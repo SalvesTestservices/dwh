@@ -20,8 +20,6 @@ RUN mkdir -p /app
 WORKDIR /app
 
 COPY Gemfile Gemfile.lock ./
-COPY package.json yarn.lock ./
 
 RUN gem update --system
 RUN bundle install -j $(nproc)
-RUN yarn install
