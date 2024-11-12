@@ -13,6 +13,7 @@ RUN apk add --no-cache --update build-base \
   vips \
   tzdata \
   wget \
+  netcat-openbsd \
   && rm -rf /var/cache/apk/*
 
 RUN mkdir -p /app

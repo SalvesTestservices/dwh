@@ -9,6 +9,7 @@ gem "tailwindcss-rails"
 gem "solid_cache"
 gem "solid_queue"
 gem "solid_cable"
+gem "mission_control-jobs"
 gem "kamal", require: false
 gem "thruster", require: false
 
