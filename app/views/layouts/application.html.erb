@@ -23,9 +23,14 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-    <main class="container mx-auto mt-28 px-5 flex">
+  <body class="h-screen">
+    <% if current_user %>
+      <%= render "header" %>
       <%= yield %>
-    </main>
+    <% else %>
+      <div class="h-screen w-full bg-gray-50">
+        <%= yield %>
+      </div>
+    <% end %>
   </body>
 </html>

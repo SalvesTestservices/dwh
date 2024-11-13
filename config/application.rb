@@ -23,5 +23,12 @@ module Dwh
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+
+    config.time_zone = "Amsterdam"
+    config.encoding = "utf-8"
+    
+    config.i18n.available_locales = [:en, :nl]
+    config.i18n.default_locale = :nl
+    config.i18n.fallbacks = true
   end
 end

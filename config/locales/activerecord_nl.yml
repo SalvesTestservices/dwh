@@ -1,0 +1,162 @@
+nl:
+  activerecord:
+    models:
+      account:                    Klant
+      user:                       Gebruiker
+      plan:                       Abonnementsplan
+      role:                       Rol
+      permission:                 Machtiging
+      transaction:                Transactie
+      api_key:                    API key
+    attributes:
+      account:
+        name:                     Klantnaam
+        is_active:                Actief?
+        is_admin:                 Beheerder?
+        plan:                     Abonnementsplan
+        subscription:             Abonnement
+        language:                 Taal
+        users:                    Gebruikers
+        email:                    Klant email
+        document_storage:         Document opslag
+      user:
+        account_name:           Klant 
+        first_name:             Voornaam
+        last_name:              Achternaam
+        email:                  E-mail
+        blocked:                Geblokkeerd?
+        password:               Wachtwoord
+        password_confirmation:  Wachtwoordbevestiging
+        password_challenge:     Huidig wachtwoord
+        password_new:           Nieuw wachtwoord
+        created_at:             Gebruiker aangemaakt op
+        invitation_status:      Uitnodigingsstatus
+        invitation_created_at:  Uitnodiging aangemaakt
+        invitation_sent_at:     Uitnodiging verzonden
+        invitation_accepted_at: Uitnodiging geaccepteerd
+        invited_by_id:          Uitgenodigd door
+      plan:
+        uid:                    Planidentificatie
+        position:               Positie
+        stripe_price_id:        Stripe prijs ID
+        name:                   Naam
+        description:            Beschrijving
+        amount:                 Bedrag
+        frequency:              Frequentie
+        emphasized:             Plan benadrukken?
+        hidden:                 Verborgen?
+        currency:               Valuta
+        trial_period_days:      Proefperiode (dagen)
+        trial_period_days_short: Proefperiode
+        days:                   Dagen
+        details_1:              Plandetails regel 1
+        details_2:              Plandetails regel 2
+        details_3:              Plandetails regel 3
+        details_4:              Plandetails regel 4
+        details_5:              Plandetails regel 5
+      subscription:
+        plan:                     Plan
+        status:                   Status
+        subscription_start_date:  Startdatum
+        subscription_end_date:    Einddatum
+        subscription_days:        Aantal dagen
+        amount:                   Bedrag
+        frequency:                Frequentie
+      role:
+        name:                   Naam
+        technical_name:         Technische naam
+        description:            Beschrijving
+      permission:
+        role:                   Rol
+        actions:                Toegestane acties
+        subject:                Onderwerp
+        description:            Beschrijving
+      transaction:
+        account_id:             Klant
+        original_id:            Stripe transactie ID
+        amount:                 Bedrag
+        currency:               Valuta
+        description:            Beschrijving
+        card:                   Kaart
+        receipt_url:            Factuur URL
+        receipt_url_short:      Factuur
+        status:                 Status
+        paid_at:                Betaald op
+      api_key:
+        name:                   Naam
+        key:                    API key
+    errors:
+      models:
+        account:
+          attributes:
+            name:
+              blank:              Naam mag niet leeg zijn
+            email:
+              blank:              E-mail mag niet leeg zijn
+              invalid:            E-mail is ongeldig
+        user:
+          attributes:
+            first_name:
+              blank:              Voornaam mag niet leeg zijn
+            last_name:
+              blank:              Achternaam mag niet leeg zijn
+            email:
+              blank:              E-mail mag niet leeg zijn
+              invalid:            E-mail is ongeldig
+            password:
+              blank:              Wachtwoord mag niet leeg zijn
+              too_short:          Wachtwoord is te kort (minimaal 6 tekens)
+            password_confirmation:
+              blank:              Wachtwoordbevestiging mag niet leeg zijn
+              too_short:          Wachtwoordbevestiging is te kort (minimaal 10 tekens)
+        plan:
+          attributes:
+            uid:
+              blank:              Planidentificatie mag niet leeg zijn
+            position:
+              blank:              Positie mag niet leeg zijn
+            stripe_price_id:
+              blank:              Stripe prijs ID mag niet leeg zijn
+            name:
+              blank:              Naam mag niet leeg zijn
+            description:
+              blank:              Beschrijving mag niet leeg zijn
+            amount:
+              blank:              Bedrag mag niet leeg zijn
+            frequency:
+              blank:              Frequentie mag niet leeg zijn
+            emphazized:
+              blank:              Plan benadrukken? mag niet leeg zijn
+            hidden:
+              blank:              Verborgen? mag niet leeg zijn
+            currency:
+              blank:              Valuta mag niet leeg zijn
+            details:
+              blank:              Plandetails mogen niet leeg zijn
+            trial_period_days:
+              not_a_number: moet een getal zijn
+              greater_than_or_equal_to: moet groter dan of gelijk aan 0 zijn
+        role:
+          attributes:
+            name:
+              blank:              Naam mag niet leeg zijn
+              taken:              Naam is al in gebruik
+            technical_name:
+              blank:              Technische naam mag niet leeg zijn
+              taken:              Technische naam is al in gebruik
+            description:
+              blank:              Beschrijving mag niet leeg zijn
+        permission:
+          attributes:
+            role:
+              blank:              Rol mag niet leeg zijn
+            action:
+              blank:              Actie mag niet leeg zijn
+            subject:
+              blank:              Onderwerp mag niet leeg zijn
+            description:
+              blank:              Beschrijving mag niet leeg zijn
+        api_key:
+          attributes:
+            name:
+              blank:              Naam mag niet leeg zijn
