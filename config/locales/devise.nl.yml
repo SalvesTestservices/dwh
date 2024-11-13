@@ -1,0 +1,105 @@
+nl:
+  devise:
+    confirmations:
+      confirmed: "Uw e-mailadres is succesvol bevestigd."
+      send_instructions: "U ontvangt binnen enkele minuten een e-mail met instructies om uw e-mailadres te bevestigen."
+      send_paranoid_instructions: "Als uw e-mailadres in onze database bestaat, ontvangt u binnen enkele minuten een e-mail met instructies om uw e-mailadres te bevestigen."
+    failure:
+      already_authenticated: "U bent al ingelogd."
+      inactive: "Uw account is nog niet geactiveerd."
+      invalid: "Ongeldig %{authentication_keys} of wachtwoord."
+      locked: "Uw account is vergrendeld."
+      last_attempt: "U heeft nog één poging voordat uw account wordt vergrendeld."
+      not_found_in_database: "Ongeldig %{authentication_keys} of wachtwoord."
+      timeout: "Uw sessie is verlopen. Log alstublieft opnieuw in om door te gaan."
+      unauthenticated: "U moet inloggen of registreren om door te gaan."
+      unconfirmed: "U moet uw e-mailadres bevestigen voordat u kunt doorgaan."
+      account_exists: "Dit account bestaat al, log in om door te gaan."
+    mailer:
+      confirmation_instructions:
+        subject: "Bevestigingsinstructies"
+        salutation: "Welkom"
+        intro: "U kunt uw %{account_name} account e-mail bevestigen via de onderstaande link:"
+        action: "Bevestig mijn account"
+      reset_password_instructions:
+        subject: "Instructies voor het opnieuw instellen van het wachtwoord"
+        salutation: "Hallo"
+        intro: "Iemand heeft een link aangevraagd om uw wachtwoord te wijzigen voor uw %{account_name} account. U kunt dit doen via de onderstaande link."
+        action: "Wijzig mijn wachtwoord"
+        remark1: "Als u dit niet heeft aangevraagd, negeer dan deze e-mail."
+        remark2: "Uw wachtwoord wordt pas gewijzigd nadat u de bovenstaande link heeft geopend en een nieuw wachtwoord heeft aangemaakt."
+      unlock_instructions:
+        subject: "Ontgrendelingsinstructies"
+        salutation: "Hallo"
+        message: "Uw account is vergrendeld vanwege een buitensporig aantal mislukte inlogpogingen."
+        instruction: "Klik op de onderstaande link om uw account te ontgrendelen:"
+        action: "Ontgrendel mijn account"
+      email_changed:
+        subject: "E-mail gewijzigd"
+        salutation: "Hallo"
+        changing: "We nemen contact met u op om u te melden dat uw e-mail wordt gewijzigd naar %{new_email}."
+        changed: "We nemen contact met u op om u te melden dat uw e-mail is gewijzigd naar %{new_email}."
+      password_change:
+        subject: "Wachtwoord gewijzigd"
+        salutation: "Hallo"
+        message: "We nemen contact met u op om u te melden dat uw wachtwoord is gewijzigd."
+    omniauth_callbacks:
+      failure: "Kon u niet authenticeren via %{kind} omdat \"%{reason}\"."
+      success: "Succesvol geauthenticeerd via %{kind} account."
+    passwords:
+      change: Wachtwoord wijzigen
+      no_token: "U kunt deze pagina niet openen zonder van een wachtwoord reset e-mail te komen. Als u wel van een wachtwoord reset e-mail komt, zorg er dan voor dat u de volledige URL heeft gebruikt die is meegeleverd."
+      send_instructions: "U ontvangt binnen enkele minuten een e-mail met instructies over hoe u uw wachtwoord opnieuw kunt instellen."
+      send_paranoid_instructions: "Als uw e-mailadres in onze database bestaat, ontvangt u binnen enkele minuten een link voor wachtwoordherstel op uw e-mailadres."
+      updated: "Uw wachtwoord is succesvol gewijzigd. U bent nu ingelogd."
+      updated_not_active: "Uw wachtwoord is succesvol gewijzigd."
+    registrations:
+      sign_up: "Registreer een account"
+      sign_up_short: Registreren
+      destroyed: "Tot ziens! Uw account is succesvol geannuleerd. We hopen u snel weer te zien."
+      signed_up: "Welkom! U bent succesvol geregistreerd."
+      signed_up_but_inactive: "U bent succesvol geregistreerd. We konden u echter niet inloggen omdat uw account nog niet is geactiveerd."
+      signed_up_but_locked: "U bent succesvol geregistreerd. We konden u echter niet inloggen omdat uw account is vergrendeld."
+      signed_up_but_unconfirmed: "Een bericht met een bevestigingslink is naar uw e-mailadres gestuurd. Volg de link om uw account te activeren."
+      update_needs_confirmation: "U heeft uw account succesvol bijgewerkt, maar we moeten uw nieuwe e-mailadres verifiëren. Controleer uw e-mail en volg de bevestigingslink om uw nieuwe e-mailadres te bevestigen."
+      updated: "Uw account is succesvol bijgewerkt."
+      updated_but_not_signed_in: "Uw account is succesvol bijgewerkt, maar omdat uw wachtwoord is gewijzigd, moet u opnieuw inloggen."
+      signed_up_and_signed_in: "U bent succesvol geregistreerd en ingelogd."
+    sessions:
+      signin:    Inloggen
+      signout:   Uitloggen
+      signed_in: "Succesvol ingelogd."
+      signed_out: "Succesvol uitgelogd."
+      already_signed_out: "Succesvol uitgelogd."
+      forgot: "Wachtwoord vergeten?"
+      reset: "Stuur me instructies voor het opnieuw instellen van het wachtwoord"
+    unlocks:
+      resend: Ontgrendelingsinstructies opnieuw verzenden
+      send_instructions: "U ontvangt binnen enkele minuten een e-mail met instructies over hoe u uw account kunt ontgrendelen."
+      send_paranoid_instructions: "Als uw account bestaat, ontvangt u binnen enkele minuten een e-mail met instructies over hoe u het kunt ontgrendelen."
+      unlocked: "Uw account is succesvol ontgrendeld. Log in om door te gaan."
+    confirmations:
+      resend: Bevestigingsinstructies opnieuw verzenden
+      confirmed: "Uw account is bevestigd, log in op uw account."
+      send_instructions: "U ontvangt binnen enkele minuten een e-mail met instructies over hoe u uw account moet bevestigen."
+      send_paranoid_instructions: "Als uw e-mail in onze database bestaat, ontvangt u binnen enkele minuten een e-mail met instructies over hoe u uw account moet bevestigen."
+    failure:
+      already_authenticated: "U bent al ingelogd."
+      inactive: "Het account is nog niet geactiveerd. Neem contact op met de support."
+      invalid: "Ongeldig e-mailadres of wachtwoord."
+      locked: "Uw account is vergrendeld."
+      not_found_in_database: "Ongeldig e-mailadres of wachtwoord."
+      timeout: "Uw sessie is verlopen, log opnieuw in om door te gaan."
+      unauthenticated: "Log in met e-mail en wachtwoord"
+      unconfirmed: "U moet eerst uw account bevestigen voordat u kunt doorgaan"
+      blocked: "Uw account is geblokkeerd. Neem contact op met de support."
+  errors:
+    messages:
+      already_confirmed: "was al bevestigd, probeer in te loggen"
+      confirmation_period_expired: "moet binnen %{period} worden bevestigd, vraag een nieuwe aan"
+      expired: "is verlopen, vraag een nieuwe aan"
+      not_found: "niet gevonden"
+      not_locked: "was niet vergrendeld"
+      not_saved:
+        one: "1 fout verhinderde dat deze %{resource} werd opgeslagen:"
+        other: "%{count} fouten verhinderden dat deze %{resource} werd opgeslagen:"

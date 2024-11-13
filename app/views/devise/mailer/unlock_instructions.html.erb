@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <!-- ... (same as reset_password_instructions.html.erb) ... -->
+    <%= render "shared/mailer/styling" %>
+  </head>
+  <body>
+    <table class="email-wrapper" width="100%" cellpadding="0" cellspacing="0" role="presentation">
+      <tr>
+        <td align="center">
+          <table class="email-content" width="100%" cellpadding="0" cellspacing="0" role="presentation">
+            <tr>
+              <td class="email-masthead"></td>
+            </tr>
+            <!-- Email Body -->
+            <tr>
+              <td class="email-body" width="570" cellpadding="0" cellspacing="0">
+                <table class="email-body_inner" align="center" width="570" cellpadding="0" cellspacing="0" role="presentation">
+                  <!-- Body content -->
+                  <tr>
+                    <td class="content-cell">
+                      <div class="f-fallback">
+                        <div class="title"><%= I18n.t(".devise.mailer.unlock_instructions.subject") %></div>
+                        
+                        <p><%= I18n.t(".devise.mailer.unlock_instructions.salutation") %> <%= @resource.email %>!</p>
+                        <p><%= I18n.t(".devise.mailer.unlock_instructions.message") %></p>
+                        <p><%= I18n.t(".devise.mailer.unlock_instructions.instruction") %></p>
+
+                        <p><%= link_to I18n.t(".devise.mailer.unlock_instructions.action"), unlock_url(@resource, unlock_token: @token) %></p>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <%= render "shared/mailer/footer" %>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

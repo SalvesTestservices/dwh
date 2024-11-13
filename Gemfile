@@ -12,6 +12,8 @@ gem "solid_cable"
 gem "mission_control-jobs"
 gem "kamal", require: false
 gem "thruster", require: false
+gem "devise"
+gem "devise_invitable"
 
 gem "pg", "~> 1.1"
 gem "puma", ">= 5.0"
