@@ -1,0 +1,56 @@
+<div>
+  <div>
+    <% unless breadcrumbs.blank? %>
+      <nav class="hidden sm:flex" aria-label="Breadcrumb">
+        <ol role="list" class="flex items-center space-x-2">
+          <li>
+            <div class="flex">
+              <a href="/" class="text-sm font-medium text-gray-500 hover:text-gray-700">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+                </svg>
+              </a>
+            </div>
+          </li>
+
+          <% breadcrumbs.each do |breadcrumb| %>
+            <% if breadcrumb[1].blank? %>
+              <li>
+                <div class="flex items-center">
+                  <svg class="size-5 shrink-0 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+                    <path fill-rule="evenodd" d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+                  </svg>
+                  <p class="ml-2 text-sm font-medium text-gray-500"><%= breadcrumb[0] %></p>
+                </div>
+              </li>
+            <% else %>
+              <li>
+                <div class="flex items-center">
+                  <svg class="size-5 shrink-0 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+                    <path fill-rule="evenodd" d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+                  </svg>
+                  <%= link_to breadcrumb[0], breadcrumb[1], class: "ml-2 text-sm font-medium text-gray-500 hover:text-gray-700 underline hover:text-gray-700" %>
+                </div>
+              </li>
+            <% end %>
+          <% end %>
+        </ol>
+      </nav>
+    <% end %>
+  </div>
+  <div class="mt-5 md:flex md:items-center md:justify-between">
+    <div class="min-w-0 flex-1">
+      <h2 class="flex items-center gap-3 text-2xl/7 font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">
+        <% if defined?(icon) && icon.present? %>
+          <%= icon(icon, width: 8, height: 8) %>
+        <% end %>
+        <%= title %>
+      </h2>
+    </div>
+    <div class="mt-4 flex shrink-0 md:ml-4 md:mt-0">
+      <button type="button" class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">Edit</button>
+      <button type="button" class="ml-3 inline-flex items-center rounded-md bg-gray-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900">Publish</button>
+    </div>
+  </div>
+</div>
+

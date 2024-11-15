@@ -1,3 +1,6 @@
 nl:
   general:
     welcome: "Welkom"
+  user:
+    titles:
+      index: "Gebruikers"

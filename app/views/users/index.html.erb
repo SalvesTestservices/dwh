@@ -1,13 +1,7 @@
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-  <div class="sm:flex sm:items-center">
-    <div class="sm:flex-auto">
-      <h1 class="text-2xl font-semibold text-gray-900">Users</h1>
-    </div>
-    <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-    </div>
-  </div>
+<div class="max-w-7xl mx-auto">
+  <%= render "layouts/page_header", title: I18n.t(".user.titles.index"), icon: :users, breadcrumbs: @breadcrumbs %>
 
-  <div class="mt-8 flex flex-col">
+  <div class="mt-8 flex flex-col pt-5">
     <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
       <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
         <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">

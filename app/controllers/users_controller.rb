@@ -1,6 +1,9 @@
 class UsersController < ApplicationController
   def index
-    @users = User.all
+    @users = User.order(:first_name)
+
+    @breadcrumbs = []
+    @breadcrumbs << [I18n.t(".user.titles.index")]
   end
 
   def invite
