@@ -1,0 +1,13 @@
+<%= link_to dw_dp_run_quality_checks_path(dp_run) do %>
+  <% checks_success = dp_quality_checks.where(result: "success").count %>
+  <% checks_total = dp_quality_checks.count %>
+  <% bg = checks_success < checks_total ? "bg-red-600" : "bg-green-600" %>
+  <% div_size = size == "small" ? "px-2 py-1 text-xs" : "px-2 py-1 text-sm" %>
+
+  <div class="<%= div_size %> <%= bg %> rounded flex flex-col items-center">
+    <% unless size == "small" %>
+      <div class="text-white"><%= I18n.t('.dp_quality_check.titles.index').downcase %></div>
+    <% end %>
+    <div class="text-white"><%= checks_success %> / <%= checks_total %></div>
+  </div>
+<% end %>

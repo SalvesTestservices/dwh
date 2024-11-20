@@ -1,0 +1,13 @@
+<% case result.status %>
+<% when "started" %>
+  <% color = "bg-sky-500 text-white" %>
+<% when "finished" %>
+  <% color = "bg-green-500 text-white" %>
+<% when "failed" %>
+  <% color = "bg-red-500 text-white" %>
+<% else %>
+  <% color = "bg-gray-300 text-gray-800" %>
+<% end %>
+
+
+<div id="pipeline-result-<%= result.id %>" class="<%= color %> w-10 h-10 rounded-full flex text-xs font-bold items-center justify-center m-1"><span><%= task.sequence %></span></div>

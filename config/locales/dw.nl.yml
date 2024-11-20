@@ -1,0 +1,92 @@
+nl:
+  dp_pipeline:
+    titles:
+      index:            Data pipelines
+      show:             Data pipeline details
+      show_short:       Data pipeline
+      new:              Toevoegen data pipeline
+      edit:             Wijzigen data pipeline
+      destroy:          Verwijderen data pipeline
+    messages:
+      created:          Data pipeline is aangemaakt
+      updated:          Data pipeline is gewijzigd
+      destroyed:        Data pipeline is verwijderd
+    form:
+      name:             Naam
+      description:      Omschrijving
+      dp_runs_count:    Aantal runs
+      dp_tasks_count:   Aantal taken
+      dp_tasks:         Taken
+      status:           Status
+      load_method:      Laad methode
+      last_executed_at: Laatst uitgevoerd op
+      account_ids:      Bedrijven
+      frequency:        Frequentie
+      pipeline_key:     Pipeline identificatie
+      month:            Maand
+      year:             Jaar
+      period:           Periode
+      scoped_user_id:   Scoped original user ID
+    states:
+      active:           Actief
+      inactive:         Inactief
+    groups:
+      consultants_internal: Interne consultants
+      consultants_external: Externe consultants
+      fixed_price:          Fixed price
+      service:              Dienst
+      training:             Training
+      total:                Totaal
+  dp_run:
+    titles:
+      index:            Runs
+      new:              Start data pipeline
+      edit:             Wijzigen run
+      show:             Run details
+      destroy:          Verwijderen run
+      results:          Resultaten
+      logs:             Logs
+    messages:
+      created:          Run is aangemaakt
+      updated:          Run is gewijzigd
+      destroyed:        Run is verwijderd
+    form:
+      status:           Status
+      started_at:       Gestart op
+      finished_at:      Afgerond op
+      dp_logs_count:    Aantal logs
+      dp_tasks_count:   Aantal taken
+      account_id:       Bedrijf
+      duration:         Duur
+  dp_task:
+    titles:
+      index:            Taken
+      new:              Toevoegen taak
+      edit:             Wijzigen taak
+    messages:
+      created:          Taak is aangemaakt
+      updated:          Taak is gewijzigd
+    form:
+      name:             Naam
+      description:      Omschrijving
+      task_key:         Taak identificatie
+      sequence:         Volgorde
+      depends_on:       Afhankelijk van
+      status:           Status
+    states:
+      active:           Actief
+      inactive:         Inactief
+  dp_quality_check:
+    titles:
+      index:            Quality checks
+    form:
+      check_type:       Type check
+      description:      Omschrijving
+      expected:         Verwacht
+      actual:           Werkelijk
+      result:           Resultaat
+    check_types:
+      row_count:        Aantal records
+    results:
+      success:          succes
+      failed:           gefaald

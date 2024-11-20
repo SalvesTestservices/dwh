@@ -1,0 +1,64 @@
+<%= render "shared/page_header", 
+  breadcrumbs: @breadcrumbs, 
+  title: I18n.t('.dp_pipeline.titles.show'), 
+  icon: ["rotate", "large", "gray"],
+  buttons: [[I18n.t('.dp_pipeline.titles.destroy'), dw_dp_pipeline_path(@dp_pipeline), "delete"]]
+%>
+
+<main>
+  <div class="mx-auto max-w-7xl py-2 md:py-6">
+    <div class="px-0 md:px-4 flex flex-col">
+      
+      <!-- Pipeline details -->
+      <%= render "details", dp_pipeline: @dp_pipeline, accounts: @accounts %>
+
+      <div class="mt-5 w-full grid grid-cols-2 gap-4">
+
+        <!-- Tasks -->
+        <div class="flex flex-col">
+          <div class="bg-white mb-2 shadow-sm sm:rounded-lg">
+            <div class="p-5 flex flex-row justify-between">
+              <h2 class="mt-2 text-2xl font-semibold leading-6 text-gray-900"><%= I18n.t('.dp_task.titles.index') %></h2>
+              <%= link_to I18n.t('.dp_task.titles.new'), new_dw_dp_task_path(dp_pipeline_id: @dp_pipeline), class: "px-4 py-2 text-sm text-gray-700 bg-gray-100 hover:bg-gray-50 mr-1 border border-gray-300 shadow-sm font-medium rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500" %>
+            </div>
+          </div>
+
+          <ul role="list" id="tasks">
+            <% unless @dp_tasks.blank?%>
+              <%= turbo_frame_tag "dp_tasks", data: { controller: "drag" , "drag-url": "/dw/dp_tasks/:id/move"} do %>
+                <% @dp_tasks.each do |dp_task| %>
+                  <div data-id="<%= dp_task.id %>">
+                    <%= render "dw/dp_tasks/dp_task", dp_task: dp_task %>
+                  </div>
+                <% end %>
+              <% end %>
+            <% end %>
+          </ul>
+        </div>
+
+        <!-- Runs -->
+        <div class="flex flex-col">
+          <div class="bg-white mb-2 shadow-sm sm:rounded-lg">
+            <div class="p-5 flex flex-row justify-between">
+              <h2 class="mt-2 text-2xl font-semibold leading-6 text-gray-900"><%= I18n.t('.dp_run.titles.index') %></h2>
+
+              <% if @dp_pipeline.active? %>
+                <%= render(View::ButtonComponent.new(title: I18n.t('.dp_run.titles.new'), url: dw_dp_runs_path(dp_pipeline_id: @dp_pipeline), button_type: "button", size: "medium")) %>
+              <% end %>
+            </div>
+          </div>
+
+          <%= turbo_stream_from "runs_#{@dp_pipeline.id}" %>
+          <ul role="list" id="runs_<%= @dp_pipeline.id %>">
+            <%= render partial: "dw/dp_runs/dp_run", collection: @dp_runs, as: :dp_run %>
+          </ul>
+
+          <%== render partial: 'shared/pagy', locals: { pagy: @pagy } %>
+
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</main>

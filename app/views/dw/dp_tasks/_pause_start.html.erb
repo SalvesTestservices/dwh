@@ -1,0 +1,9 @@
+<% if dp_task.status == "active" %>
+  <%= button_to dw_dp_task_pause_path(dp_task), method: :post do %>
+    <%= render(View::IconComponent.new(icon_type: "pause", size: "small", color: "gray")) %>
+  <% end %>
+<% else %>
+  <%= button_to dw_dp_task_start_path(dp_task), method: :post do %>
+    <%= render(View::IconComponent.new(icon_type: "start", size: "small", color: "gray")) %>
+  <% end %>
+<% end %>

@@ -1,0 +1,25 @@
+<%= render "shared/page_header", 
+  breadcrumbs: @breadcrumbs, 
+  title: I18n.t('.dp_quality_check.titles.index'), 
+  icon: ["rotate", "large", "gray"],
+  buttons: nil
+%>
+
+<main>
+  <div class="mx-auto max-w-7xl py-2 md:py-6">
+    <div class="px-0 md:px-4 flex flex-col items-center">
+
+      <%= render "quality_checks_overall", size: "large", dp_run: @dp_run, dp_quality_checks: @dp_quality_checks %>
+
+      <ul role="list" class="w-10/12">
+        <% unless @dp_tasks.blank?%>
+          <% @dp_tasks.each do |dp_task| %>
+            <%= render "dp_task", dp_task: dp_task, dp_results: @dp_results, dp_quality_checks: @dp_quality_checks %>
+          <% end %>
+        <% end %>
+      </ul>
+
+    </div>
+  </div>
+</main>
+

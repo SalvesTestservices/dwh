@@ -1,0 +1,11 @@
+<% dp_pipeline.dp_tasks.order(:sequence).each do |task| %>
+  <% last_run = dp_pipeline.dp_runs.order(:created_at).last %>
+  <% last_results = last_run.blank? ? nil : dp_pipeline.dp_runs.order(:created_at).last.dp_results %>
+
+  <% unless last_results.blank? %>
+    <% result = last_results.find { |result| result.dp_task_id == task.id } %>
+    <% task_status = result&.status %>
+
+    <%= render "dw/dp_pipelines/progress_item", task: task, result: result %>
+  <% end %>
+<% end %>

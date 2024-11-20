@@ -1,0 +1,49 @@
+<%= turbo_frame_tag dom_id(dp_pipeline) do %>
+  <% decorate dp_pipeline do |decorates| %>
+    <% accounts = Account.where(id: dp_pipeline.account_ids).order(:name) %>
+    <% status = dp_pipeline.status == "active" ? "border-green-500" : "border-gray-500" %>
+    <% dp_run = dp_pipeline.dp_runs.order(started_at: :desc).first %>
+
+    <div class="bg-white shadow rounded-lg mx-auto max-w-7xl mb-3 px-5 py-3 grid grid-cols-12 gap-4 border-l-8 <%= status %>">
+      <div class="col-span-3 flex flex-col">
+        <div class="text-sm font-medium leading-6 text-gray-800"><%= decorates.data_field(dp_pipeline.name) %></div>
+        <div class="mt-1 text-xs leading-5 text-gray-500"><%= decorates.data_field(dp_pipeline.description) %></div>
+      </div>
+      <div class="col-span-1 flex flex-col">
+        <div class="text-sm font-medium leading-6 text-gray-800 text-center"><%= I18n.t('.dp_pipeline.form.account_ids') %></div>
+        <div class="flex flex-col items-center mt-2">
+          <% accounts.each do |account| %>
+            <div class="w-28 rounded mb-1 px-1 text-xs text-center font-medium bg-sky-100 text-sky-700 border border-sky-700"><%= account.name %></div>
+          <% end %>
+        </div>
+      </div>
+      <div class="col-span-1 flex flex-col">
+        <div class="text-sm font-medium leading-6 text-gray-800 text-center"><%= I18n.t('.dp_pipeline.form.frequency') %></div>
+        <div class="mt-1 text-sm leading-5 text-gray-500 text-center"><%= decorates.data_field(dp_pipeline.frequency) %> uur</div>
+      </div>
+      <div class="col-span-1 flex flex-col">
+        <div class="text-sm font-medium leading-6 text-gray-800 text-center">QC</div>
+        <div class="mt-1 flex flex-row justify-center">
+          <% if dp_run.blank? %>
+            <%= "-" %>
+          <% else %>
+            <%= render "dw/dp_runs/quality_checks_overall", size: "small", dp_run: dp_run, dp_quality_checks: dp_run.dp_quality_checks %>
+          <% end %>
+        </div>
+      </div>
+      <div class="col-span-2 flex flex-col">
+        <div class="text-sm font-medium leading-6 text-gray-800 text-center"><%= I18n.t('.dp_pipeline.form.last_executed_at') %></div>
+        <div class="mt-1 text-sm leading-5 text-gray-500 text-center"><%= decorates.data_field_time(dp_pipeline.last_executed_at) %></div>
+      </div>
+      <div class="col-span-3 flex flex-col">
+        <div class="text-sm font-medium leading-6 text-gray-800 text-center"><%= I18n.t('.dp_pipeline.form.dp_tasks') %></div>
+        <div class="flex flex-wrap justify-center">
+          <%= decorates.progress("small") %>
+        </div>
+      </div>
+      <div class="col-span-1 flex items-center mt-2.5">
+        <%= render(View::ButtonComponent.new(title: I18n.t(".general.details"), url: dw_dp_pipeline_path(dp_pipeline), button_type: "link_turbo", size: "medium")) %>
+      </div>
+    </div>
+  <% end %>
+<% end %>

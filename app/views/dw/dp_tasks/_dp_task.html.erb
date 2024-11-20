@@ -1,0 +1,38 @@
+<%= turbo_frame_tag dom_id(dp_task) do %>
+  <% decorate dp_task do |decorates| %>
+    <li class="bg-white mb-1 px-4 py-2 shadow-sm sm:rounded-lg flex flex-row justify-between gap-x-6 border-l-8 <%= decorates.status %>">
+      <div class="w-10/12 flex flex-col">
+        <div class="w-full border-b border-gray-200">
+          <p class="text-sm font-semibold leading-6 text-gray-900"><%= dp_task.name %></p>
+        </div>
+
+        <% cols = dp_task.description.blank? ? "grid-cols-2" : "grid-cols-3" %>
+
+        <div class="mt-1 grid <%= cols %> gap-x-2 gap-y-1">
+          <% unless dp_task.description.blank? %>
+            <div class="text-xs text-gray-800 text-left"><%= I18n.t(".dp_task.form.description") %></div>
+          <% end %>
+          <div class="text-xs text-gray-800 text-left"><%= I18n.t(".dp_task.form.task_key") %></div>
+          <div class="text-xs text-gray-800 text-center"><%= I18n.t(".dp_task.form.depends_on") %></div>
+
+          <% unless dp_task.description.blank? %>
+            <div class="text-xs text-gray-400 text-left truncate"><%= decorates.data_field(dp_task.description) %></div>
+          <% end %>
+          <div class="text-xs text-gray-400 text-left truncate"><%= decorates.data_field(dp_task.task_key) %></div>
+          <div class="text-xs text-gray-400 text-center truncate"><%= decorates.depends_on %></div>
+        </div>
+      </div>
+      <div class="w-2/12 flex flex-col items-center gap-x-0">
+        <%= render "dw/dp_tasks/pause_start", dp_task: dp_task %>
+
+        <%= link_to edit_dw_dp_task_path(dp_task) do %>
+          <%= render(View::IconComponent.new(icon_type: "edit", size: "small", color: "gray")) %>
+        <% end %>
+
+        <%= button_to dw_dp_task_path(dp_task), method: :delete, class: "mt-2" do %>
+          <%= render(View::IconComponent.new(icon_type: "delete", size: "small", color: "gray")) %>
+        <% end %>
+      </div>
+    </li>
+  <% end %>
+<% end %>

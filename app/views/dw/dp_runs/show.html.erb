@@ -1,0 +1,86 @@
+<%= render "shared/page_header", 
+  breadcrumbs: @breadcrumbs, 
+  title: I18n.t('.dp_run.titles.show'), 
+  icon: ["rotate", "large", "gray"],
+  buttons: [[I18n.t('.dp_run.titles.destroy'), dw_dp_run_path(@dp_run), "delete"]]
+%>
+
+<main>
+  <div class="mx-auto max-w-7xl py-2 md:py-6">
+    <div class="px-0 md:px-4 flex flex-col">
+      
+      <!-- Run details -->
+      <% decorate @dp_run do |decorates| %>
+        <div class="bg-white -mx-4 px-4 py-4 shadow-sm ring-1 ring-gray-900/5 sm:mx-0 sm:rounded-lg sm:px-8 sm:pb-4 mb-3 border-l-8 <%= decorates.status %>">
+          <div class="flex flex-col border-b border-gray-300 pb-5">
+            <h2 class="text-2xl font-semibold leading-6 text-gray-900"><%= @dp_run.dp_pipeline.name %></h2>
+            <dt class="mt-2 text-gray-500"><%= @dp_run.dp_pipeline.description %></dt>        
+          </div>
+          <div class="mt-5 grid grid-cols-6 gap-4">
+            <div class="flex flex-col">
+              <div class="text-base font-semibold leading-6 text-gray-900 text-center"><%= I18n.t('.dp_run.form.account_id') %></div>
+              <div class="mt-2 text-base font-semibold leading-6 text-gray-500 text-center"><%= decorates.data_field(@account.name) %></div>
+            </div>
+            <div class="flex flex-col">
+              <div class="text-base font-semibold leading-6 text-gray-900 text-center"><%= I18n.t('.dp_run.form.started_at') %></div>
+              <div class="mt-2 text-base font-semibold leading-6 text-gray-500 text-center"><%= decorates.data_field_time(@dp_run.started_at, true) %></div>
+            </div>
+            <div class="flex flex-col">
+              <div class="text-base font-semibold leading-6 text-gray-900 text-center"><%= I18n.t('.dp_run.form.finished_at') %></div>
+              <div class="mt-2 text-base font-semibold leading-6 text-gray-500 text-center"><%= decorates.data_field_time(@dp_run.finished_at, true) %></div>
+            </div>
+            <div class="flex flex-col">
+              <div class="text-base font-semibold leading-6 text-gray-900 text-center"><%= I18n.t('.dp_run.form.duration') %></div>
+              <div class="mt-2 text-base font-semibold leading-6 text-gray-500 text-center"><%= decorates.duration %></div>
+            </div>
+            <div class="flex flex-col">
+              <div class="text-base font-semibold leading-6 text-gray-900 text-center"><%= I18n.t('.dp_run.form.dp_tasks_count') %></div>
+              <div class="mt-2 text-base font-semibold leading-6 text-gray-500 text-center"><%= decorates.data_field(@dp_run.dp_tasks.count) %></div>
+            </div>
+            <div class="flex flex-col">
+              <div class="text-base font-semibold leading-6 text-gray-900 text-center"><%= I18n.t('.dp_run.form.dp_logs_count') %></div>
+              <div class="mt-2 text-base font-semibold leading-6 text-gray-500 text-center"><%= decorates.data_field(@dp_run.dp_logs.count) %></div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+
+      <div class="mt-5 w-full grid grid-cols-2 gap-4">
+
+        <!-- Results -->
+        <div class="flex flex-col">
+          <div class="bg-white mb-2 shadow-sm sm:rounded-lg h-20">
+            <div class="p-5 flex flex-row justify-between">
+              <h2 class="mt-2 ml-2 text-2xl font-semibold leading-6 text-gray-900"><%= I18n.t('.dp_run.titles.results') %></h2>
+              <%= render "quality_checks_overall", size: "medium", dp_run: @dp_run, dp_quality_checks: @dp_quality_checks %>
+            </div>
+          </div>
+
+          <ul role="list">
+            <% unless @dp_tasks.blank?%>
+              <% @dp_tasks.each do |dp_task| %>
+                <%= render "dp_task", dp_task: dp_task, dp_results: @dp_results, dp_quality_checks: nil %>
+              <% end %>
+            <% end %>
+          </ul>
+        </div>
+
+        <!-- Logs -->
+        <div class="flex flex-col">
+          <div class="bg-white mb-2 shadow-sm sm:rounded-lg h-20">
+            <div class="p-5 flex flex-row justify-between">
+              <h2 class="mt-2 text-2xl font-semibold leading-6 text-gray-900"><%= I18n.t('.dp_run.titles.logs') %></h2>
+            </div>
+          </div>
+
+          <%= turbo_stream_from "logs_#{@dp_run.id}" %>
+          <ul role="list" id="logs_<%= @dp_run.id %>">
+            <%= render partial: "dp_log", collection: @dp_logs, as: :dp_log %>
+          </ul>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</main>

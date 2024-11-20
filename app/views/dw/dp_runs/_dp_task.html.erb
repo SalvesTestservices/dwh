@@ -1,0 +1,61 @@
+<% decorate dp_task do |decorates| %>
+  <% dp_result = dp_results.find_by(dp_task_id: dp_task.id) %>
+  <% if dp_result.blank?%>
+    <% status = "border-gray-300" %>
+  <% else %>
+    <% decorate dp_result do |decorates| %>
+      <% status = decorates.status %>
+    <% end %>
+  <% end %>
+
+  <li class="bg-white mb-2 px-4 py-2 shadow-sm sm:rounded-lg flex items-center justify-between gap-x-6  border-l-8 <%= status %>">
+    <div class="w-1/12 text-xl text-center font-bold"><%= dp_task.sequence %></div>
+    <div class="w-11/12 flex flex-col">
+      <div class="w-full">
+        <p class="text-sm font-semibold leading-6 text-gray-900"><%= decorates.data_field(dp_task.name) %></p>
+      </div>
+
+      <% cols = dp_task.description.blank? ? "grid-cols-2" : "grid-cols-3" %>
+
+      <div class="mt-1 grid <%= cols %> gap-x-2 gap-y-1">
+        <% unless dp_task.description.blank? %>
+          <div class="text-xs text-gray-800 text-left"><%= I18n.t(".dp_task.form.description") %></div>
+        <% end %>
+        <div class="text-xs text-gray-800 text-left"><%= I18n.t(".dp_task.form.task_key") %></div>
+        <div class="text-xs text-gray-800 text-center"><%= I18n.t(".dp_task.form.depends_on") %></div>
+
+        <% unless dp_task.description.blank? %>
+          <div class="text-xs text-gray-400 text-left truncate"><%= decorates.data_field(dp_task.description) %></div>
+        <% end %>
+        <div class="text-xs text-gray-400 text-left truncate"><%= decorates.data_field(dp_task.task_key) %></div>
+        <div class="text-xs text-gray-400 text-center truncate"><%= decorates.depends_on %></div>
+      </div>
+    </div>
+  </li>
+
+  <% unless dp_quality_checks.blank? %>
+    <% task_quality_checks = dp_quality_checks.where(dp_task_id: dp_task.id) %>
+    <% unless task_quality_checks.blank? %>
+      <div class="ml-10 flex flex-col bg-white my-5 p-5 shadow-sm sm:rounded-lg">
+        <div class="grid grid-cols-12 border-b border-gray-300">
+          <div class="col-span-3 text-xs text-gray-800 pb-2"><%= I18n.t('.dp_quality_check.form.check_type') %></div>
+          <div class="col-span-3 text-xs text-gray-800"><%= I18n.t('.dp_quality_check.form.description') %></div>
+          <div class="col-span-2 text-center text-xs text-gray-800"><%= I18n.t('.dp_quality_check.form.expected') %></div>
+          <div class="col-span-2 text-center text-xs text-gray-800"><%= I18n.t('.dp_quality_check.form.actual') %></div>
+          <div class="col-span-2 text-center text-xs text-gray-800"><%= I18n.t('.dp_quality_check.form.result') %></div>
+        </div>
+        <% task_quality_checks.each do |qc| %>
+          <% decorate qc do |decorates| %>
+            <div class="grid grid-cols-12 mt-3">
+              <div class="col-span-3 text-xs text-gray-600"><%= decorates.check_type %></div>
+              <div class="col-span-3 text-xs text-gray-600"><%= decorates.data_field(qc.description) %></div>
+              <div class="col-span-2 text-center text-xs text-gray-600"><%= qc.expected %></div>
+              <div class="col-span-2 text-center text-xs text-gray-600"><%= qc.actual %></div>
+              <div class="col-span-2 text-center text-xs text-gray-600"><%= decorates.result %></div>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+  <% end %>
+<% end %>

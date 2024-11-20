@@ -1,0 +1,24 @@
+<%= render "shared/page_header", 
+  breadcrumbs: @breadcrumbs, 
+  title: I18n.t('.dp_pipeline.titles.index'), 
+  icon: ["rotate", "large", "gray"],
+  buttons: [[I18n.t('.dp_pipeline.titles.new'), new_dw_dp_pipeline_path]]
+%>
+
+<main>
+  <div class="mx-auto max-w-8xl py-2 md:py-6">
+    <div class="px-0 md:px-4">
+
+      <% unless @dp_pipelines.blank? %>
+        <%= turbo_frame_tag "dp_pipelines", data: { controller: "drag" , "drag-url": "/dw/dp_pipelines/:id/move"} do %>
+          <% @dp_pipelines.each do |dp_pipeline| %>
+            <div data-id="<%= dp_pipeline.id %>">
+              <%= render "dp_pipeline", dp_pipeline: dp_pipeline %>
+            </div>
+          <% end %>
+        <% end %>
+      <% end %>
+
+    </div>
+  </div>
+</main>

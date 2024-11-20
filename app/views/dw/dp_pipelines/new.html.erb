@@ -1,0 +1,16 @@
+<%= render "shared/page_header", 
+  breadcrumbs: @breadcrumbs, 
+  title: I18n.t('.dp_pipeline.titles.new'), 
+  icon: ["rotate", "large", "gray"],
+  buttons: nil
+%>
+
+<main>
+  <div class="mx-auto max-w-7xl py-2 md:py-6">
+    <div class="px-0 md:px-4">
+
+      <%= render "form" %>
+
+    </div>
+  </div>
+</main>
