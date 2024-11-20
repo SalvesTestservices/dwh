@@ -2,8 +2,6 @@ class Dw::DpPipelinesController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    authorized_for?(:maintenance_view)
-
     @dp_pipelines = Dw::DpPipeline.includes(:dp_tasks).includes(:dp_runs).order(position: :asc)
 
     @breadcrumbs = []
@@ -11,8 +9,6 @@ class Dw::DpPipelinesController < ApplicationController
   end
 
   def show
-    authorized_for?(:maintenance_view)
-
     @dp_pipeline = Dw::DpPipeline.find(params[:id])
     @accounts = Account.where(id: @dp_pipeline.account_ids).order(:name)
     @dp_tasks = @dp_pipeline.dp_tasks.order(:sequence)
@@ -25,8 +21,6 @@ class Dw::DpPipelinesController < ApplicationController
   end
 
   def new
-    authorized_for?(:maintenance_view)
-
     @dp_pipeline = Dw::DpPipeline.new
     @accounts = Account.order(:name)
 
@@ -36,8 +30,6 @@ class Dw::DpPipelinesController < ApplicationController
   end
 
   def create
-    authorized_for?(:maintenance_view)
-
     @dp_pipeline = Dw::DpPipeline.new(dp_pipeline_params)
     if @dp_pipeline.save
       redirect_to dw_dp_pipelines_path, notice: I18n.t('.dp_pipeline.messages.created')
@@ -48,8 +40,6 @@ class Dw::DpPipelinesController < ApplicationController
   end
 
   def edit
-    authorized_for?(:maintenance_view)
-
     @dp_pipeline = Dw::DpPipeline.find(params[:id])
     @accounts = Account.order(:name)
     @years = Year.new.all_years
@@ -61,8 +51,6 @@ class Dw::DpPipelinesController < ApplicationController
   end
 
   def update
-    authorized_for?(:maintenance_view)
-
     @dp_pipeline = Dw::DpPipeline.find(params[:id])
     if @dp_pipeline.update(dp_pipeline_params)
       redirect_to dw_dp_pipeline_path(@dp_pipeline), notice: I18n.t('.dp_pipeline.messages.updated')
@@ -74,8 +62,6 @@ class Dw::DpPipelinesController < ApplicationController
   end
 
   def destroy
-    authorized_for?(:maintenance_view)
-
     @dp_pipeline = Dw::DpPipeline.find(params[:id])
     @dp_pipeline.dp_tasks.destroy_all
     @dp_pipeline.dp_runs.destroy_all

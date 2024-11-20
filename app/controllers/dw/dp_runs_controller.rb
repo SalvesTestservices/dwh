@@ -2,8 +2,6 @@ class Dw::DpRunsController < ApplicationController
   before_action :authenticate_user!
 
   def show
-    authorized_for?(:maintenance_view)
-
     @dp_run = Dw::DpRun.includes(:dp_pipeline).find(params[:id])
     @dp_logs = @dp_run.dp_logs.order(:created_at)
     @dp_tasks = @dp_run.dp_pipeline.dp_tasks.order(:sequence)
@@ -18,15 +16,11 @@ class Dw::DpRunsController < ApplicationController
   end
 
   def create
-    authorized_for?(:maintenance_view)
-
     @dp_pipeline = Dw::DpPipeline.find(params[:dp_pipeline_id])
     Dw::DataPipelineExecutor.perform_later(@dp_pipeline)
   end
 
   def destroy
-    authorized_for?(:maintenance_view)
-
     @dp_run = Dw::DpRun.find(params[:id])
     dp_pipeline_id = @dp_run.dp_pipeline_id
     @dp_run.dp_results.destroy
@@ -37,8 +31,6 @@ class Dw::DpRunsController < ApplicationController
   end
 
   def quality_checks
-    authorized_for?(:maintenance_view)
-
     @dp_run = Dw::DpRun.find(params[:dp_run_id])
     @dp_tasks = @dp_run.dp_pipeline.dp_tasks.order(:sequence)
     @dp_results = @dp_run.dp_results.order(:created_at)

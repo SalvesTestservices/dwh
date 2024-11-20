@@ -10,10 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_11_20_092310) do
+ActiveRecord::Schema[8.0].define(version: 2024_11_20_092310) do
   # These are extensions that must be enabled in order to support this database
-  enable_extension "pgcrypto"
-  enable_extension "plpgsql"
+  enable_extension "pg_catalog.plpgsql"
 
   create_table "bb_grouped_work_overviews", force: :cascade do |t|
     t.string "uid"
@@ -501,6 +500,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_11_20_092310) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["dp_pipeline_id"], name: "index_dp_tasks_on_dp_pipeline_id"
+    t.index ["name"], name: "index_dp_tasks_on_name"
     t.index ["sequence"], name: "index_dp_tasks_on_sequence"
     t.index ["status"], name: "index_dp_tasks_on_status"
     t.index ["task_key"], name: "index_dp_tasks_on_task_key"

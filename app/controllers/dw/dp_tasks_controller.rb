@@ -2,8 +2,6 @@ class Dw::DpTasksController < ApplicationController
   before_action :authenticate_user!
 
   def new
-    authorized_for?(:maintenance_view)
-
     @dp_task = Dw::DpTask.new
     @dp_pipeline = Dw::DpPipeline.find(params[:dp_pipeline_id])
     @dp_tasks = @dp_pipeline.dp_tasks.order(:sequence)
@@ -15,8 +13,6 @@ class Dw::DpTasksController < ApplicationController
   end
 
   def create
-    authorized_for?(:maintenance_view)
-
     @dp_task = Dw::DpTask.new(dp_task_params)
     if @dp_task.save!
       redirect_to dw_dp_pipeline_path(@dp_task.dp_pipeline_id), notice: I18n.t('.dp_task.messages.created')
@@ -26,36 +22,26 @@ class Dw::DpTasksController < ApplicationController
   end
 
   def edit
-    authorized_for?(:maintenance_view)
-
     @dp_task = Dw::DpTask.find(params[:id])
     @dp_tasks = @dp_task.dp_pipeline.dp_tasks.order(:sequence)
   end
 
   def update
-    authorized_for?(:maintenance_view)
-
     @dp_task = Dw::DpTask.find(params[:id])
     @dp_task.update(dp_task_params)
   end
 
   def destroy
-    authorized_for?(:maintenance_view)
-
     @dp_task = Dw::DpTask.find(params[:id])
     @dp_task.destroy
   end
 
   def pause
-    authorized_for?(:maintenance_view)
-
     @dp_task = Dw::DpTask.find(params[:dp_task_id])
     @dp_task.update(status: "inactive")
   end
 
   def start
-    authorized_for?(:maintenance_view)
-
     @dp_task = Dw::DpTask.find(params[:dp_task_id])
     @dp_task.update(status: "active")
   end

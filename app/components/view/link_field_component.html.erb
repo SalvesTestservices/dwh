@@ -1,0 +1,11 @@
+<% if @position == "inline" %>
+  <div class="sm:grid grid-cols-3 gap-4 px-2 py-4 border-b border-gray-300">
+    <dt class="pt-1 text-sm text-left font-bold text-gray-800"><%= @label %></dt>
+    <dd class="text-sm text-gray-600 col-span-2"><%= link_to @link_label, @path, class: "text-sm text-primary underline underline-offset-2" %></dd>
+  </div>
+<% else %>
+  <div class="py-3 mt-0 flex flex-col mr-2">
+    <div class="text-sm font-medium text-gray-700 mt-1 mb-2"><%= @label %></div>
+    <div class="bg-gray-100 border border-gray-300 rounded-md h-10 px-2 py-2.5 text-sm font-bold"><%= link_to @link_label, @path, class: "text-sm text-primary underline underline-offset-2" %></div>
+  </div>
+<% end %>

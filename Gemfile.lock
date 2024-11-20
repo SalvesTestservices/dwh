@@ -72,6 +72,9 @@ GEM
       securerandom (>= 0.3)
       tzinfo (~> 2.0, >= 2.0.5)
       uri (>= 0.13.1)
+    acts_as_list (1.2.4)
+      activerecord (>= 6.1)
+      activesupport (>= 6.1)
     ast (2.4.2)
     base64 (0.2.0)
     bcrypt (3.1.20)
@@ -81,8 +84,6 @@ GEM
     benchmark (0.4.0)
     bigdecimal (3.1.8)
     bindex (0.8.1)
-    bootsnap (1.18.4)
-      msgpack (~> 1.2)
     brakeman (6.2.2)
       racc
     builder (3.3.0)
@@ -153,6 +154,7 @@ GEM
       net-pop
       net-smtp
     marcel (1.0.4)
+    method_source (1.1.0)
     mini_mime (1.1.5)
     minitest (5.25.1)
     mission_control-jobs (0.5.0)
@@ -165,7 +167,6 @@ GEM
       railties (>= 7.1)
       stimulus-rails
       turbo-rails
-    msgpack (1.7.5)
     net-imap (0.5.1)
       date
       net-protocol
@@ -344,6 +345,10 @@ GEM
     unicode-display_width (2.6.0)
     uri (1.0.1)
     useragent (0.16.10)
+    view_component (3.20.0)
+      activesupport (>= 5.2.0, < 8.1)
+      concurrent-ruby (~> 1.0)
+      method_source (~> 1.0)
     warden (1.2.9)
       rack (>= 2.0.9)
     web-console (4.2.1)
@@ -365,7 +370,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  bootsnap
+  acts_as_list
   brakeman
   debug
   devise
@@ -387,6 +392,7 @@ DEPENDENCIES
   tailwindcss-rails
   thruster
   turbo-rails
+  view_component (~> 3.20.0)
   web-console
 
 BUNDLED WITH

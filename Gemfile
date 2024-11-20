@@ -18,7 +18,8 @@ gem "devise_invitable"
 gem "pg", "~> 1.1"
 gem "puma", ">= 5.0"
 gem "jbuilder"
-gem "bootsnap", require: false
+gem "view_component", "~> 3.20.0"
+gem "acts_as_list"
 
 group :development, :test do
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"

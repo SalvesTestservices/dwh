@@ -1,0 +1,13 @@
+<% label = @mandatory ? "#{@label}*" : @label %>
+
+<% if @view == "inline" %>
+  <div class="grid grid-cols-3 gap-4 items-start border-t border-gray-200 py-2">
+    <%= @form.label label, class: "block text-sm font-medium text-gray-700 pt-2" %>
+    <%= @form.check_box @attribute, class: "focus:ring-gray-500 h-5 w-5 text-gray-600 border-gray-300 rounded mt-2" %>
+  </div>
+<% else %>
+  <div class="py-3 mt-0 flex flex-col mr-2 <%= @width %>">
+    <%= @form.label label, class: "block text-sm font-medium text-gray-700 mt-1 mb-1" %>
+    <%= @form.check_box @attribute, class: "mt-1 block p-5 rounded-md border-gray-300 bg-gray-100 py-2 pl-3 pr-10 text-base focus:border-gray-500 focus:outline-none focus:ring-gray-500 sm:text-sm", placeholder: "dd-mm-yyyy" %>
+  </div>
+<% end %>

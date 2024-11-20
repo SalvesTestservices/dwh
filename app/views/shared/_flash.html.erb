@@ -1,0 +1,10 @@
+<div class="flashes">
+  <% flash.each do |type, message| %>
+    <% if type == "notice" %>
+      <%= content_tag(:div, message, class: "flash p-3 bg-green-100 text-green-700 border border-green-700 font-bold rounded text-center", data: { controller: "flash" }) %>
+    <% end %>
+    <% if type == "alert" %>
+      <%= content_tag(:div, message, class: "flash p-3 bg-red-100 text-red-700 border border-red-700 font-bold rounded text-center", data: { controller: "flash" }) %>
+    <% end %>
+  <% end %>
+</div>

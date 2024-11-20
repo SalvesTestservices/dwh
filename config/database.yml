@@ -4,13 +4,35 @@ default: &default
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
 
 development:
-  <<: *default
-  database: dwh_development
+  primary:
+    <<: *default
+    host: postgres
+    database: dwh_base_development
+    username: postgres
+    password: postgres
+  dw:
+    <<: *default
+    host: postgres
+    database: dwh_data_development
+    username: postgres
+    password: postgres
+    migrations_paths: ["db/dw_migrate"]
 
 test:
   <<: *default
   database: dwh_test
 
 production:
-  <<: *default
-  database: dwh_production
+  primary:
+    <<: *default
+    host: <%= ENV["POSTGRESQL_HOST"] %>
+    database: <%= ENV["POSTGRESQL_DATABASE"] %>
+    username: <%= ENV["POSTGRESQL_USERNAME"] %>
+    password: <%= ENV["POSTGRESQL_PASSWORD"] %>
+  dw:
+    <<: *default
+    host: <%= ENV["POSTGRESQL_DW_HOST"] %>
+    database: <%= ENV["POSTGRESQL_DW_DATABASE"] %>
+    username: <%= ENV["POSTGRESQL_DW_USERNAME"] %>
+    password: <%= ENV["POSTGRESQL_DW_PASSWORD"] %>
+    migrations_paths: ["db/dw_migrate"]

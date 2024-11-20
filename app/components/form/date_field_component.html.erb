@@ -1,0 +1,13 @@
+<% label = @mandatory ? "#{@label}*" : @label %>
+
+<% if @position == "inline" %>
+  <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 py-2">
+    <%= @form.label label, class: "block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2" %>
+    <%= @form.date_field @attribute, class: "mt-1 block w-3/4 rounded-md border-gray-300 bg-gray-100 py-2 pl-3 pr-10 text-base focus:border-gray-500 focus:outline-none focus:ring-gray-500 sm:text-sm", placeholder: "dd-mm-yyyy" %>
+  </div>
+<% else %>
+  <div class="py-3 mt-0 flex flex-col mr-2 <%= @width %>">
+    <%= @form.label label, class: "block text-sm font-medium text-gray-700 mt-1 mb-1" %>
+    <%= @form.date_field @attribute, class: "mt-1 block w-full rounded-md border-gray-300 bg-gray-100 py-2 pl-3 pr-10 text-base focus:border-gray-500 focus:outline-none focus:ring-gray-500 sm:text-sm", placeholder: "dd-mm-yyyy" %>
+  </div>
+<% end %>
