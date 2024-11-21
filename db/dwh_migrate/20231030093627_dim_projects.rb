@@ -14,7 +14,8 @@ class DimProjects < ActiveRecord::Migration[7.0]
 
       t.timestamps
     end
-    add_index :dim_projects, [:account_id, :original_id, :start_date, :end_date], unique: true    add_index :dim_projects, :account_id
+    add_index :dim_projects, [:account_id, :original_id, :start_date, :end_date], unique: true, name: 'index_dim_projects_on_acc_id_orig_id_start_end'
+    add_index :dim_projects, :account_id
     add_index :dim_projects, :original_id
     add_index :dim_projects, :company_id
     add_index :dim_projects, :calculation_type
