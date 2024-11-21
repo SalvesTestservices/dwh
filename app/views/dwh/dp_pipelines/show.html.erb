@@ -2,7 +2,7 @@
   breadcrumbs: @breadcrumbs, 
   title: I18n.t('.dp_pipeline.titles.show'), 
   icon: ["rotate", "large", "gray"],
-  buttons: [[I18n.t('.dp_pipeline.titles.destroy'), dw_dp_pipeline_path(@dp_pipeline), "delete"]]
+  buttons: [[I18n.t('.dp_pipeline.titles.destroy'), dwh_dp_pipeline_path(@dp_pipeline), "delete"]]
 %>
 
 <main>
@@ -19,7 +19,7 @@
           <div class="bg-white mb-2 shadow-sm sm:rounded-lg">
             <div class="p-5 flex flex-row justify-between">
               <h2 class="mt-2 text-2xl font-semibold leading-6 text-gray-900"><%= I18n.t('.dp_task.titles.index') %></h2>
-              <%= link_to I18n.t('.dp_task.titles.new'), new_dw_dp_task_path(dp_pipeline_id: @dp_pipeline), class: "px-4 py-2 text-sm text-gray-700 bg-gray-100 hover:bg-gray-50 mr-1 border border-gray-300 shadow-sm font-medium rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500" %>
+              <%= link_to I18n.t('.dp_task.titles.new'), new_dwh_dp_task_path(dp_pipeline_id: @dp_pipeline), class: "px-4 py-2 text-sm text-gray-700 bg-gray-100 hover:bg-gray-50 mr-1 border border-gray-300 shadow-sm font-medium rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500" %>
             </div>
           </div>
 
@@ -43,7 +43,7 @@
               <h2 class="mt-2 text-2xl font-semibold leading-6 text-gray-900"><%= I18n.t('.dp_run.titles.index') %></h2>
 
               <% if @dp_pipeline.active? %>
-                <%= render(View::ButtonComponent.new(title: I18n.t('.dp_run.titles.new'), url: dw_dp_runs_path(dp_pipeline_id: @dp_pipeline), button_type: "button", size: "medium")) %>
+                <%= render(View::ButtonComponent.new(title: I18n.t('.dp_run.titles.new'), url: dwh_dp_runs_path(dp_pipeline_id: @dp_pipeline), button_type: "button", size: "medium")) %>
               <% end %>
             </div>
           </div>

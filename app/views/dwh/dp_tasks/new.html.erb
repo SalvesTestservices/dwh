@@ -9,7 +9,7 @@
   <div class="mx-auto max-w-7xl py-2 md:py-6">
     <div class="px-0 md:px-4">
 
-      <%= form_with(model: @dp_task, url: dw_dp_tasks_path, method: :post, local: true) do |form| %>
+      <%= form_with(model: @dp_task, url: dwh_dp_tasks_path, method: :post, local: true) do |form| %>
         <%= form.hidden_field :dp_pipeline_id, value: @dp_pipeline.id %>
 
         <div class="mt-2 space-y-8 divide-y divide-gray-200 bg-white p-10 shadow">
@@ -33,7 +33,7 @@
 
               <div class="grid grid-cols-3 gap-4 items-start border-t border-gray-200 pt-5">
                 <div class="col-start-2">
-                  <%= render(View::ButtonComponent.new(title: I18n.t(".general.save"), url: dw_dp_tasks_path, button_type: "button", size: "medium")) %>
+                  <%= render(View::ButtonComponent.new(title: I18n.t(".general.save"), url: dwh_dp_tasks_path, button_type: "button", size: "medium")) %>
                 </div>
               </div>
             </div>

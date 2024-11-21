@@ -64,8 +64,8 @@
             <dd class="mt-2 text-gray-500 text-center"><%= decorates.data_field(@dp_pipeline.dp_tasks_count) %></dd>
           </div>
           <div class="w-full flex flex-row justify-start mt-3">
-            <%= render(View::ButtonComponent.new(title: I18n.t(".general.save"), url: dw_dp_pipelines_path, button_type: "button", size: "medium")) %>
-            <%= link_to I18n.t(".general.cancel"), dw_dp_pipeline_path(@dp_pipeline), class: "text-primary hover:underline pt-2 pl-2" %>
+            <%= render(View::ButtonComponent.new(title: I18n.t(".general.save"), url: dwh_dp_pipelines_path, button_type: "button", size: "medium")) %>
+            <%= link_to I18n.t(".general.cancel"), dwh_dp_pipeline_path(@dp_pipeline), class: "text-primary hover:underline pt-2 pl-2" %>
           </div>
         </dl>
       </div>

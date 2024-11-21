@@ -1,4 +1,4 @@
-<%= link_to dw_dp_run_quality_checks_path(dp_run) do %>
+<%= link_to dwh_dp_run_quality_checks_path(dp_run) do %>
   <% checks_success = dp_quality_checks.where(result: "success").count %>
   <% checks_total = dp_quality_checks.count %>
   <% bg = checks_success < checks_total ? "bg-red-600" : "bg-green-600" %>

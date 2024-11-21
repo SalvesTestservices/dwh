@@ -1,4 +1,4 @@
-<%= form_with(model: @dp_pipeline, url: @dp_pipeline.new_record? ? dw_dp_pipelines_path : dw_dp_pipeline_path(@dp_pipeline), method: @dp_pipeline.new_record? ? :post : :patch, local: true) do |form| %>
+<%= form_with(model: @dp_pipeline, url: @dp_pipeline.new_record? ? dwh_dp_pipelines_path : dwh_dp_pipeline_path(@dp_pipeline), method: @dp_pipeline.new_record? ? :post : :patch, local: true) do |form| %>
   <div class="mt-2 space-y-8 divide-y divide-gray-200 bg-white p-10 shadow">
     <%= render "shared/error_messages", resource: @dp_pipeline %>
 
@@ -12,22 +12,11 @@
 
         <% collection = [['active', I18n.t('.dp_pipeline.states.active')],['inactive', I18n.t('.dp_pipeline.states.inactive')]] %>
         <%= render(Form::SelectComponent.new(label: I18n.t(".dp_pipeline.form.status"), form: form, attribute: :status, collection: collection, value: nil, mandatory: true)) %>
-
-        <div class="py-2 mt-0 grid grid-cols-3 gap-4 items-start border-t border-gray-200">
-          <%= form.label I18n.t(".dp_pipeline.form.account_ids"), class: "block text-sm font-medium text-gray-700 pt-2" %>
-          <dd class="col-span-2 pt-1 text-sm text-gray-900 mt-0">
-            <%= form.collection_check_boxes :account_ids, @accounts, :id, :name do |b| %>
-              <div class="flex items-center mb-1">
-                <%= b.check_box class: "form-checkbox h-4 w-4 text-gray-700 transition duration-150 ease-in-out" %>
-                <%= b.label class: "ml-2 block text-sm leading-5 text-gray-700" %>
-              </div>
-            <% end %>
-          </dd>
-        </div>
+        <%= render(Form::SelectComponent.new(label: I18n.t(".dp_pipeline.form.account"), form: form, attribute: :status, collection: @accounts, value: nil, mandatory: true)) %>
 
         <div class="grid grid-cols-3 gap-4 items-start border-t border-gray-200 pt-5">
           <div class="col-start-2">
-            <%= render(View::ButtonComponent.new(title: I18n.t(".general.save"), url: dw_dp_pipelines_path, button_type: "button", size: "medium")) %>
+            <%= render(View::ButtonComponent.new(title: I18n.t(".general.save"), url: dwh_dp_pipelines_path, button_type: "button", size: "medium")) %>
           </div>
         </div>
       </div>

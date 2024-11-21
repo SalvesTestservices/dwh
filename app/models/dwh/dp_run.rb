@@ -5,7 +5,7 @@ class Dwh::DpRun < DwhRecord
   has_many :dp_logs, class_name: 'Dwh::DpLog', dependent: :destroy
   has_many :dp_quality_checks, class_name: 'Dwh::DpQualityCheck', dependent: :destroy
   
-  validates :account_id, :dp_pipeline_id, :status, :started_at, presence: true
+  validates :account, :dp_pipeline_id, :status, :started_at, presence: true
 
   after_create_commit do
     Turbo::StreamsChannel.broadcast_append_to "runs_#{self.dp_pipeline_id}", target: "runs_#{self.dp_pipeline_id}", action: :prepend, partial: "dw/dp_runs/dp_run", locals: { dp_run: self }

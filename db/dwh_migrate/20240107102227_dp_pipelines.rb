@@ -9,7 +9,7 @@ class DpPipelines < ActiveRecord::Migration[7.0]
       t.string    :load_method, default: "incremental"
       t.integer   :dp_tasks_count, default: 0
       t.integer   :dp_runs_count, default: 0
-      t.jsonb     :account_ids, default: []
+      t.string    :account
       t.string    :pipeline_key
       t.integer   :month
       t.integer   :year
@@ -25,7 +25,7 @@ class DpPipelines < ActiveRecord::Migration[7.0]
     add_index :dp_pipelines, :load_method
     add_index :dp_pipelines, :dp_tasks_count
     add_index :dp_pipelines, :dp_runs_count
-    add_index :dp_pipelines, :account_ids, using: :gin
+    add_index :dp_pipelines, :account
     add_index :dp_pipelines, :pipeline_key
     add_index :dp_pipelines, :month
     add_index :dp_pipelines, :year

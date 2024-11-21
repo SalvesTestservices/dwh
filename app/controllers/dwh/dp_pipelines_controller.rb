@@ -22,7 +22,7 @@ class Dwh::DpPipelinesController < ApplicationController
 
   def new
     @dp_pipeline = Dwh::DpPipeline.new
-    @accounts = Account.order(:name)
+    get_form_data
 
     @breadcrumbs = []
     @breadcrumbs << [I18n.t('.dp_pipeline.titles.index'), dw_dp_pipelines_path]
@@ -34,15 +34,14 @@ class Dwh::DpPipelinesController < ApplicationController
     if @dp_pipeline.save
       redirect_to dw_dp_pipelines_path, notice: I18n.t('.dp_pipeline.messages.created')
     else
-      @accounts = Account.order(:name)
+      get_form_data
       render action: "new", status: 422
     end
   end
 
   def edit
     @dp_pipeline = Dwh::DpPipeline.find(params[:id])
-    @accounts = Account.order(:name)
-    @years = Year.new.all_years
+    get_form_data
 
     @breadcrumbs = []
     @breadcrumbs << [I18n.t('.dp_pipeline.titles.index'), dw_dp_pipelines_path]
@@ -55,8 +54,7 @@ class Dwh::DpPipelinesController < ApplicationController
     if @dp_pipeline.update(dp_pipeline_params)
       redirect_to dw_dp_pipeline_path(@dp_pipeline), notice: I18n.t('.dp_pipeline.messages.updated')
     else
-      @accounts = Account.order(:name)
-      @years = Year.new.all_years
+      get_form_data
       render action: "new", status: 422
     end
   end
@@ -76,9 +74,12 @@ class Dwh::DpPipelinesController < ApplicationController
     head :ok
   end
 
+  private def get_form_data
+    @accounts = [['cerios','Cerios'],['salves','Salves'],['valori','Valori'],['qdata','QDat'],['test_crew_it','Test Crew IT']]
+    @years = { "2025" => "2025", "2024" => "2024", "2023" => "2023","2022" => "2022", "2021" => "2021", "2020" => "2020" }
+  end
+
   private def dp_pipeline_params
-    params.require(:dw_dp_pipeline).permit(:name, :description, :status, :frequency, :load_method, :pipeline_key, :month, :year, :scoped_user_id).tap do |whitelisted|
-      whitelisted[:account_ids] = params[:dw_dp_pipeline][:account_ids].reject(&:empty?) if params[:dw_dp_pipeline][:account_ids].is_a?(Array)
-    end
+    params.require(:dw_dp_pipeline).permit(:name, :description, :status, :frequency, :load_method, :pipeline_key, :month, :year, :scoped_user_id, :account)
   end
 end

@@ -28,7 +28,7 @@
           </div>
         </div>
         <div class="w-1/12 flex flex-none items-center gap-x-4">
-          <%= button_to dw_dp_task_path(@dp_task), method: :post, class: "mt-1" do %>
+          <%= button_to dwh_dp_task_path(@dp_task), method: :post, class: "mt-1" do %>
             <%= render(View::IconComponent.new(icon_type: "save", size: "small", color: "gray")) %>
           <% end %>
         </div>
