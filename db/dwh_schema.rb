@@ -200,7 +200,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_03_080000) do
     t.string "load_method", default: "incremental"
     t.integer "dp_tasks_count", default: 0
     t.integer "dp_runs_count", default: 0
-    t.jsonb "account_ids", default: []
+    t.string "account"
     t.string "pipeline_key"
     t.integer "month"
     t.integer "year"
@@ -208,7 +208,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_03_080000) do
     t.integer "scoped_user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["account_ids"], name: "index_dp_pipelines_on_account_ids", using: :gin
+    t.index ["account"], name: "index_dp_pipelines_on_account"
     t.index ["dp_runs_count"], name: "index_dp_pipelines_on_dp_runs_count"
     t.index ["dp_tasks_count"], name: "index_dp_pipelines_on_dp_tasks_count"
     t.index ["frequency"], name: "index_dp_pipelines_on_frequency"
@@ -257,14 +257,14 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_03_080000) do
   end
 
   create_table "dp_runs", force: :cascade do |t|
-    t.integer "account_id"
+    t.string "account"
     t.string "status", default: "new"
     t.datetime "started_at"
     t.datetime "finished_at"
     t.integer "dp_pipeline_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["account_id"], name: "index_dp_runs_on_account_id"
+    t.index ["account"], name: "index_dp_runs_on_account"
     t.index ["dp_pipeline_id"], name: "index_dp_runs_on_dp_pipeline_id"
     t.index ["status"], name: "index_dp_runs_on_status"
   end
@@ -326,37 +326,6 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_03_080000) do
     t.index ["user_id"], name: "index_fact_activities_on_user_id"
   end
 
-  create_table "fact_contracts", force: :cascade do |t|
-    t.integer "account_id"
-    t.string "original_id"
-    t.integer "customer_id"
-    t.integer "user_id"
-    t.integer "company_id"
-    t.integer "projectuser_id"
-    t.integer "project_id"
-    t.integer "contract_date"
-    t.string "contract_type"
-    t.string "description"
-    t.integer "start_date"
-    t.integer "end_date"
-    t.integer "expected_end_date"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["account_id", "original_id"], name: "index_fact_contracts_on_account_id_and_original_id", unique: true
-    t.index ["account_id"], name: "index_fact_contracts_on_account_id"
-    t.index ["company_id"], name: "index_fact_contracts_on_company_id"
-    t.index ["contract_date"], name: "index_fact_contracts_on_contract_date"
-    t.index ["contract_type"], name: "index_fact_contracts_on_contract_type"
-    t.index ["customer_id"], name: "index_fact_contracts_on_customer_id"
-    t.index ["end_date"], name: "index_fact_contracts_on_end_date"
-    t.index ["expected_end_date"], name: "index_fact_contracts_on_expected_end_date"
-    t.index ["original_id"], name: "index_fact_contracts_on_original_id"
-    t.index ["project_id"], name: "index_fact_contracts_on_project_id"
-    t.index ["projectuser_id"], name: "index_fact_contracts_on_projectuser_id"
-    t.index ["start_date"], name: "index_fact_contracts_on_start_date"
-    t.index ["user_id"], name: "index_fact_contracts_on_user_id"
-  end
-
   create_table "fact_projectusers", force: :cascade do |t|
     t.integer "account_id"
     t.string "original_id"
@@ -403,6 +372,41 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_03_080000) do
     t.index ["role"], name: "index_fact_rates_on_role"
     t.index ["show_user"], name: "index_fact_rates_on_show_user"
     t.index ["user_id"], name: "index_fact_rates_on_user_id"
+  end
+
+  create_table "fact_targets", force: :cascade do |t|
+    t.string "uid"
+    t.integer "account_id"
+    t.string "original_id"
+    t.integer "company_id"
+    t.integer "year"
+    t.integer "month"
+    t.string "role_group"
+    t.decimal "fte"
+    t.integer "billable_hours"
+    t.decimal "cost_price"
+    t.decimal "bruto_margin"
+    t.integer "target_date"
+    t.integer "workable_hours"
+    t.decimal "productivity", precision: 5, scale: 2
+    t.decimal "hour_rate", precision: 5, scale: 2
+    t.decimal "turnover", precision: 10, scale: 2
+    t.integer "quarter"
+    t.decimal "employee_attrition"
+    t.decimal "employee_absence"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_fact_targets_on_account_id"
+    t.index ["company_id"], name: "index_fact_targets_on_company_id"
+    t.index ["employee_absence"], name: "index_fact_targets_on_employee_absence"
+    t.index ["employee_attrition"], name: "index_fact_targets_on_employee_attrition"
+    t.index ["month"], name: "index_fact_targets_on_month"
+    t.index ["original_id"], name: "index_fact_targets_on_original_id"
+    t.index ["quarter"], name: "index_fact_targets_on_quarter"
+    t.index ["role_group"], name: "index_fact_targets_on_role_group"
+    t.index ["target_date"], name: "index_fact_targets_on_target_date"
+    t.index ["uid"], name: "index_fact_targets_on_uid", unique: true
+    t.index ["year"], name: "index_fact_targets_on_year"
   end
 
   create_table "lucanet_transactions", force: :cascade do |t|

@@ -7,15 +7,15 @@ class Dwh::DpTasksController < ApplicationController
     @dp_tasks = @dp_pipeline.dp_tasks.order(:sequence)
 
     @breadcrumbs = []
-    @breadcrumbs << [I18n.t('.dp_pipeline.titles.index'), dw_dp_pipelines_path]
-    @breadcrumbs << [I18n.t('.dp_pipeline.titles.show'), dw_dp_pipeline_path(@dp_pipeline)]
+    @breadcrumbs << [I18n.t('.dp_pipeline.titles.index'), dwh_dp_pipelines_path]
+    @breadcrumbs << [I18n.t('.dp_pipeline.titles.show'), dwh_dp_pipeline_path(@dp_pipeline)]
     @breadcrumbs << [I18n.t('.dp_task.titles.new')]
   end
 
   def create
     @dp_task = Dwh::DpTask.new(dp_task_params)
     if @dp_task.save!
-      redirect_to dw_dp_pipeline_path(@dp_task.dp_pipeline_id), notice: I18n.t('.dp_task.messages.created')
+      redirect_to dwh_dp_pipeline_path(@dp_task.dp_pipeline_id), notice: I18n.t('.dp_task.messages.created')
     else
       render action: "new", status: 422
     end
@@ -53,8 +53,8 @@ class Dwh::DpTasksController < ApplicationController
   end
 
   def dp_task_params
-    params.require(:dw_dp_task).permit(:dp_pipeline_id, :name, :description, :task_key, :status, :sequence, depends_on: []).tap do |whitelisted|
-      whitelisted[:depends_on] = params[:dw_dp_task][:depends_on].reject(&:empty?) if params[:dw_dp_task][:depends_on].is_a?(Array)
+    params.require(:dwh_dp_task).permit(:dp_pipeline_id, :name, :description, :task_key, :status, :sequence, depends_on: []).tap do |whitelisted|
+      whitelisted[:depends_on] = params[:dwh_dp_task][:depends_on].reject(&:empty?) if params[:dwh_dp_task][:depends_on].is_a?(Array)
     end
   end
 end

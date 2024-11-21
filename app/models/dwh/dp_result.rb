@@ -16,6 +16,6 @@ class Dwh::DpResult < DwhRecord
       dp_run.update(status: "cancelled")
     end
 
-    Turbo::StreamsChannel.broadcast_replace_to "pipeline-result-#{self.id}", target: "pipeline-result-#{self.id}", action: :replace, partial: "dw/dp_pipelines/progress_item", locals: { task: self.dp_task, result: self }
+    Turbo::StreamsChannel.broadcast_replace_to "pipeline-result-#{self.id}", target: "pipeline-result-#{self.id}", action: :replace, partial: "dwh/dp_pipelines/progress_item", locals: { task: self.dp_task, result: self }
   end
 end

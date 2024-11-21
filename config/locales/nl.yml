@@ -1,6 +1,9 @@
 nl:
   general:
     welcome: "Welkom"
+    mandatory:      Velden met een (*) zijn verplicht
+    save:           Opslaan
+    details:        details
   user:
     titles:
       index: "Gebruikers"

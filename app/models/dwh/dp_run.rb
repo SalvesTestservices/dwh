@@ -8,11 +8,11 @@ class Dwh::DpRun < DwhRecord
   validates :account, :dp_pipeline_id, :status, :started_at, presence: true
 
   after_create_commit do
-    Turbo::StreamsChannel.broadcast_append_to "runs_#{self.dp_pipeline_id}", target: "runs_#{self.dp_pipeline_id}", action: :prepend, partial: "dw/dp_runs/dp_run", locals: { dp_run: self }
+    Turbo::StreamsChannel.broadcast_append_to "runs_#{self.dp_pipeline_id}", target: "runs_#{self.dp_pipeline_id}", action: :prepend, partial: "dwh/dp_runs/dp_run", locals: { dp_run: self }
   end
 
   after_update_commit do
-    Turbo::StreamsChannel.broadcast_replace_to "runs_#{self.dp_pipeline_id}", target: "dw_dp_run_#{self.id}", action: :replace, partial: "dw/dp_runs/dp_run", locals: { dp_run: self }
+    Turbo::StreamsChannel.broadcast_replace_to "runs_#{self.dp_pipeline_id}", target: "dwh_dp_run_#{self.id}", action: :replace, partial: "dwh/dp_runs/dp_run", locals: { dp_run: self }
   end
 end
  

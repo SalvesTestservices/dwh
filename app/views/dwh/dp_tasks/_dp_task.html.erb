@@ -23,7 +23,7 @@
         </div>
       </div>
       <div class="w-2/12 flex flex-col items-center gap-x-0">
-        <%= render "dw/dp_tasks/pause_start", dp_task: dp_task %>
+        <%= render "dwh/dp_tasks/pause_start", dp_task: dp_task %>
 
         <%= link_to edit_dwh_dp_task_path(dp_task) do %>
           <%= render(View::IconComponent.new(icon_type: "edit", size: "small", color: "gray")) %>

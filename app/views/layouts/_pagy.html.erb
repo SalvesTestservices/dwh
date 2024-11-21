@@ -1,0 +1,7 @@
+<% if pagy.present? and pagy.pages > 1 %>
+  <div class="flex w-full justify-center my-5">
+    <div class="w-full text-center">
+      <%== pagy_nav(pagy) %>
+    </div>
+  </div>
+<% end %>

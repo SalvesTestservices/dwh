@@ -12,15 +12,15 @@ gem "solid_cable"
 gem "mission_control-jobs"
 gem "kamal", require: false
 gem "thruster", require: false
-gem "devise"
-gem "devise_invitable"
 
 gem "pg", "~> 1.1"
 gem "puma", ">= 5.0"
 gem "jbuilder"
 gem "view_component", "~> 3.20.0"
 gem "acts_as_list"
-
+gem "devise"
+gem "devise_invitable"
+gem "pagy"
 group :development, :test do
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
   gem "brakeman", require: false

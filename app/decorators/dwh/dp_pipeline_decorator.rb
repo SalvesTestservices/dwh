@@ -1,6 +1,21 @@
 class Dwh::DpPipelineDecorator < BaseDecorator
   decorates :dp_pipeline
 
+  def account
+    case dp_pipeline.account
+    when "cerios"
+      "Cerios"
+    when "salves"
+      "Salves"
+    when "valori"
+      "Valori"
+    when "qdata"
+      "QDat"
+    when "test_crew_it"
+      "Test Crew IT"
+    end
+  end
+
   def load_method
     if dp_pipeline.load_method == "initial"
       I18n.t('.dp_pipeline.load_methods.initial')

@@ -10,7 +10,7 @@
     <div class="px-0 md:px-4">
 
       <% unless @dp_pipelines.blank? %>
-        <%= turbo_frame_tag "dp_pipelines", data: { controller: "drag" , "drag-url": "/dw/dp_pipelines/:id/move"} do %>
+        <%= turbo_frame_tag "dp_pipelines", data: { controller: "drag" , "drag-url": "/dwh/dp_pipelines/:id/move"} do %>
           <% @dp_pipelines.each do |dp_pipeline| %>
             <div data-id="<%= dp_pipeline.id %>">
               <%= render "dp_pipeline", dp_pipeline: dp_pipeline %>

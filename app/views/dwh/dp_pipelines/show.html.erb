@@ -25,10 +25,10 @@
 
           <ul role="list" id="tasks">
             <% unless @dp_tasks.blank?%>
-              <%= turbo_frame_tag "dp_tasks", data: { controller: "drag" , "drag-url": "/dw/dp_tasks/:id/move"} do %>
+              <%= turbo_frame_tag "dp_tasks", data: { controller: "drag" , "drag-url": "/dwh/dp_tasks/:id/move"} do %>
                 <% @dp_tasks.each do |dp_task| %>
                   <div data-id="<%= dp_task.id %>">
-                    <%= render "dw/dp_tasks/dp_task", dp_task: dp_task %>
+                    <%= render "dwh/dp_tasks/dp_task", dp_task: dp_task %>
                   </div>
                 <% end %>
               <% end %>
@@ -50,10 +50,10 @@
 
           <%= turbo_stream_from "runs_#{@dp_pipeline.id}" %>
           <ul role="list" id="runs_<%= @dp_pipeline.id %>">
-            <%= render partial: "dw/dp_runs/dp_run", collection: @dp_runs, as: :dp_run %>
+            <%= render partial: "dwh/dp_runs/dp_run", collection: @dp_runs, as: :dp_run %>
           </ul>
 
-          <%== render partial: 'shared/pagy', locals: { pagy: @pagy } %>
+          <%== render partial: 'layouts/pagy', locals: { pagy: @pagy } %>
 
         </div>
 

@@ -10,13 +10,12 @@ class Dwh::DpPipelinesController < ApplicationController
 
   def show
     @dp_pipeline = Dwh::DpPipeline.find(params[:id])
-    @accounts = Account.where(id: @dp_pipeline.account_ids).order(:name)
     @dp_tasks = @dp_pipeline.dp_tasks.order(:sequence)
     @pagy, @dp_runs = pagy(@dp_pipeline.dp_runs.order(started_at: :desc), items: 10)
     @dp_task = Dwh::DpTask.new
 
     @breadcrumbs = []
-    @breadcrumbs << [I18n.t('.dp_pipeline.titles.index'), dw_dp_pipelines_path]
+    @breadcrumbs << [I18n.t('.dp_pipeline.titles.index'), dwh_dp_pipelines_path]
     @breadcrumbs << [I18n.t('.dp_pipeline.titles.show')]
   end
 
@@ -25,14 +24,14 @@ class Dwh::DpPipelinesController < ApplicationController
     get_form_data
 
     @breadcrumbs = []
-    @breadcrumbs << [I18n.t('.dp_pipeline.titles.index'), dw_dp_pipelines_path]
+    @breadcrumbs << [I18n.t('.dp_pipeline.titles.index'), dwh_dp_pipelines_path]
     @breadcrumbs << [I18n.t('.dp_pipeline.titles.new')]
   end
 
   def create
     @dp_pipeline = Dwh::DpPipeline.new(dp_pipeline_params)
     if @dp_pipeline.save
-      redirect_to dw_dp_pipelines_path, notice: I18n.t('.dp_pipeline.messages.created')
+      redirect_to dwh_dp_pipelines_path, notice: I18n.t('.dp_pipeline.messages.created')
     else
       get_form_data
       render action: "new", status: 422
@@ -44,15 +43,15 @@ class Dwh::DpPipelinesController < ApplicationController
     get_form_data
 
     @breadcrumbs = []
-    @breadcrumbs << [I18n.t('.dp_pipeline.titles.index'), dw_dp_pipelines_path]
-    @breadcrumbs << [I18n.t('.dp_pipeline.titles.index'), dw_dp_pipeline_path(@dp_pipeline)]
+    @breadcrumbs << [I18n.t('.dp_pipeline.titles.index'), dwh_dp_pipelines_path]
+    @breadcrumbs << [I18n.t('.dp_pipeline.titles.index'), dwh_dp_pipeline_path(@dp_pipeline)]
     @breadcrumbs << [I18n.t('.dp_pipeline.titles.edit')]
   end
 
   def update
     @dp_pipeline = Dwh::DpPipeline.find(params[:id])
     if @dp_pipeline.update(dp_pipeline_params)
-      redirect_to dw_dp_pipeline_path(@dp_pipeline), notice: I18n.t('.dp_pipeline.messages.updated')
+      redirect_to dwh_dp_pipeline_path(@dp_pipeline), notice: I18n.t('.dp_pipeline.messages.updated')
     else
       get_form_data
       render action: "new", status: 422
@@ -65,7 +64,7 @@ class Dwh::DpPipelinesController < ApplicationController
     @dp_pipeline.dp_runs.destroy_all
     @dp_pipeline.destroy
 
-    redirect_to dw_dp_pipelines_path, notice: I18n.t('.dp_pipeline.messages.destroyed')
+    redirect_to dwh_dp_pipelines_path, notice: I18n.t('.dp_pipeline.messages.destroyed')
   end
 
   def move
@@ -80,6 +79,6 @@ class Dwh::DpPipelinesController < ApplicationController
   end
 
   private def dp_pipeline_params
-    params.require(:dw_dp_pipeline).permit(:name, :description, :status, :frequency, :load_method, :pipeline_key, :month, :year, :scoped_user_id, :account)
+    params.require(:dwh_dp_pipeline).permit(:name, :description, :status, :frequency, :load_method, :pipeline_key, :month, :year, :scoped_user_id, :account)
   end
 end

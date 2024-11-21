@@ -1,7 +1,11 @@
 <% if @button_type == "link" %>
   <%= link_to @title, @url, class: "#{@color} #{@size} mr-1 border border-gray-300 shadow-sm font-medium rounded", data: { turbo_prefetch: false } %>
+<% elsif @button_type == "link_turbo" %>
+  <%= link_to @title, @url, data: { turbo: "false" }, class: "#{@color} #{@size} mr-1 border border-gray-300 shadow-sm font-medium rounded" %>
 <% elsif @button_type == "button" %>
   <%= button_to @title, @url, method: :post, class: "#{@color} #{@size} mr-1 border border-gray-300 shadow-sm font-medium rounded", data: { turbo_prefetch: false } %>
 <% elsif @button_type == "delete_button" %>
   <%= button_to @title, @url, method: :delete , data: { turbo: "false" }, class: "#{@color} #{@size} mr-1 border border-gray-300 shadow-sm font-medium rounded", data: { turbo_prefetch: false } %>
+<% elsif @button_type == "delete_button_turbo" %>
+  <%= button_to @title, @url, method: :delete, class: "#{@color} #{@size} mr-1 border border-gray-300 shadow-sm font-medium rounded" %>
 <% end %>

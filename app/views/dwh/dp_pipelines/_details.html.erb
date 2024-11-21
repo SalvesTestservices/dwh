@@ -10,7 +10,7 @@
         </div>
         <div class="w-3/12 flex flex-row justify-center mt-2">
           <% unless @dp_runs.blank? %>
-            <%= render "dw/dp_runs/quality_checks_overall", size: "medium", dp_run: @dp_runs.first, dp_quality_checks: @dp_runs.first.dp_quality_checks %>
+            <%= render "dwh/dp_runs/quality_checks_overall", size: "medium", dp_run: @dp_runs.first, dp_quality_checks: @dp_runs.first.dp_quality_checks %>
           <% end %>
         </div>
         <div class="w-3/12 flex flex-row justify-end h-10 mt-3">
@@ -43,11 +43,7 @@
       <dl class="mt-1 grid grid-cols-4 text-sm leading-6 w-full">
         <div class="mt-6 border-t border-gray-200 pt-6 sm:pr-4">
           <dt class="font-semibold text-gray-900 text-center"><%= I18n.t('.dp_pipeline.form.account_ids') %></dt>
-          <dd class="flex flex-col items-center mt-2">
-            <% accounts.each do |account| %>
-              <div class="w-28 rounded mb-2 px-1 text-xs text-center font-medium bg-sky-100 text-sky-700 border border-sky-700"><%= account.name %></div>
-            <% end %>
-          </dd>
+          <dd class="mt-2 text-gray-500 text-center"><%= decorates.account %></dd>
         </div>
         <div class="mt-6 border-t border-gray-200 pt-6 sm:pr-4">
           <dt class="font-semibold text-gray-900 text-center"><%= I18n.t('.dp_pipeline.form.frequency') %></dt>

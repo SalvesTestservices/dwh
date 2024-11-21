@@ -6,6 +6,6 @@
     <% result = last_results.find { |result| result.dp_task_id == task.id } %>
     <% task_status = result&.status %>
 
-    <%= render "dw/dp_pipelines/progress_item", task: task, result: result %>
+    <%= render "dwh/dp_pipelines/progress_item", task: task, result: result %>
   <% end %>
 <% end %>

@@ -10,8 +10,8 @@ class Dwh::DpRunsController < ApplicationController
     @account = Account.find(@dp_run.account_id)
 
     @breadcrumbs = []
-    @breadcrumbs << [I18n.t('.dp_pipeline.titles.index'), dw_dp_pipelines_path]
-    @breadcrumbs << [I18n.t('.dp_pipeline.titles.show'), dw_dp_pipeline_path(@dp_run.dp_pipeline_id)]
+    @breadcrumbs << [I18n.t('.dp_pipeline.titles.index'), dwh_dp_pipelines_path]
+    @breadcrumbs << [I18n.t('.dp_pipeline.titles.show'), dwh_dp_pipeline_path(@dp_run.dp_pipeline_id)]
     @breadcrumbs << [I18n.t('.dp_run.titles.show')]
   end
 
@@ -27,7 +27,7 @@ class Dwh::DpRunsController < ApplicationController
     @dp_run.dp_logs.destroy
     @dp_run.destroy
 
-    redirect_to dw_dp_pipeline_path(dp_pipeline_id), notice: I18n.t('.dp_run.messages.destroyed')
+    redirect_to dwh_dp_pipeline_path(dp_pipeline_id), notice: I18n.t('.dp_run.messages.destroyed')
   end
 
   def quality_checks
@@ -37,9 +37,9 @@ class Dwh::DpRunsController < ApplicationController
     @dp_quality_checks = @dp_run.dp_quality_checks
   
     @breadcrumbs = []
-    @breadcrumbs << [I18n.t('.dp_pipeline.titles.index'), dw_dp_pipelines_path]
-    @breadcrumbs << [I18n.t('.dp_pipeline.titles.show'), dw_dp_pipeline_path(@dp_run.dp_pipeline_id)]
-    @breadcrumbs << [I18n.t('.dp_run.titles.show'), dw_dp_run_path(@dp_run.id)]
+    @breadcrumbs << [I18n.t('.dp_pipeline.titles.index'), dwh_dp_pipelines_path]
+    @breadcrumbs << [I18n.t('.dp_pipeline.titles.show'), dwh_dp_pipeline_path(@dp_run.dp_pipeline_id)]
+    @breadcrumbs << [I18n.t('.dp_run.titles.show'), dwh_dp_run_path(@dp_run.id)]
     @breadcrumbs << [I18n.t('.dp_quality_check.titles.index')]
   end
 end

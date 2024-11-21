@@ -13,7 +13,7 @@ class View::ButtonComponent < ViewComponent::Base
       @size = "sm:h-10 mt-1 px-1 sm:px-4 py-2 text-sm"
     end
 
-    if @button_type == "delete_button"
+    if @button_type == "delete_button" or @button_type == "delete_button_turbo"
       @color = "text-white bg-red-600 hover:bg-red-500"
     else
       @color = "text-gray-700 bg-gray-100 hover:bg-gray-50"
