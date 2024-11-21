@@ -10,6 +10,11 @@ class DpPipelines < ActiveRecord::Migration[7.0]
       t.integer   :dp_tasks_count, default: 0
       t.integer   :dp_runs_count, default: 0
       t.jsonb     :account_ids, default: []
+      t.string    :pipeline_key
+      t.integer   :month
+      t.integer   :year
+      t.integer   :position
+      t.integer   :scoped_user_id
 
       t.timestamps
     end
@@ -21,5 +26,10 @@ class DpPipelines < ActiveRecord::Migration[7.0]
     add_index :dp_pipelines, :dp_tasks_count
     add_index :dp_pipelines, :dp_runs_count
     add_index :dp_pipelines, :account_ids, using: :gin
+    add_index :dp_pipelines, :pipeline_key
+    add_index :dp_pipelines, :month
+    add_index :dp_pipelines, :year
+    add_index :dp_pipelines, :position
+    add_index :dp_pipelines, :scoped_user_id
   end
 end

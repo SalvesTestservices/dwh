@@ -7,7 +7,7 @@ class DimAccounts < ActiveRecord::Migration[7.0]
 
       t.timestamps
     end
-    add_index :dim_accounts, :original_id
+    add_index :dim_accounts, [:original_id], unique: true    
     add_index :dim_accounts, :is_holding
   end
 end

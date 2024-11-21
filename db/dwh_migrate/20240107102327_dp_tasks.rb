@@ -12,7 +12,7 @@ class DpTasks < ActiveRecord::Migration[7.0]
       t.timestamps
     end
     add_index :dp_tasks, :name
-    add_index :dp_tasks, :task_key, unique: true
+    add_index :dp_tasks, :task_key
     add_index :dp_tasks, :sequence
     add_index :dp_tasks, :dp_pipeline_id
     add_index :dp_tasks, :status

@@ -10,13 +10,13 @@ development:
     database: dwh_base_development
     username: postgres
     password: postgres
-  dw:
+  dwh:
     <<: *default
     host: postgres
     database: dwh_data_development
     username: postgres
     password: postgres
-    migrations_paths: ["db/dw_migrate"]
+    migrations_paths: ["db/dwh_migrate"]
 
 test:
   <<: *default
@@ -29,10 +29,10 @@ production:
     database: <%= ENV["POSTGRESQL_DATABASE"] %>
     username: <%= ENV["POSTGRESQL_USERNAME"] %>
     password: <%= ENV["POSTGRESQL_PASSWORD"] %>
-  dw:
+  dwh:
     <<: *default
-    host: <%= ENV["POSTGRESQL_DW_HOST"] %>
-    database: <%= ENV["POSTGRESQL_DW_DATABASE"] %>
-    username: <%= ENV["POSTGRESQL_DW_USERNAME"] %>
-    password: <%= ENV["POSTGRESQL_DW_PASSWORD"] %>
-    migrations_paths: ["db/dw_migrate"]
+    host: <%= ENV["POSTGRESQL_DWH_HOST"] %>
+    database: <%= ENV["POSTGRESQL_DWH_DATABASE"] %>
+    username: <%= ENV["POSTGRESQL_DWH_USERNAME"] %>
+    password: <%= ENV["POSTGRESQL_DWH_PASSWORD"] %>
+    migrations_paths: ["db/dwh_migrate"]

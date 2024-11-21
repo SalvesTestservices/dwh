@@ -14,6 +14,10 @@ class DimDates < ActiveRecord::Migration[7.0]
       t.boolean :is_workday
       t.boolean :is_holiday_nl
       t.boolean :is_holiday_be
+      t.date    :original_date
+      t.integer :yearmonth
+      t.integer :iso_year
+      t.integer :iso_week
 
       t.timestamps
     end
@@ -26,5 +30,9 @@ class DimDates < ActiveRecord::Migration[7.0]
     add_index :dim_dates, :is_workday
     add_index :dim_dates, :is_holiday_nl
     add_index :dim_dates, :is_holiday_be
+    add_index :dim_dates, :original_date
+    add_index :dim_dates, :yearmonth
+    add_index :dim_dates, :iso_year
+    add_index :dim_dates, :iso_week
   end
 end
