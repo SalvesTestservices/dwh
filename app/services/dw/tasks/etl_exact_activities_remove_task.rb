@@ -1,11 +1,11 @@
-class Dw::Tasks::EtlExactActivitiesRemoveTask < Dw::Tasks::BaseExactTask
+class Dwh::Tasks::EtlExactActivitiesRemoveTask < Dwh::Tasks::BaseExactTask
   queue_as :default
 
   def perform(account, run, result, task)
     # Wait for alle dependencies to finish
     all_dependencies_finished = wait_on_dependencies(account, run, task)
     if all_dependencies_finished == false
-      Dw::DataPipelineLogger.new.create_log(run.id, "cancelled", "[#{account.name}] Taak [#{task.task_key}] geannuleerd")
+      Dwh::DataPipelineLogger.new.create_log(run.id, "cancelled", "[#{account.name}] Taak [#{task.task_key}] geannuleerd")
       result.update(finished_at: DateTime.now, status: "cancelled")
       return
     end
@@ -13,24 +13,24 @@ class Dw::Tasks::EtlExactActivitiesRemoveTask < Dw::Tasks::BaseExactTask
     begin
       ActsAsTenant.without_tenant do
         account              = Account.find(run.account_id)
-        dim_account          = Dw::DimAccount.find_by(original_id: account.id)
+        dim_account          = Dwh::DimAccount.find_by(original_id: account.id)
         previous_month_start = Date.new(Date.current.year, Date.current.month, 1).prev_month
         previous_month_end   = Date.new(Date.current.year, Date.current.month, -1).prev_month
 
         # Cancel the task if the API keys are not valid
         api_url, api_key, administration = get_api_keys("synergy")
         if api_url.blank? or api_key.blank? or administration.blank?
-          Dw::DataPipelineLogger.new.create_log(run.id, "alert", "[#{account.name}] Invalid API keys")
+          Dwh::DataPipelineLogger.new.create_log(run.id, "alert", "[#{account.name}] Invalid API keys")
           result.update(finished_at: DateTime.now, status: "error")
           return  
         end
 
         # Set refreshed of all activities of the month to 0
-        fact_activities = Dw::FactActivity.where(account_id: dim_account.id).where("CAST(activity_date AS VARCHAR) LIKE ?", "%#{previous_month_start.strftime("%m%Y")}%")
+        fact_activities = Dwh::FactActivity.where(account_id: dim_account.id).where("CAST(activity_date AS VARCHAR) LIKE ?", "%#{previous_month_start.strftime("%m%Y")}%")
         fact_activities.update_all(refreshed: 0)
 
         # Iterate all users
-        dim_users = Dw::DimUser.where(account_id: dim_account.id)
+        dim_users = Dwh::DimUser.where(account_id: dim_account.id)
         unless dim_users.blank?
           dim_users.each do |dim_user|
             # Get all billable activities for user as long as the SkipToken is not empty (pagination)
@@ -62,7 +62,7 @@ class Dw::Tasks::EtlExactActivitiesRemoveTask < Dw::Tasks::BaseExactTask
             end
 
             # Iterate all unbillables
-            dim_unbillables = Dw::DimUnbillable.where(account_id: dim_account.id).where.not(original_id: ["LEEGLOOP", "INTERN", "ZIEK_GED_HERST"])
+            dim_unbillables = Dwh::DimUnbillable.where(account_id: dim_account.id).where.not(original_id: ["LEEGLOOP", "INTERN", "ZIEK_GED_HERST"])
             unless dim_unbillables.blank?
               dim_unbillables.each do |dim_unbillable|
                 # Get all unbillable activities as long as the SkipToken is not empty (pagination)
@@ -108,11 +108,11 @@ class Dw::Tasks::EtlExactActivitiesRemoveTask < Dw::Tasks::BaseExactTask
 
       # Update result
       result.update(finished_at: DateTime.now, status: "finished")
-      Dw::DataPipelineLogger.new.create_log(run.id, "success", "[#{account.name}] Finished task [#{task.task_key}] successfully")
+      Dwh::DataPipelineLogger.new.create_log(run.id, "success", "[#{account.name}] Finished task [#{task.task_key}] successfully")
     rescue => e
       # Update result to failed if an error occurs
       result.update(finished_at: DateTime.now, status: "failed", error: e.message)
-      Dw::DataPipelineLogger.new.create_log(run.id, "alert", "[#{account.name}] Finished task [#{task.task_key}] with error: #{e.message}")
+      Dwh::DataPipelineLogger.new.create_log(run.id, "alert", "[#{account.name}] Finished task [#{task.task_key}] with error: #{e.message}")
     end
   end
 end

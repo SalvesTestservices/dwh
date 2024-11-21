@@ -1,11 +1,11 @@
-class Dw::Tasks::EtlExactRatesTask < Dw::Tasks::BaseExactTask
+class Dwh::Tasks::EtlExactRatesTask < Dwh::Tasks::BaseExactTask
   queue_as :default
 
   def perform(account, run, result, task)
     # Wait for alle dependencies to finish
     all_dependencies_finished = wait_on_dependencies(account, run, task)
     if all_dependencies_finished == false
-      Dw::DataPipelineLogger.new.create_log(run.id, "cancelled", "[#{account.name}] Taak [#{task.task_key}] geannuleerd")
+      Dwh::DataPipelineLogger.new.create_log(run.id, "cancelled", "[#{account.name}] Taak [#{task.task_key}] geannuleerd")
       result.update(finished_at: DateTime.now, status: "cancelled")
       return
     end
@@ -14,7 +14,7 @@ class Dw::Tasks::EtlExactRatesTask < Dw::Tasks::BaseExactTask
       # Extract rates
       ActsAsTenant.without_tenant do
         account = Account.find(run.account_id)
-        dim_account = Dw::DimAccount.find_by(original_id: account.id)
+        dim_account = Dwh::DimAccount.find_by(original_id: account.id)
         dp_pipeline = run.dp_pipeline
         year    = dp_pipeline.year.blank? ? Date.current.year : dp_pipeline.year.to_i
         month   = dp_pipeline.month.blank? ? Date.current.month : dp_pipeline.month.to_i
@@ -23,16 +23,16 @@ class Dw::Tasks::EtlExactRatesTask < Dw::Tasks::BaseExactTask
 
         # Cancel the task if the API keys are not valid
         if api_url.blank? or api_key.blank? or administration.blank?
-          Dw::DataPipelineLogger.new.create_log(run.id, "alert", "[#{account.name}] Invalid API keys")
+          Dwh::DataPipelineLogger.new.create_log(run.id, "alert", "[#{account.name}] Invalid API keys")
           result.update(finished_at: DateTime.now, status: "error")
           return  
         end
 
         # Scope users 
         if dp_pipeline.scoped_user_id.blank?
-          dim_users = Dw::DimUser.where(account_id: dim_account.id)
+          dim_users = Dwh::DimUser.where(account_id: dim_account.id)
         else
-          dim_users = Dw::DimUser.where(account_id: dim_account.id, original_id: dp_pipeline.scoped_user_id.to_i)
+          dim_users = Dwh::DimUser.where(account_id: dim_account.id, original_id: dp_pipeline.scoped_user_id.to_i)
         end
 
         # Iterate the users
@@ -59,7 +59,7 @@ class Dw::Tasks::EtlExactRatesTask < Dw::Tasks::BaseExactTask
                   UserMailer.dwh_email("Geen HR data aanwezig voor: #{dim_user.full_name} (ID: #{dim_user.original_id})").deliver_later
                 else
                   # Get company
-                  dim_company = Dw::DimCompany.find_by(id: dim_user.company_id)
+                  dim_company = Dwh::DimCompany.find_by(id: dim_user.company_id)
                   unless dim_company.blank?
                     # Get all hours and average rate for the user for the month
                     avg_rate, hours = calculate_avg_rate_and_hours(api_url, api_key, administration, dim_user.original_id, month, year)
@@ -93,7 +93,7 @@ class Dw::Tasks::EtlExactRatesTask < Dw::Tasks::BaseExactTask
                       user_hash[:salary]          = valid_hr_data["Amount"]
                       user_hash[:show_user]       = "Y"
 
-                      Dw::EtlStorage.create(account_id: account.id, identifier: "rates", etl: "transform", data: user_hash)
+                      Dwh::EtlStorage.create(account_id: account.id, identifier: "rates", etl: "transform", data: user_hash)
                     end
                   end
                 end
@@ -103,16 +103,16 @@ class Dw::Tasks::EtlExactRatesTask < Dw::Tasks::BaseExactTask
         end
 
         # Load rates
-        Dw::Loaders::RatesLoader.new.load_data(account)
+        Dwh::Loaders::RatesLoader.new.load_data(account)
       end
 
       # Update result
       result.update(finished_at: DateTime.now, status: "finished")
-      Dw::DataPipelineLogger.new.create_log(run.id, "success", "[#{account.name}] Finished task [#{task.task_key}] successfully")
+      Dwh::DataPipelineLogger.new.create_log(run.id, "success", "[#{account.name}] Finished task [#{task.task_key}] successfully")
     rescue => e
       # Update result to failed if an error occurs
       result.update(finished_at: DateTime.now, status: "failed", error: e.message)
-      Dw::DataPipelineLogger.new.create_log(run.id, "alert", "[#{account.name}] Finished task [#{task.task_key}] with error: #{e.message}")
+      Dwh::DataPipelineLogger.new.create_log(run.id, "alert", "[#{account.name}] Finished task [#{task.task_key}] with error: #{e.message}")
     end
   end
 

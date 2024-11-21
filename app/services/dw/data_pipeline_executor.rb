@@ -1,4 +1,4 @@
-class Dw::DataPipelineExecutor < ApplicationJob
+class Dwh::DataPipelineExecutor < ApplicationJob
   queue_as :default
 
   def perform(dp_pipeline)
@@ -13,21 +13,21 @@ class Dw::DataPipelineExecutor < ApplicationJob
         account = Account.find(account_id.to_i)
 
         # Create a new run for the account
-        run = Dw::DpRun.create(account_id: account.id, status: "started", started_at: DateTime.now, dp_pipeline_id: dp_pipeline.id)
+        run = Dwh::DpRun.create(account_id: account.id, status: "started", started_at: DateTime.now, dp_pipeline_id: dp_pipeline.id)
 
-        Dw::DataPipelineLogger.new.create_log(run.id, "success", "[#{account.name}] Run gestart")
+        Dwh::DataPipelineLogger.new.create_log(run.id, "success", "[#{account.name}] Run gestart")
 
         # Get all pipeline tasks, iterate and run
         tasks = dp_pipeline.dp_tasks.active.order(:sequence)
         tasks.each do |task|
           # Create a new result to store the dependencies
-          result = Dw::DpResult.create!(dp_run_id: run.id, dp_task_id: task.id, depends_on: task.depends_on, started_at: DateTime.now, status: "started")
+          result = Dwh::DpResult.create!(dp_run_id: run.id, dp_task_id: task.id, depends_on: task.depends_on, started_at: DateTime.now, status: "started")
           result_ids << result.id
 
-          Dw::DataPipelineLogger.new.create_log(run.id, "success", "[#{account.name}] Taak [#{task.task_key}] gestart")
+          Dwh::DataPipelineLogger.new.create_log(run.id, "success", "[#{account.name}] Taak [#{task.task_key}] gestart")
 
           # Execute the task by finding the class and running it
-          task_class = class_eval("Dw::Tasks::#{task.task_key.split('_').map(&:capitalize).join}Task")
+          task_class = class_eval("Dwh::Tasks::#{task.task_key.split('_').map(&:capitalize).join}Task")
           job = task_class.perform_later(account, run, result, task)
 
           # Save the job ID
@@ -35,7 +35,7 @@ class Dw::DataPipelineExecutor < ApplicationJob
         end
 
         # Check if all jobs of run are finished
-        Dw::DataPipelineChecker.perform_later(account, run, result_ids)
+        Dwh::DataPipelineChecker.perform_later(account, run, result_ids)
       end
     end
   end

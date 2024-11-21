@@ -1,11 +1,11 @@
-class Dw::Tasks::BbGroupedWorkOverviewTask < Dw::Tasks::BaseTask
+class Dwh::Tasks::BbGroupedWorkOverviewTask < Dwh::Tasks::BaseTask
   queue_as :default
 
   def perform(account, run, result, task)
     # Wait for alle dependencies to finish
     all_dependencies_finished = wait_on_dependencies(account, run, task)
     if all_dependencies_finished == false
-      Dw::DataPipelineLogger.new.create_log(run.id, "cancelled", "[#{account.name}] Taak [#{task.task_key}] geannuleerd")
+      Dwh::DataPipelineLogger.new.create_log(run.id, "cancelled", "[#{account.name}] Taak [#{task.task_key}] geannuleerd")
       result.update(finished_at: DateTime.now, status: "cancelled")
       return
     end
@@ -16,7 +16,7 @@ class Dw::Tasks::BbGroupedWorkOverviewTask < Dw::Tasks::BaseTask
         vat = Vat.where(selected: true).first
 
         # Remove rows with zero hours of previous month
-        Dw::BbGroupedWorkOverview.where(account_id: account.id, month: 1.month.ago.month, year: 1.month.ago.year).where(hours: 0.0).destroy_all
+        Dwh::BbGroupedWorkOverview.where(account_id: account.id, month: 1.month.ago.month, year: 1.month.ago.year).where(hours: 0.0).destroy_all
         
         # Set which month(s) should be iterated
         if run.dp_pipeline.year.present? and run.dp_pipeline.month.present?
@@ -106,7 +106,7 @@ class Dw::Tasks::BbGroupedWorkOverviewTask < Dw::Tasks::BaseTask
                       hourtype_description = hourtype.blank? ? nil : Hourtype.find(hourtype).description
                     end
 
-                    Dw::BbGroupedWorkOverview.upsert({ uid: uid, account_id: account.id, company_id: company.id, user_id: user.id, customer_id: customer_id, project_id: project_id, 
+                    Dwh::BbGroupedWorkOverview.upsert({ uid: uid, account_id: account.id, company_id: company.id, user_id: user.id, customer_id: customer_id, project_id: project_id, 
                       timesheet_id: timesheet_id, projectuser_id: projectuser_id, invoice_id: nil, month: month, year: year, account_name: account.name, company_name: company.name, target: target, 
                       group: group, row_type: type, user_name: user.full_name, show_name: nil, customer_name: customer_name, project_name: project_name, broker: broker_name, start_date: start_date, end_date: end_date, 
                       calculation_type: calculation_type, hour_type: hourtype_description, hours: hours, rate: rate, invoices: invoice, progress: nil, frequence: nil, type_amount: nil, 
@@ -118,7 +118,7 @@ class Dw::Tasks::BbGroupedWorkOverviewTask < Dw::Tasks::BaseTask
                 target_id = targets.index(target)
                 uid = "#{target_id}#{account.id}#{company.id}#{month}#{year}".to_i
 
-                Dw::BbGroupedWorkOverview.upsert({ uid: uid, account_id: account.id, company_id: company.id, user_id: nil, customer_id: nil, project_id: nil, 
+                Dwh::BbGroupedWorkOverview.upsert({ uid: uid, account_id: account.id, company_id: company.id, user_id: nil, customer_id: nil, project_id: nil, 
                   timesheet_id: nil, projectuser_id: nil, invoice_id: nil, month: month, year: year, account_name: account.name, company_name: company.name, target: target, 
                   group: "total", row_type: "total", user_name: nil, show_name: nil, customer_name: nil, project_name: nil, broker: nil, start_date: nil, end_date: nil, 
                   calculation_type: nil, hour_type: nil, hours: total_hours, rate: nil, invoices: nil, progress: nil, frequence: nil, type_amount: nil, 
@@ -129,7 +129,7 @@ class Dw::Tasks::BbGroupedWorkOverviewTask < Dw::Tasks::BaseTask
                   group_id = index + 1
                   uid = "#{group_id}#{target_id}#{account.id}#{company.id}#{month}#{year}".to_i
       
-                  Dw::BbGroupedWorkOverview.upsert({ uid: uid, account_id: account.id, company_id: company.id, user_id: nil, customer_id: nil, project_id: nil, 
+                  Dwh::BbGroupedWorkOverview.upsert({ uid: uid, account_id: account.id, company_id: company.id, user_id: nil, customer_id: nil, project_id: nil, 
                     timesheet_id: nil, projectuser_id: nil, invoice_id: nil, month: month, year: year, account_name: account.name, company_name: company.name, target: target, 
                     group: group, row_type: "total_group", user_name: nil, show_name: nil, customer_name: nil, project_name: nil, broker: nil, start_date: nil, end_date: nil, 
                     calculation_type: nil, hour_type: nil, hours: values[:hours], rate: nil, invoices: nil, progress: nil, frequence: nil, type_amount: nil, 
@@ -153,7 +153,7 @@ class Dw::Tasks::BbGroupedWorkOverviewTask < Dw::Tasks::BaseTask
                   customer_id = project_id.blank? ? nil : project.customer_id
                   uid = "#{target_id}#{account.id}#{company.id}#{month}#{year}#{project_id}".to_i
       
-                  Dw::BbGroupedWorkOverview.upsert({ uid: uid, account_id: account.id, company_id: company.id, user_id: nil, customer_id: customer_id, project_id: project_id, 
+                  Dwh::BbGroupedWorkOverview.upsert({ uid: uid, account_id: account.id, company_id: company.id, user_id: nil, customer_id: customer_id, project_id: project_id, 
                     timesheet_id: nil, projectuser_id: nil, invoice_id: nil, month: month, year: year, account_name: account.name, company_name: company.name, target: target, 
                     group: nil, row_type: "main", user_name: nil, show_name: nil, customer_name: customer_name, project_name: project_name, broker: nil, start_date: nil, end_date: nil, 
                     calculation_type: nil, hour_type: nil, hours: nil, rate: nil, invoices: invoice_ids, progress: nil, frequence: nil, type_amount: nil, 
@@ -162,7 +162,7 @@ class Dw::Tasks::BbGroupedWorkOverviewTask < Dw::Tasks::BaseTask
       
                 uid = "#{target_id}#{account.id}#{company.id}#{month}#{year}".to_i
       
-                Dw::BbGroupedWorkOverview.upsert({ uid: uid, account_id: account.id, company_id: company.id, user_id: nil, customer_id: nil, project_id: nil, 
+                Dwh::BbGroupedWorkOverview.upsert({ uid: uid, account_id: account.id, company_id: company.id, user_id: nil, customer_id: nil, project_id: nil, 
                   timesheet_id: nil, projectuser_id: nil, invoice_id: nil, month: month, year: year, account_name: account.name, company_name: company.name, target: target, 
                   group: "total", row_type: "total", user_name: nil, show_name: nil, customer_name: nil, project_name: nil, broker: nil, start_date: nil, end_date: nil, 
                   calculation_type: nil, hour_type: nil, hours: nil, rate: nil, invoices: nil, progress: nil, frequence: nil, type_amount: nil, 
@@ -195,7 +195,7 @@ class Dw::Tasks::BbGroupedWorkOverviewTask < Dw::Tasks::BaseTask
       
                   uid = "#{target_id}#{account.id}#{company.id}#{month}#{year}#{invoice_id}".to_i
       
-                  Dw::BbGroupedWorkOverview.upsert({ uid: uid, account_id: account.id, company_id: company.id, user_id: nil, customer_id: customer_id, project_id: nil, 
+                  Dwh::BbGroupedWorkOverview.upsert({ uid: uid, account_id: account.id, company_id: company.id, user_id: nil, customer_id: customer_id, project_id: nil, 
                     timesheet_id: nil, projectuser_id: nil, invoice_id: invoice_id, month: month, year: year, account_name: account.name, company_name: company.name, target: target, 
                     group: nil, row_type: "main", user_name: nil, show_name: nil, customer_name: customer_name, project_name: nil, broker: nil, start_date: nil, end_date: nil, 
                     calculation_type: nil, hour_type: nil, hours: hours, rate: nil, invoices: nil, progress: nil, frequence: nil, type_amount: nil, 
@@ -204,7 +204,7 @@ class Dw::Tasks::BbGroupedWorkOverviewTask < Dw::Tasks::BaseTask
 
                 uid = "#{target_id}#{account.id}#{company.id}#{month}#{year}".to_i
             
-                Dw::BbGroupedWorkOverview.upsert({ uid: uid, account_id: account.id, company_id: company.id, user_id: nil, customer_id: nil, project_id: nil, 
+                Dwh::BbGroupedWorkOverview.upsert({ uid: uid, account_id: account.id, company_id: company.id, user_id: nil, customer_id: nil, project_id: nil, 
                   timesheet_id: nil, projectuser_id: nil, invoice_id: nil, month: month, year: year, account_name: account.name, company_name: company.name, target: target, 
                   group: "total", row_type: "total", user_name: nil, show_name: nil, customer_name: nil, project_name: nil, broker: nil, start_date: nil, end_date: nil, 
                   calculation_type: nil, hour_type: nil, hours: total_hours, rate: nil, invoices: nil, progress: nil, frequence: nil, type_amount: nil, 
@@ -227,7 +227,7 @@ class Dw::Tasks::BbGroupedWorkOverviewTask < Dw::Tasks::BaseTask
                   customer_id = project_id.blank? ? nil : project.customer_id
                   uid = "#{target_id}#{account.id}#{company.id}#{month}#{year}#{project_id}".to_i
       
-                  Dw::BbGroupedWorkOverview.upsert({ uid: uid, account_id: account.id, company_id: company.id, user_id: nil, customer_id: customer_id, project_id: project_id, 
+                  Dwh::BbGroupedWorkOverview.upsert({ uid: uid, account_id: account.id, company_id: company.id, user_id: nil, customer_id: customer_id, project_id: project_id, 
                     timesheet_id: nil, projectuser_id: nil, invoice_id: nil, month: month, year: year, account_name: account.name, company_name: company.name, target: target, 
                     group: nil, row_type: "main", user_name: nil, show_name: nil, customer_name: customer_name, project_name: project_name, broker: nil, start_date: nil, end_date: nil, 
                     calculation_type: nil, hour_type: nil, hours: nil, rate: nil, invoices: invoice_ids, progress: nil, frequence: nil, type_amount: nil, 
@@ -236,7 +236,7 @@ class Dw::Tasks::BbGroupedWorkOverviewTask < Dw::Tasks::BaseTask
       
                 uid = "#{target_id}#{account.id}#{company.id}#{month}#{year}".to_i
       
-                Dw::BbGroupedWorkOverview.upsert({ uid: uid, account_id: account.id, company_id: company.id, user_id: nil, customer_id: nil, project_id: nil, 
+                Dwh::BbGroupedWorkOverview.upsert({ uid: uid, account_id: account.id, company_id: company.id, user_id: nil, customer_id: nil, project_id: nil, 
                   timesheet_id: nil, projectuser_id: nil, invoice_id: nil, month: month, year: year, account_name: account.name, company_name: company.name, target: target, 
                   group: "total", row_type: "total", user_name: nil, show_name: nil, customer_name: nil, project_name: nil, broker: nil, start_date: nil, end_date: nil, 
                   calculation_type: nil, hour_type: nil, hours: nil, rate: nil, invoices: nil, progress: nil, frequence: nil, type_amount: nil, 
@@ -259,7 +259,7 @@ class Dw::Tasks::BbGroupedWorkOverviewTask < Dw::Tasks::BaseTask
                   customer_id = project_id.blank? ? nil : project.customer_id
                   uid = "#{target_id}#{account.id}#{company.id}#{month}#{year}#{project_id}".to_i
       
-                  Dw::BbGroupedWorkOverview.upsert({ uid: uid, account_id: account.id, company_id: company.id, user_id: nil, customer_id: customer_id, project_id: project_id, 
+                  Dwh::BbGroupedWorkOverview.upsert({ uid: uid, account_id: account.id, company_id: company.id, user_id: nil, customer_id: customer_id, project_id: project_id, 
                     timesheet_id: nil, projectuser_id: nil, invoice_id: nil, month: month, year: year, account_name: account.name, company_name: company.name, target: target, 
                     group: nil, row_type: "main", user_name: nil, show_name: nil, customer_name: customer_name, project_name: project_name, broker: nil, start_date: nil, end_date: nil, 
                     calculation_type: nil, hour_type: nil, hours: nil, rate: nil, invoices: invoice_ids, progress: nil, frequence: nil, type_amount: nil, 
@@ -268,7 +268,7 @@ class Dw::Tasks::BbGroupedWorkOverviewTask < Dw::Tasks::BaseTask
       
                 uid = "#{target_id}#{account.id}#{company.id}#{month}#{year}".to_i
       
-                Dw::BbGroupedWorkOverview.upsert({ uid: uid, account_id: account.id, company_id: company.id, user_id: nil, customer_id: nil, project_id: nil, 
+                Dwh::BbGroupedWorkOverview.upsert({ uid: uid, account_id: account.id, company_id: company.id, user_id: nil, customer_id: nil, project_id: nil, 
                   timesheet_id: nil, projectuser_id: nil, invoice_id: nil, month: month, year: year, account_name: account.name, company_name: company.name, target: target, 
                   group: "total", row_type: "total", user_name: nil, show_name: nil, customer_name: nil, project_name: nil, broker: nil, start_date: nil, end_date: nil, 
                   calculation_type: nil, hour_type: nil, hours: nil, rate: nil, invoices: nil, progress: nil, frequence: nil, type_amount: nil, 
@@ -302,7 +302,7 @@ class Dw::Tasks::BbGroupedWorkOverviewTask < Dw::Tasks::BaseTask
         
                     uid = "#{target_id}#{account.id}#{company.id}#{month}#{year}#{invoice_id}".to_i
         
-                    Dw::BbGroupedWorkOverview.upsert({ uid: uid, account_id: account.id, company_id: company.id, user_id: nil, customer_id: customer_id, project_id: nil, 
+                    Dwh::BbGroupedWorkOverview.upsert({ uid: uid, account_id: account.id, company_id: company.id, user_id: nil, customer_id: customer_id, project_id: nil, 
                       timesheet_id: nil, projectuser_id: nil, invoice_id: invoice_id, month: month, year: year, account_name: account.name, company_name: company.name, target: target, 
                       group: nil, row_type: "main", user_name: nil, show_name: nil, customer_name: customer_name, project_name: nil, broker: nil, start_date: nil, end_date: nil, 
                       calculation_type: nil, hour_type: nil, hours: hours, rate: nil, invoices: nil, progress: nil, frequence: nil, type_amount: nil, 
@@ -312,7 +312,7 @@ class Dw::Tasks::BbGroupedWorkOverviewTask < Dw::Tasks::BaseTask
       
                 uid = "#{target_id}#{account.id}#{company.id}#{month}#{year}".to_i
       
-                Dw::BbGroupedWorkOverview.upsert({ uid: uid, account_id: account.id, company_id: company.id, user_id: nil, customer_id: nil, project_id: nil, 
+                Dwh::BbGroupedWorkOverview.upsert({ uid: uid, account_id: account.id, company_id: company.id, user_id: nil, customer_id: nil, project_id: nil, 
                   timesheet_id: nil, projectuser_id: nil, invoice_id: nil, month: month, year: year, account_name: account.name, company_name: company.name, target: target, 
                   group: "total", row_type: "total", user_name: nil, show_name: nil, customer_name: nil, project_name: nil, broker: nil, start_date: nil, end_date: nil, 
                   calculation_type: nil, hour_type: nil, hours: total_hours, rate: nil, invoices: nil, progress: nil, frequence: nil, type_amount: nil, 
@@ -346,7 +346,7 @@ class Dw::Tasks::BbGroupedWorkOverviewTask < Dw::Tasks::BaseTask
         
                     uid = "#{target_id}#{account.id}#{company.id}#{month}#{year}#{invoice_id}".to_i
         
-                    Dw::BbGroupedWorkOverview.upsert({ uid: uid, account_id: account.id, company_id: company.id, user_id: nil, customer_id: customer_id, project_id: nil, 
+                    Dwh::BbGroupedWorkOverview.upsert({ uid: uid, account_id: account.id, company_id: company.id, user_id: nil, customer_id: customer_id, project_id: nil, 
                       timesheet_id: nil, projectuser_id: nil, invoice_id: invoice_id, month: month, year: year, account_name: account.name, company_name: company.name, target: target, 
                       group: nil, row_type: "main", user_name: nil, show_name: nil, customer_name: customer_name, project_name: nil, broker: nil, start_date: nil, end_date: nil, 
                       calculation_type: nil, hour_type: nil, hours: hours, rate: nil, invoices: nil, progress: nil, frequence: nil, type_amount: nil, 
@@ -356,7 +356,7 @@ class Dw::Tasks::BbGroupedWorkOverviewTask < Dw::Tasks::BaseTask
       
                 uid = "#{target_id}#{account.id}#{company.id}#{month}#{year}".to_i
       
-                Dw::BbGroupedWorkOverview.upsert({ uid: uid, account_id: account.id, company_id: company.id, user_id: nil, customer_id: nil, project_id: nil, 
+                Dwh::BbGroupedWorkOverview.upsert({ uid: uid, account_id: account.id, company_id: company.id, user_id: nil, customer_id: nil, project_id: nil, 
                   timesheet_id: nil, projectuser_id: nil, invoice_id: nil, month: month, year: year, account_name: account.name, company_name: company.name, target: target, 
                   group: "total", row_type: "total", user_name: nil, show_name: nil, customer_name: nil, project_name: nil, broker: nil, start_date: nil, end_date: nil, 
                   calculation_type: nil, hour_type: nil, hours: total_hours, rate: nil, invoices: nil, progress: nil, frequence: nil, type_amount: nil, 
@@ -369,11 +369,11 @@ class Dw::Tasks::BbGroupedWorkOverviewTask < Dw::Tasks::BaseTask
 
       # Update result
       result.update(finished_at: DateTime.now, status: "finished")
-      Dw::DataPipelineLogger.new.create_log(run.id, "success", "[#{account.name}] Finished task [#{task.task_key}] successfully")
+      Dwh::DataPipelineLogger.new.create_log(run.id, "success", "[#{account.name}] Finished task [#{task.task_key}] successfully")
     rescue => e
       # Update result to failed if an error occurs
       result.update(finished_at: DateTime.now, status: "failed", error: e.message)
-      Dw::DataPipelineLogger.new.create_log(run.id, "alert", "[#{account.name}] Finished task [#{task.task_key}] with error: #{e.message}")
+      Dwh::DataPipelineLogger.new.create_log(run.id, "alert", "[#{account.name}] Finished task [#{task.task_key}] with error: #{e.message}")
     end
   end
 end

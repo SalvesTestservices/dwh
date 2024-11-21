@@ -1,11 +1,11 @@
-class Dw::Tasks::EtlBbDatesTask < Dw::Tasks::BaseTask
+class Dwh::Tasks::EtlBbDatesTask < Dwh::Tasks::BaseTask
   queue_as :default
 
   def perform(account, run, result, task)
     # Wait for alle dependencies to finish
     all_dependencies_finished = wait_on_dependencies(account, run, task)
     if all_dependencies_finished == false
-      Dw::DataPipelineLogger.new.create_log(run.id, "cancelled", "[#{account.name}] Taak [#{task.task_key}] geannuleerd")
+      Dwh::DataPipelineLogger.new.create_log(run.id, "cancelled", "[#{account.name}] Taak [#{task.task_key}] geannuleerd")
       result.update(finished_at: DateTime.now, status: "cancelled")
       return
     end
@@ -15,7 +15,7 @@ class Dw::Tasks::EtlBbDatesTask < Dw::Tasks::BaseTask
       year        = run.dp_pipeline.year.blank? ? Date.current.year : run.dp_pipeline.year.to_i
       month       = run.dp_pipeline.month.blank? ? Date.current.month : run.dp_pipeline.month.to_i
 
-      existing_dates = Dw::DimDate.find_by(year: year, month: month)
+      existing_dates = Dwh::DimDate.find_by(year: year, month: month)
       if existing_dates.blank?
         # Extract dates
         dates = Array.new
@@ -51,16 +51,16 @@ class Dw::Tasks::EtlBbDatesTask < Dw::Tasks::BaseTask
           day_hash[:is_holiday_nl]    = account.holidays.find_by(holiday_date: date, country: "NL").blank? ? false : true
           day_hash[:is_holiday_be]    = account.holidays.find_by(holiday_date: date, country: "BE").blank? ? false : true
     
-          Dw::EtlStorage.create(account_id: account.id, identifier: "dates", etl: "extract", data: day_hash)
+          Dwh::EtlStorage.create(account_id: account.id, identifier: "dates", etl: "extract", data: day_hash)
         end
 
         # Load dates
-        dates = Dw::EtlStorage.where(identifier: "dates", etl: "extract")
+        dates = Dwh::EtlStorage.where(identifier: "dates", etl: "extract")
         unless dates.blank?
           dates.each do |date|
-            dim_date = Dw::DimDate.find_by(id: date.data['id'])
+            dim_date = Dwh::DimDate.find_by(id: date.data['id'])
             if dim_date.blank?
-              Dw::DimDate.find_or_create_by(id: date.data['id']) do |dim_date|
+              Dwh::DimDate.find_or_create_by(id: date.data['id']) do |dim_date|
                 dim_date.original_date = date.data['original_date']
                 dim_date.year = date.data['year']
                 dim_date.month = date.data['month']
@@ -87,11 +87,11 @@ class Dw::Tasks::EtlBbDatesTask < Dw::Tasks::BaseTask
 
       # Update result
       result.update(finished_at: DateTime.now, status: "finished")
-      Dw::DataPipelineLogger.new.create_log(run.id, "success", "[#{account.name}] Finished task [#{task.task_key}] successfully")
+      Dwh::DataPipelineLogger.new.create_log(run.id, "success", "[#{account.name}] Finished task [#{task.task_key}] successfully")
     rescue => e
       # Update result to failed if an error occurs
       result.update(finished_at: DateTime.now, status: "failed", error: e.message)
-      Dw::DataPipelineLogger.new.create_log(run.id, "alert", "[#{account.name}] Finished task [#{task.task_key}] with error: #{e.message}")
+      Dwh::DataPipelineLogger.new.create_log(run.id, "alert", "[#{account.name}] Finished task [#{task.task_key}] with error: #{e.message}")
     end
   end
 end

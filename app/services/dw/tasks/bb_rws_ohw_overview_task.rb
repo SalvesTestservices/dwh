@@ -1,11 +1,11 @@
-class Dw::Tasks::BbRwsOhwOverviewTask < Dw::Tasks::BaseTask
+class Dwh::Tasks::BbRwsOhwOverviewTask < Dwh::Tasks::BaseTask
   queue_as :default
 
   def perform(account, run, result, task)
     # Wait for alle dependencies to finish
     all_dependencies_finished = wait_on_dependencies(account, run, task)
     if all_dependencies_finished == false
-      Dw::DataPipelineLogger.new.create_log(run.id, "cancelled", "[#{account.name}] Taak [#{task.task_key}] geannuleerd")
+      Dwh::DataPipelineLogger.new.create_log(run.id, "cancelled", "[#{account.name}] Taak [#{task.task_key}] geannuleerd")
       result.update(finished_at: DateTime.now, status: "cancelled")
       return
     end
@@ -174,7 +174,7 @@ class Dw::Tasks::BbRwsOhwOverviewTask < Dw::Tasks::BaseTask
       
                       uid = "#{account.id}#{offer.id}#{year}#{month}#{project.id}#{projectuser.id}#{user.id}"
 
-                      Dw::BbRwsOhwOverview.upsert({ uid: uid, account_id: account.id, year: year, month: month, offer_id: offer.id, 
+                      Dwh::BbRwsOhwOverview.upsert({ uid: uid, account_id: account.id, year: year, month: month, offer_id: offer.id, 
                         offer_nr: offer.offer_nr, status: status, deliverable_name: nil, invoice_nr_purchasing: nil, amount_purchasing: nil, 
                         invoice_nr_sales: nil, invoice_date_sales: nil, amount_sales: nil, employee_name: user.full_name, hours: hours, 
                         rate: rate, total_employee: total}, unique_by: [:uid])
@@ -213,7 +213,7 @@ class Dw::Tasks::BbRwsOhwOverviewTask < Dw::Tasks::BaseTask
 
                       uid = "#{account.id}#{offer.id}#{year}#{month}#{deliverable.id}"
 
-                      Dw::BbRwsOhwOverview.upsert({ uid: uid, account_id: account.id, year: year, month: month, offer_id: offer.id, 
+                      Dwh::BbRwsOhwOverview.upsert({ uid: uid, account_id: account.id, year: year, month: month, offer_id: offer.id, 
                         offer_nr: offer.offer_nr, status: status, deliverable_name: deliverable.name, invoice_nr_purchasing: deliverable.purchase_invoice_reference, 
                         amount_purchasing: amount_purchasing, invoice_nr_sales: invoice_nr, invoice_date_sales: invoice_date, amount_sales: amount_sales, 
                         employee_name: nil, hours: nil, rate: nil, total_employee: users_total}, unique_by: [:uid])
@@ -228,11 +228,11 @@ class Dw::Tasks::BbRwsOhwOverviewTask < Dw::Tasks::BaseTask
 
       # Update result
       result.update(finished_at: DateTime.now, status: "finished")
-      Dw::DataPipelineLogger.new.create_log(run.id, "success", "[#{account.name}] Finished task [#{task.task_key}] successfully")
+      Dwh::DataPipelineLogger.new.create_log(run.id, "success", "[#{account.name}] Finished task [#{task.task_key}] successfully")
     #rescue => e
     #  # Update result to failed if an error occurs
     #  result.update(finished_at: DateTime.now, status: "failed", error: e.message)
-    #  Dw::DataPipelineLogger.new.create_log(run.id, "alert", "[#{account.name}] Finished task [#{task.task_key}] with error: #{e.message}")
+    #  Dwh::DataPipelineLogger.new.create_log(run.id, "alert", "[#{account.name}] Finished task [#{task.task_key}] with error: #{e.message}")
     #end
   end
 end

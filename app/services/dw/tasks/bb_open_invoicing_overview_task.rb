@@ -1,11 +1,11 @@
-class Dw::Tasks::BbOpenInvoicingOverviewTask < Dw::Tasks::BaseTask
+class Dwh::Tasks::BbOpenInvoicingOverviewTask < Dwh::Tasks::BaseTask
   queue_as :default
 
   def perform(account, run, result, task)
     # Wait for alle dependencies to finish
     all_dependencies_finished = wait_on_dependencies(account, run, task)
     if all_dependencies_finished == false
-      Dw::DataPipelineLogger.new.create_log(run.id, "cancelled", "[#{account.name}] Taak [#{task.task_key}] geannuleerd")
+      Dwh::DataPipelineLogger.new.create_log(run.id, "cancelled", "[#{account.name}] Taak [#{task.task_key}] geannuleerd")
       result.update(finished_at: DateTime.now, status: "cancelled")
       return
     end
@@ -16,7 +16,7 @@ class Dw::Tasks::BbOpenInvoicingOverviewTask < Dw::Tasks::BaseTask
         month = run.dp_pipeline.month.blank? ? 1.month.ago.month : run.dp_pipeline.month.to_i
 
         # Remove all existing records
-        Dw::BbOpenInvoicingOverview.where(account_id: account.id).destroy_all
+        Dwh::BbOpenInvoicingOverview.where(account_id: account.id).destroy_all
 
         # Get all invoices
         invoices = account.invoices.where.not(company_id: [2,3,4,5,8,48])
@@ -35,7 +35,7 @@ class Dw::Tasks::BbOpenInvoicingOverviewTask < Dw::Tasks::BaseTask
               quantity  = invoice.invoice_lines.sum(:quantity)
               amount    = invoice.invoice_lines.sum { |invoice_line| invoice_line.quantity * invoice_line.rate }
 
-              Dw::BbOpenInvoicingOverview.upsert({ uid: invoice.id, category: "timesheets", account_id: account.id, company_id: company.id, user_id: user.id, customer_id: customer.id, invoice_id: invoice.id, account_name: account.name, 
+              Dwh::BbOpenInvoicingOverview.upsert({ uid: invoice.id, category: "timesheets", account_id: account.id, company_id: company.id, user_id: user.id, customer_id: customer.id, invoice_id: invoice.id, account_name: account.name, 
                 company_name: company.name, user_name: user.full_name, customer_name: customer.name, project_name: project.name, status: status, quantity: quantity, amount: amount, month: timesheet.month, year: timesheet.year}, unique_by: [:uid])
             end
           end
@@ -61,7 +61,7 @@ class Dw::Tasks::BbOpenInvoicingOverviewTask < Dw::Tasks::BaseTask
                   quantity    = invoice.invoice_lines.sum(:quantity)
                   amount      = invoice.invoice_lines.sum { |invoice_line| invoice_line.quantity * invoice_line.rate }
     
-                  Dw::BbOpenInvoicingOverview.upsert({ uid: invoice.id, category: "selfbilling", account_id: account.id, company_id: company.id, user_id: user.id, customer_id: customer_id, invoice_id: invoice.id, account_name: account.name, 
+                  Dwh::BbOpenInvoicingOverview.upsert({ uid: invoice.id, category: "selfbilling", account_id: account.id, company_id: company.id, user_id: user.id, customer_id: customer_id, invoice_id: invoice.id, account_name: account.name, 
                     company_name: company.name, user_name: user.full_name, customer_name: customer_name, project_name: project.name, status: status, quantity: quantity, amount: amount, month: pselfbilling.month, year: pselfbilling.year }, unique_by: [:uid])              
                 end  
               end
@@ -99,7 +99,7 @@ class Dw::Tasks::BbOpenInvoicingOverviewTask < Dw::Tasks::BaseTask
                   rate        = RateCalculator.new(nil, pselfbilling&.projectuser, nil).calculate_rate("rate", Date.strptime(day, "%d%m%Y"))
                   amount      = (hours * rate).round(2)
 
-                  Dw::BbOpenInvoicingOverview.upsert({ uid: uid, category: "selfbilling", account_id: account.id, company_id: company.id, user_id: user.id, customer_id: customer.id, invoice_id: nil, account_name: account.name, 
+                  Dwh::BbOpenInvoicingOverview.upsert({ uid: uid, category: "selfbilling", account_id: account.id, company_id: company.id, user_id: user.id, customer_id: customer.id, invoice_id: nil, account_name: account.name, 
                     company_name: company.name, user_name: user.full_name, customer_name: customer.name, project_name: project.name, status: "niet gefactureerd", quantity: hours, amount: amount, month: pselfbilling.month, year: pselfbilling.year }, unique_by: [:uid])
                 end
               end
@@ -118,7 +118,7 @@ class Dw::Tasks::BbOpenInvoicingOverviewTask < Dw::Tasks::BaseTask
               quantity  = invoice.invoice_lines.sum(:quantity)
               amount    = invoice.invoice_lines.sum { |invoice_line| invoice_line.quantity * invoice_line.rate }
 
-              Dw::BbOpenInvoicingOverview.upsert({ uid: invoice.id, category: "manual", account_id: account.id, company_id: company.id, user_id: nil, customer_id: customer_id, invoice_id: invoice.id, account_name: account.name, 
+              Dwh::BbOpenInvoicingOverview.upsert({ uid: invoice.id, category: "manual", account_id: account.id, company_id: company.id, user_id: nil, customer_id: customer_id, invoice_id: invoice.id, account_name: account.name, 
                 company_name: company.name, user_name: nil, customer_name: customer_name, project_name: nil, status: status, quantity: quantity, amount: amount, month: invoice.created_at.month, year: invoice.created_at.year }, unique_by: [:uid])
             end
           end
@@ -135,7 +135,7 @@ class Dw::Tasks::BbOpenInvoicingOverviewTask < Dw::Tasks::BaseTask
               quantity  = invoice.invoice_lines.sum(:quantity)
               amount    = invoice.invoice_lines.sum { |invoice_line| invoice_line.quantity * invoice_line.rate }
 
-              Dw::BbOpenInvoicingOverview.upsert({ uid: invoice.id, category: "periodic", account_id: account.id, company_id: company.id, user_id: nil, customer_id: customer_id, invoice_id: invoice.id, account_name: account.name, 
+              Dwh::BbOpenInvoicingOverview.upsert({ uid: invoice.id, category: "periodic", account_id: account.id, company_id: company.id, user_id: nil, customer_id: customer_id, invoice_id: invoice.id, account_name: account.name, 
                 company_name: company.name, user_name: nil, customer_name: customer_name, project_name: nil, status: status, quantity: quantity, amount: amount, month: invoice.created_at.month, year: invoice.created_at.year }, unique_by: [:uid])
             end
           end
@@ -152,7 +152,7 @@ class Dw::Tasks::BbOpenInvoicingOverviewTask < Dw::Tasks::BaseTask
               quantity  = invoice.invoice_lines.sum(:quantity)
               amount    = invoice.invoice_lines.sum { |invoice_line| invoice_line.quantity * invoice_line.rate }
 
-              Dw::BbOpenInvoicingOverview.upsert({ uid: invoice.id, category: "consolidated", account_id: account.id, company_id: company.id, user_id: nil, customer_id: customer_id, invoice_id: invoice.id, account_name: account.name, 
+              Dwh::BbOpenInvoicingOverview.upsert({ uid: invoice.id, category: "consolidated", account_id: account.id, company_id: company.id, user_id: nil, customer_id: customer_id, invoice_id: invoice.id, account_name: account.name, 
                 company_name: company.name, user_name: nil, customer_name: customer_name, project_name: nil, status: status, quantity: quantity, amount: amount, month: invoice.created_at.month, year: invoice.created_at.year }, unique_by: [:uid])
             end
           end
@@ -170,7 +170,7 @@ class Dw::Tasks::BbOpenInvoicingOverviewTask < Dw::Tasks::BaseTask
                 quantity  = invoice.invoice_lines.sum(:quantity)
                 amount    = invoice.invoice_lines.sum { |invoice_line| invoice_line.quantity * invoice_line.rate }
   
-                Dw::BbOpenInvoicingOverview.upsert({ uid: invoice.id, category: "services", account_id: account.id, company_id: company.id, user_id: nil, customer_id: customer_id, invoice_id: invoice.id, account_name: account.name, 
+                Dwh::BbOpenInvoicingOverview.upsert({ uid: invoice.id, category: "services", account_id: account.id, company_id: company.id, user_id: nil, customer_id: customer_id, invoice_id: invoice.id, account_name: account.name, 
                   company_name: company.name, user_name: nil, customer_name: customer_name, project_name: nil, status: status, quantity: quantity, amount: amount, month: invoice.created_at.month, year: invoice.created_at.year }, unique_by: [:uid])
               end
             end
@@ -189,7 +189,7 @@ class Dw::Tasks::BbOpenInvoicingOverviewTask < Dw::Tasks::BaseTask
                 quantity  = invoice.invoice_lines.sum(:quantity)
                 amount    = invoice.invoice_lines.sum { |invoice_line| invoice_line.quantity * invoice_line.rate }
 
-                Dw::BbOpenInvoicingOverview.upsert({ uid: invoice.id, category: "trainings", account_id: account.id, company_id: company.id, user_id: nil, customer_id: customer_id, invoice_id: invoice.id, account_name: account.name, 
+                Dwh::BbOpenInvoicingOverview.upsert({ uid: invoice.id, category: "trainings", account_id: account.id, company_id: company.id, user_id: nil, customer_id: customer_id, invoice_id: invoice.id, account_name: account.name, 
                   company_name: company.name, user_name: nil, customer_name: customer_name, project_name: nil, status: status, quantity: quantity, amount: amoun, month: invoice.created_at.month, year: invoice.created_at.year }, unique_by: [:uid])
               end
             end
@@ -208,7 +208,7 @@ class Dw::Tasks::BbOpenInvoicingOverviewTask < Dw::Tasks::BaseTask
                 quantity  = invoice.invoice_lines.sum(:quantity)
                 amount    = invoice.invoice_lines.sum { |invoice_line| invoice_line.quantity * invoice_line.rate }
 
-                Dw::BbOpenInvoicingOverview.upsert({ uid: invoice.id, category: "fixed_price", account_id: account.id, company_id: company.id, user_id: nil, customer_id: customer_id, invoice_id: invoice.id, account_name: account.name, 
+                Dwh::BbOpenInvoicingOverview.upsert({ uid: invoice.id, category: "fixed_price", account_id: account.id, company_id: company.id, user_id: nil, customer_id: customer_id, invoice_id: invoice.id, account_name: account.name, 
                   company_name: company.name, user_name: nil, customer_name: customer_name, project_name: nil, status: status, quantity: quantity, amount: amount, month: invoice.created_at.month, year: invoice.created_at.year }, unique_by: [:uid])
               end
             end
@@ -224,7 +224,7 @@ class Dw::Tasks::BbOpenInvoicingOverviewTask < Dw::Tasks::BaseTask
             if company.present? and [2,3,4,5,8,48].exclude?(company.id) and pturnover.turnover.present? and pturnover.turnover > 0
               customer  = project.customer
 
-              Dw::BbOpenInvoicingOverview.upsert({ uid: pturnover.id, category: "fixed_price_turnovers", account_id: account.id, company_id: company.id, user_id: nil, customer_id: customer.id, invoice_id: nil, account_name: account.name, 
+              Dwh::BbOpenInvoicingOverview.upsert({ uid: pturnover.id, category: "fixed_price_turnovers", account_id: account.id, company_id: company.id, user_id: nil, customer_id: customer.id, invoice_id: nil, account_name: account.name, 
                 company_name: company.name, user_name: nil, customer_name: customer.name, project_name: project.name, status: "gepland", quantity: 1, amount: pturnover.turnover, month: pturnover.booking_date.month, year: pturnover.booking_date.year }, unique_by: [:uid])
             end
           end
@@ -234,11 +234,11 @@ class Dw::Tasks::BbOpenInvoicingOverviewTask < Dw::Tasks::BaseTask
 
       # Update result
       result.update(finished_at: DateTime.now, status: "finished")
-      Dw::DataPipelineLogger.new.create_log(run.id, "success", "[#{account.name}] Finished task [#{task.task_key}] successfully")
+      Dwh::DataPipelineLogger.new.create_log(run.id, "success", "[#{account.name}] Finished task [#{task.task_key}] successfully")
     rescue => e
       # Update result to failed if an error occurs
       result.update(finished_at: DateTime.now, status: "failed", error: e.message)
-      Dw::DataPipelineLogger.new.create_log(run.id, "alert", "[#{account.name}] Finished task [#{task.task_key}] with error: #{e.message}")
+      Dwh::DataPipelineLogger.new.create_log(run.id, "alert", "[#{account.name}] Finished task [#{task.task_key}] with error: #{e.message}")
     end
   end
 

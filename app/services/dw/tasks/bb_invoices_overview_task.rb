@@ -1,11 +1,11 @@
-class Dw::Tasks::BbInvoicesOverviewTask < Dw::Tasks::BaseTask
+class Dwh::Tasks::BbInvoicesOverviewTask < Dwh::Tasks::BaseTask
   queue_as :default
 
   def perform(account, run, result, task)
     # Wait for alle dependencies to finish
     all_dependencies_finished = wait_on_dependencies(account, run, task)
     if all_dependencies_finished == false
-      Dw::DataPipelineLogger.new.create_log(run.id, "cancelled", "[#{account.name}] Taak [#{task.task_key}] geannuleerd")
+      Dwh::DataPipelineLogger.new.create_log(run.id, "cancelled", "[#{account.name}] Taak [#{task.task_key}] geannuleerd")
       result.update(finished_at: DateTime.now, status: "cancelled")
       return
     end
@@ -76,7 +76,7 @@ class Dw::Tasks::BbInvoicesOverviewTask < Dw::Tasks::BaseTask
               invoice_type = "manual"
             end
 
-            Dw::BbInvoiceOverview.upsert({ uid: invoice.id, account_id: account.id, company_id: company.id, user_id: user_id, customer_id: customer_id, invoice_id: invoice.id, project_id: project_id,
+            Dwh::BbInvoiceOverview.upsert({ uid: invoice.id, account_id: account.id, company_id: company.id, user_id: user_id, customer_id: customer_id, invoice_id: invoice.id, project_id: project_id,
                   account_name: account.name, company_name: company_name, invoice_nr: invoice_nr, invoice_date: invoice_date, month: month, year: year, user_name: user_name, customer_name: customer_name,
                   project_name: project_name, description: description, quantity: quantity, amount: amount, invoice_type: invoice_type}, unique_by: [:uid])
           end
@@ -85,11 +85,11 @@ class Dw::Tasks::BbInvoicesOverviewTask < Dw::Tasks::BaseTask
 
       # Update result
       result.update(finished_at: DateTime.now, status: "finished")
-      Dw::DataPipelineLogger.new.create_log(run.id, "success", "[#{account.name}] Finished task [#{task.task_key}] successfully")
+      Dwh::DataPipelineLogger.new.create_log(run.id, "success", "[#{account.name}] Finished task [#{task.task_key}] successfully")
     rescue => e
       # Update result to failed if an error occurs
       result.update(finished_at: DateTime.now, status: "failed", error: e.message)
-      Dw::DataPipelineLogger.new.create_log(run.id, "alert", "[#{account.name}] Finished task [#{task.task_key}] with error: #{e.message}")
+      Dwh::DataPipelineLogger.new.create_log(run.id, "alert", "[#{account.name}] Finished task [#{task.task_key}] with error: #{e.message}")
     end
   end
 end

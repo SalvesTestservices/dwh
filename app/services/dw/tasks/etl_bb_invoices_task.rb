@@ -1,11 +1,11 @@
-class Dw::Tasks::EtlBbInvoicesTask < Dw::Tasks::BaseTask
+class Dwh::Tasks::EtlBbInvoicesTask < Dwh::Tasks::BaseTask
   queue_as :default
 
   def perform(account, run, result, task)
     # Wait for alle dependencies to finish
     all_dependencies_finished = wait_on_dependencies(account, run, task)
     if all_dependencies_finished == false
-      Dw::DataPipelineLogger.new.create_log(run.id, "cancelled", "[#{account.name}] Taak [#{task.task_key}] geannuleerd")
+      Dwh::DataPipelineLogger.new.create_log(run.id, "cancelled", "[#{account.name}] Taak [#{task.task_key}] geannuleerd")
       result.update(finished_at: DateTime.now, status: "cancelled")
       return
     end
@@ -85,27 +85,27 @@ class Dw::Tasks::EtlBbInvoicesTask < Dw::Tasks::BaseTask
             invoice_hash[:vat_total]          = vat_total.blank? ? nil : vat_total.round(2)
             invoice_hash[:amount_incl_vat]    = amount_incl_vat.blank? ? nil : amount_incl_vat.round(2)
   
-            Dw::EtlStorage.create(account_id: account.id, identifier: "invoices", etl: "extract", data: invoice_hash)
+            Dwh::EtlStorage.create(account_id: account.id, identifier: "invoices", etl: "extract", data: invoice_hash)
           end
         end
 
         # Load invoices
-        dim_account = Dw::DimAccount.find_by(original_id: account.id)
+        dim_account = Dwh::DimAccount.find_by(original_id: account.id)
 
-        invoices = Dw::EtlStorage.where(account_id: account.id, identifier: "invoices", etl: "extract")
+        invoices = Dwh::EtlStorage.where(account_id: account.id, identifier: "invoices", etl: "extract")
         unless invoices.blank?
           invoices.each do |invoice|
-            dim_project     = Dw::DimProject.find_by(account_id: dim_account.id, original_id: invoice.data['project_id'])
-            dim_customer    = Dw::DimCustomer.find_by(account_id: dim_account.id, original_id: invoice.data['customer_id'])
-            dim_user        = Dw::DimUser.find_by(account_id: dim_account.id, original_id: invoice.data['user_id'])
-            dim_company     = Dw::DimCompany.find_by(account_id: dim_account.id, original_id: invoice.data['company_id'])
+            dim_project     = Dwh::DimProject.find_by(account_id: dim_account.id, original_id: invoice.data['project_id'])
+            dim_customer    = Dwh::DimCustomer.find_by(account_id: dim_account.id, original_id: invoice.data['customer_id'])
+            dim_user        = Dwh::DimUser.find_by(account_id: dim_account.id, original_id: invoice.data['user_id'])
+            dim_company     = Dwh::DimCompany.find_by(account_id: dim_account.id, original_id: invoice.data['company_id'])
             
             dim_project_id      = dim_project.blank? ? nil : dim_project.id
             dim_customer_id     = dim_customer.blank? ? nil : dim_customer.id
             dim_user_id         = dim_user.blank? ? nil : dim_user.id
             dim_company_id      = dim_company.blank? ? nil : dim_company.id
     
-            Dw::FactInvoice.upsert({ account_id: dim_account.id, original_id: invoice.data['original_id'], invoice_date: invoice.data['invoice_date'], status: invoice.data['status'], project_id: dim_project_id,
+            Dwh::FactInvoice.upsert({ account_id: dim_account.id, original_id: invoice.data['original_id'], invoice_date: invoice.data['invoice_date'], status: invoice.data['status'], project_id: dim_project_id,
               customer_id: dim_customer_id, user_id: dim_user_id, company_id: dim_company_id, timesheet_month: invoice.data['timesheet_month'], timesheet_year: invoice.data['timesheet_year'], credit: invoice.data['credit'],
               condition_days: invoice.data['condition_days'], internal_charging: invoice.data['internal_charging'], amount_excl_vat: invoice.data['amount_excl_vat'], vat_6: invoice.data['vat_6'], vat_9: invoice.data['vat_9'],
               vat_21: invoice.data['vat_21'], vat_total: invoice.data['vat_total'], amount_incl_vat: invoice.data['amount_incl_vat'] }, unique_by: [:account_id, :original_id])
@@ -117,11 +117,11 @@ class Dw::Tasks::EtlBbInvoicesTask < Dw::Tasks::BaseTask
 
       # Update result
       result.update(finished_at: DateTime.now, status: "finished")
-      Dw::DataPipelineLogger.new.create_log(run.id, "success", "[#{account.name}] Finished task [#{task.task_key}] successfully")
+      Dwh::DataPipelineLogger.new.create_log(run.id, "success", "[#{account.name}] Finished task [#{task.task_key}] successfully")
     rescue => e
       # Update result to failed if an error occurs
       result.update(finished_at: DateTime.now, status: "failed", error: e.message)
-      Dw::DataPipelineLogger.new.create_log(run.id, "alert", "[#{account.name}] Finished task [#{task.task_key}] with error: #{e.message}")
+      Dwh::DataPipelineLogger.new.create_log(run.id, "alert", "[#{account.name}] Finished task [#{task.task_key}] with error: #{e.message}")
     end
   end
 end

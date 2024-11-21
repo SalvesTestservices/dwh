@@ -1,11 +1,11 @@
-class Dw::Tasks::EtlBbTargetsTask < Dw::Tasks::BaseTask
+class Dwh::Tasks::EtlBbTargetsTask < Dwh::Tasks::BaseTask
   queue_as :default
 
   def perform(account, run, result, task)
     # Wait for alle dependencies to finish
     all_dependencies_finished = wait_on_dependencies(account, run, task)
     if all_dependencies_finished == false
-      Dw::DataPipelineLogger.new.create_log(run.id, "cancelled", "[#{account.name}] Taak [#{task.task_key}] geannuleerd")
+      Dwh::DataPipelineLogger.new.create_log(run.id, "cancelled", "[#{account.name}] Taak [#{task.task_key}] geannuleerd")
       result.update(finished_at: DateTime.now, status: "cancelled")
       return
     end
@@ -14,7 +14,7 @@ class Dw::Tasks::EtlBbTargetsTask < Dw::Tasks::BaseTask
       # Extract company_targets
       ActsAsTenant.without_tenant do
         account     = Account.find(run.account_id)
-        dim_account = Dw::DimAccount.find_by(original_id: account.id)
+        dim_account = Dwh::DimAccount.find_by(original_id: account.id)
         companies   = account.companies.where.not(id: get_excluded_company_ids)
         year        = account.company_targets.blank? ? Date.current.year : account.company_targets.order(:year).last.year
 
@@ -59,7 +59,7 @@ class Dw::Tasks::EtlBbTargetsTask < Dw::Tasks::BaseTask
                 company_target_hash[:employee_attrition]  = convert_to_fractional(role_target.employee_attrition)
                 company_target_hash[:employee_absence]    = convert_to_fractional(role_target.employee_absence)
 
-                Dw::EtlStorage.create(account_id: account.id, identifier: "company_targets", etl: "extract", data: company_target_hash)
+                Dwh::EtlStorage.create(account_id: account.id, identifier: "company_targets", etl: "extract", data: company_target_hash)
               end
             end
           end
@@ -67,10 +67,10 @@ class Dw::Tasks::EtlBbTargetsTask < Dw::Tasks::BaseTask
 
         # Load company_targets
         unless dim_account.blank?
-          company_targets = Dw::EtlStorage.where(account_id: account.id, identifier: "company_targets", etl: "extract")
+          company_targets = Dwh::EtlStorage.where(account_id: account.id, identifier: "company_targets", etl: "extract")
           unless company_targets.blank?
             company_targets.each do |company_target|
-              dim_company     = Dw::DimCompany.find_by(account_id: dim_account.id, original_id: company_target.data['company_id'])
+              dim_company     = Dwh::DimCompany.find_by(account_id: dim_account.id, original_id: company_target.data['company_id'])
               dim_company_id  = dim_company.blank? ? nil : dim_company.id
 
               unless dim_company_id.blank?
@@ -85,7 +85,7 @@ class Dw::Tasks::EtlBbTargetsTask < Dw::Tasks::BaseTask
 
                 uid = "#{dim_account.id}#{dim_company.id}#{company_target.data['year']}#{company_target.data['month']}#{company_target.data['quarter']}#{role_group_id}"
 
-                Dw::FactTarget.upsert({ uid: uid, account_id: dim_account.id, original_id: company_target.data['original_id'], company_id: dim_company.id, 
+                Dwh::FactTarget.upsert({ uid: uid, account_id: dim_account.id, original_id: company_target.data['original_id'], company_id: dim_company.id, 
                   year: company_target.data['year'], month: company_target.data['month'], quarter: company_target.data['quarter'], role_group: company_target.data['role_group'], 
                   fte: company_target.data['fte'], billable_hours: company_target.data['billable_hours'], cost_price: company_target.data['cost_price'], 
                   bruto_margin: company_target.data['bruto_margin'], target_date: company_target.data['target_date'], workable_hours: company_target.data['workable_hours'],
@@ -99,7 +99,7 @@ class Dw::Tasks::EtlBbTargetsTask < Dw::Tasks::BaseTask
 
         # Data quality check: row count
         expected  = companies.count * 144 #(4 quarters * 12 months * 3 roles)
-        actual    = Dw::FactTarget.where(account_id: dim_account.id, year: year).count
+        actual    = Dwh::FactTarget.where(account_id: dim_account.id, year: year).count
         perform_quality_check("row_count", run, task, actual, expected, "targets gevuld + leeg")
 
         # Data quality check: row count for filled and empty targets
@@ -110,20 +110,20 @@ class Dw::Tasks::EtlBbTargetsTask < Dw::Tasks::BaseTask
           expected_empty   += 144 - company.company_targets.count
         end
 
-        actual_filled = Dw::FactTarget.where(account_id: dim_account.id, year: year).where.not(billable_hours: nil).count
+        actual_filled = Dwh::FactTarget.where(account_id: dim_account.id, year: year).where.not(billable_hours: nil).count
         perform_quality_check("row_count", run, task, actual_filled, expected_filled, "targets gevuld")
         
-        actual_empty = Dw::FactTarget.where(account_id: dim_account.id, year: year).where(billable_hours: nil).count
+        actual_empty = Dwh::FactTarget.where(account_id: dim_account.id, year: year).where(billable_hours: nil).count
         perform_quality_check("row_count", run, task, actual_empty, expected_empty, "targets leeg")
 
         # Update result
         result.update(finished_at: DateTime.now, status: "finished")
-        Dw::DataPipelineLogger.new.create_log(run.id, "success", "[#{account.name}] Finished task [#{task.task_key}] successfully")
+        Dwh::DataPipelineLogger.new.create_log(run.id, "success", "[#{account.name}] Finished task [#{task.task_key}] successfully")
       end
     rescue => e
       # Update result to failed if an error occurs
       result.update(finished_at: DateTime.now, status: "failed", error: e.message)
-      Dw::DataPipelineLogger.new.create_log(run.id, "alert", "[#{account.name}] Finished task [#{task.task_key}] with error: #{e.message}")
+      Dwh::DataPipelineLogger.new.create_log(run.id, "alert", "[#{account.name}] Finished task [#{task.task_key}] with error: #{e.message}")
     end
   end
 
@@ -159,7 +159,7 @@ class Dw::Tasks::EtlBbTargetsTask < Dw::Tasks::BaseTask
         company_target_hash[:employee_attrition]  = nil
         company_target_hash[:employee_absence]    = nil
     
-        Dw::EtlStorage.create(account_id: account.id, identifier: "company_targets", etl: "extract", data: company_target_hash)
+        Dwh::EtlStorage.create(account_id: account.id, identifier: "company_targets", etl: "extract", data: company_target_hash)
       end
     end
   end

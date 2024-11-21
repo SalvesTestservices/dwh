@@ -1,4 +1,4 @@
-class Dw::Tasks::EtlLucanetTask < Dw::Tasks::BaseTask
+class Dwh::Tasks::EtlLucanetTask < Dwh::Tasks::BaseTask
   queue_as :default
 
   class LucanetConnection < ActiveRecord::Base
@@ -10,7 +10,7 @@ class Dw::Tasks::EtlLucanetTask < Dw::Tasks::BaseTask
     # Wait for all dependencies to finish
     all_dependencies_finished = wait_on_dependencies(account, run, task)
     if all_dependencies_finished == false
-      Dw::DataPipelineLogger.new.create_log(run.id, "cancelled", "[#{account.name}] Taak [#{task.task_key}] geannuleerd")
+      Dwh::DataPipelineLogger.new.create_log(run.id, "cancelled", "[#{account.name}] Taak [#{task.task_key}] geannuleerd")
       result.update(finished_at: DateTime.now, status: "cancelled")
       return
     end
@@ -80,16 +80,16 @@ class Dw::Tasks::EtlLucanetTask < Dw::Tasks::BaseTask
             account_level_6: account_structure['AccountLevel6']
           }
         end
-        Dw::LucanetTransaction.upsert_all(transformed_facts, unique_by: :uid)
+        Dwh::LucanetTransaction.upsert_all(transformed_facts, unique_by: :uid)
       end
 
       # Update result
       result.update(finished_at: DateTime.now, status: "finished")
-      Dw::DataPipelineLogger.new.create_log(run.id, "success", "[#{account.name}] Finished task [#{task.task_key}] successfully")
+      Dwh::DataPipelineLogger.new.create_log(run.id, "success", "[#{account.name}] Finished task [#{task.task_key}] successfully")
     rescue => e
       # Update result to failed if an error occurs
       result.update(finished_at: DateTime.now, status: "failed", error: e.message)
-      Dw::DataPipelineLogger.new.create_log(run.id, "alert", "[#{account.name}] Finished task [#{task.task_key}] with error: #{e.message}")
+      Dwh::DataPipelineLogger.new.create_log(run.id, "alert", "[#{account.name}] Finished task [#{task.task_key}] with error: #{e.message}")
     end
   end
 

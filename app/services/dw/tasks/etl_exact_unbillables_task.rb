@@ -1,11 +1,11 @@
-class Dw::Tasks::EtlExactUnbillablesTask < Dw::Tasks::BaseExactTask
+class Dwh::Tasks::EtlExactUnbillablesTask < Dwh::Tasks::BaseExactTask
   queue_as :default
 
   def perform(account, run, result, task)
     # Wait for alle dependencies to finish
     all_dependencies_finished = wait_on_dependencies(account, run, task)
     if all_dependencies_finished == false
-      Dw::DataPipelineLogger.new.create_log(run.id, "cancelled", "[#{account.name}] Taak [#{task.task_key}] geannuleerd")
+      Dwh::DataPipelineLogger.new.create_log(run.id, "cancelled", "[#{account.name}] Taak [#{task.task_key}] geannuleerd")
       result.update(finished_at: DateTime.now, status: "cancelled")
       return
     end
@@ -38,20 +38,20 @@ class Dw::Tasks::EtlExactUnbillablesTask < Dw::Tasks::BaseExactTask
           unbillables_hash[:name_short]   = unbillable[:name_short]
           unbillables_hash[:updated_at]   = DateTime.now.strftime("%d%m%Y").to_i
 
-          Dw::EtlStorage.create(account_id: account.id, identifier: "unbillables", etl: "transform", data: unbillables_hash)
+          Dwh::EtlStorage.create(account_id: account.id, identifier: "unbillables", etl: "transform", data: unbillables_hash)
         end
 
         ### Load unbillables
-        Dw::Loaders::UnbillablesLoader.new.load_data(account)
+        Dwh::Loaders::UnbillablesLoader.new.load_data(account)
       end
 
       # Update result
       result.update(finished_at: DateTime.now, status: "finished")
-      Dw::DataPipelineLogger.new.create_log(run.id, "success", "[#{account.name}] Finished task [#{task.task_key}] successfully")
+      Dwh::DataPipelineLogger.new.create_log(run.id, "success", "[#{account.name}] Finished task [#{task.task_key}] successfully")
     rescue => e
       # Update result to failed if an error occurs
       result.update(finished_at: DateTime.now, status: "failed", error: e.message)
-      Dw::DataPipelineLogger.new.create_log(run.id, "alert", "[#{account.name}] Finished task [#{task.task_key}] with error: #{e.message}")
+      Dwh::DataPipelineLogger.new.create_log(run.id, "alert", "[#{account.name}] Finished task [#{task.task_key}] with error: #{e.message}")
     end
   end
 end

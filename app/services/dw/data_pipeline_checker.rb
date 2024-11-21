@@ -1,8 +1,8 @@
-class Dw::DataPipelineChecker < ApplicationJob
+class Dwh::DataPipelineChecker < ApplicationJob
   queue_as :default
 
   def perform(account, run, result_ids)
-    results = Dw::DpResult.where(id: result_ids)
+    results = Dwh::DpResult.where(id: result_ids)
     job_ids = results.pluck(:job_id)
 
     # Keep checking jobs until all are finished
@@ -38,7 +38,7 @@ class Dw::DataPipelineChecker < ApplicationJob
     run.update(status: status, finished_at: DateTime.now)
     run.dp_pipeline.update(last_executed_at: DateTime.now)
 
-    Dw::DataPipelineLogger.new.create_log(run.id, "success", "[#{account.name}] Run gereed")
+    Dwh::DataPipelineLogger.new.create_log(run.id, "success", "[#{account.name}] Run gereed")
   end
 
   private def handle_failed_job(failed_job, results)
@@ -48,7 +48,7 @@ class Dw::DataPipelineChecker < ApplicationJob
     # Update the failed result
     failed_result.update(status: "failed", error: failed_job.error, finished_at: DateTime.now)
 
-    Dw::DataPipelineLogger.new.create_log(failed_result.dp_run.id, "alert", "Taak [#{failed_task_key}] mislukt: #{failed_job.error}")
+    Dwh::DataPipelineLogger.new.create_log(failed_result.dp_run.id, "alert", "Taak [#{failed_task_key}] mislukt: #{failed_job.error}")
     
     # Destroy the failed job
     failed_job.destroy
@@ -65,7 +65,7 @@ class Dw::DataPipelineChecker < ApplicationJob
           # Update the result status to "cancelled"
           result.update(status: "cancelled", finished_at: DateTime.now)
 
-          Dw::DataPipelineLogger.new.create_log(result.dp_run.id, "alert", "Afhankelijke taak [#{result.dp_task.task_key}] geannuleerd")
+          Dwh::DataPipelineLogger.new.create_log(result.dp_run.id, "alert", "Afhankelijke taak [#{result.dp_task.task_key}] geannuleerd")
 
           # Destroy the job
           job.destroy

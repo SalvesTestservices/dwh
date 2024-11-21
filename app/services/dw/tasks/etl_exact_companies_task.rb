@@ -1,11 +1,11 @@
-class Dw::Tasks::EtlExactCompaniesTask < Dw::Tasks::BaseExactTask
+class Dwh::Tasks::EtlExactCompaniesTask < Dwh::Tasks::BaseExactTask
   queue_as :default
 
   def perform(account, run, result, task)
     # Wait for alle dependencies to finish
     all_dependencies_finished = wait_on_dependencies(account, run, task)
     if all_dependencies_finished == false
-      Dw::DataPipelineLogger.new.create_log(run.id, "cancelled", "[#{account.name}] Taak [#{task.task_key}] geannuleerd")
+      Dwh::DataPipelineLogger.new.create_log(run.id, "cancelled", "[#{account.name}] Taak [#{task.task_key}] geannuleerd")
       result.update(finished_at: DateTime.now, status: "cancelled")
       return
     end
@@ -19,7 +19,7 @@ class Dw::Tasks::EtlExactCompaniesTask < Dw::Tasks::BaseExactTask
 
         # Cancel the task if the API keys are not valid
         if api_url.blank? or api_key.blank? or administration.blank?
-          Dw::DataPipelineLogger.new.create_log(run.id, "alert", "[#{account.name}] Invalid API keys")
+          Dwh::DataPipelineLogger.new.create_log(run.id, "alert", "[#{account.name}] Invalid API keys")
           result.update(finished_at: DateTime.now, status: "error")
           return  
         end
@@ -53,22 +53,22 @@ class Dw::Tasks::EtlExactCompaniesTask < Dw::Tasks::BaseExactTask
               companies_hash[:name_short]   = company["Code"].gsub(company["CompanyCode"], "")
               companies_hash[:updated_at]   = company["ModifiedDate"].to_date.strftime("%d%m%Y").to_i
 
-              Dw::EtlStorage.create(account_id: account.id, identifier: "companies", etl: "transform", data: companies_hash)
+              Dwh::EtlStorage.create(account_id: account.id, identifier: "companies", etl: "transform", data: companies_hash)
             end
           end
         end
 
         ### Load companies
-        Dw::Loaders::CompaniesLoader.new.load_data(account)
+        Dwh::Loaders::CompaniesLoader.new.load_data(account)
       end
 
       # Update result
       result.update(finished_at: DateTime.now, status: "finished")
-      Dw::DataPipelineLogger.new.create_log(run.id, "success", "[#{account.name}] Finished task [#{task.task_key}] successfully")
+      Dwh::DataPipelineLogger.new.create_log(run.id, "success", "[#{account.name}] Finished task [#{task.task_key}] successfully")
     rescue => e
       # Update result to failed if an error occurs
       result.update(finished_at: DateTime.now, status: "failed", error: e.message)
-      Dw::DataPipelineLogger.new.create_log(run.id, "alert", "[#{account.name}] Finished task [#{task.task_key}] with error: #{e.message}")
+      Dwh::DataPipelineLogger.new.create_log(run.id, "alert", "[#{account.name}] Finished task [#{task.task_key}] with error: #{e.message}")
     end
   end
 end

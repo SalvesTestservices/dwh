@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   end
 
   # DWH
-  namespace :dw do
+  namespace :dwh do
     resources :dp_pipelines do
       member do
         patch :move

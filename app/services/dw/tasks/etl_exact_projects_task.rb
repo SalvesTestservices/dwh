@@ -1,11 +1,11 @@
-class Dw::Tasks::EtlExactProjectsTask < Dw::Tasks::BaseExactTask
+class Dwh::Tasks::EtlExactProjectsTask < Dwh::Tasks::BaseExactTask
   queue_as :default
 
   def perform(account, run, result, task)
     # Wait for alle dependencies to finish
     all_dependencies_finished = wait_on_dependencies(account, run, task)
     if all_dependencies_finished == false
-      Dw::DataPipelineLogger.new.create_log(run.id, "cancelled", "[#{account.name}] Taak [#{task.task_key}] geannuleerd")
+      Dwh::DataPipelineLogger.new.create_log(run.id, "cancelled", "[#{account.name}] Taak [#{task.task_key}] geannuleerd")
       result.update(finished_at: DateTime.now, status: "cancelled")
       return
     end
@@ -13,13 +13,13 @@ class Dw::Tasks::EtlExactProjectsTask < Dw::Tasks::BaseExactTask
     begin
       ActsAsTenant.without_tenant do
         account     = Account.find(run.account_id)
-        dim_account = Dw::DimAccount.find_by(original_id: account.id)
+        dim_account = Dwh::DimAccount.find_by(original_id: account.id)
 
         api_url, api_key, administration = get_api_keys("synergy")
 
         # Cancel the task if the API keys are not valid
         if api_url.blank? or api_key.blank? or administration.blank?
-          Dw::DataPipelineLogger.new.create_log(run.id, "alert", "[#{account.name}] Invalid API keys")
+          Dwh::DataPipelineLogger.new.create_log(run.id, "alert", "[#{account.name}] Invalid API keys")
           result.update(finished_at: DateTime.now, status: "error")
           return  
         end
@@ -52,7 +52,7 @@ class Dw::Tasks::EtlExactProjectsTask < Dw::Tasks::BaseExactTask
             projects["Results"].each do |project|
               unless project["ProjectNumber"] == "CERIOS_UREN_INTERN"
                 unless unbillable_work_project_numbers.map(&:strip).include?(project["ProjectNumber"])
-                  dim_customer = Dw::DimCustomer.find_by(original_id: project["CustomerID"])
+                  dim_customer = Dwh::DimCustomer.find_by(original_id: project["CustomerID"])
                   dim_customer_id = dim_customer.blank? ? nil : dim_customer.original_id
 
                   status = project["Status"] == "G" ? "inactive" : "active"
@@ -77,7 +77,7 @@ class Dw::Tasks::EtlExactProjectsTask < Dw::Tasks::BaseExactTask
                   project_hash[:customer_id]        = dim_customer_id
                   project_hash[:updated_at]         = project["ModifiedDate"].to_date.strftime("%d%m%Y").to_i
 
-                  Dw::EtlStorage.create(account_id: account.id, identifier: "projects", etl: "transform", data: project_hash)
+                  Dwh::EtlStorage.create(account_id: account.id, identifier: "projects", etl: "transform", data: project_hash)
                 end
               end
             end
@@ -85,16 +85,16 @@ class Dw::Tasks::EtlExactProjectsTask < Dw::Tasks::BaseExactTask
         end
 
         ### Load projects
-        Dw::Loaders::ProjectsLoader.new.load_data(account)
+        Dwh::Loaders::ProjectsLoader.new.load_data(account)
       end
 
       # Update result
       result.update(finished_at: DateTime.now, status: "finished")
-      Dw::DataPipelineLogger.new.create_log(run.id, "success", "[#{account.name}] Finished task [#{task.task_key}] successfully")      
+      Dwh::DataPipelineLogger.new.create_log(run.id, "success", "[#{account.name}] Finished task [#{task.task_key}] successfully")      
     rescue => e
       # Update result to failed if an error occurs
       result.update(finished_at: DateTime.now, status: "failed", error: e.message)
-      Dw::DataPipelineLogger.new.create_log(run.id, "alert", "[#{account.name}] Finished task [#{task.task_key}] with error: #{e.message}")
+      Dwh::DataPipelineLogger.new.create_log(run.id, "alert", "[#{account.name}] Finished task [#{task.task_key}] with error: #{e.message}")
     end
   end
 end

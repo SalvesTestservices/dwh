@@ -1,11 +1,11 @@
-class Dw::Tasks::EtlExactTempTask < Dw::Tasks::BaseExactTask
+class Dwh::Tasks::EtlExactTempTask < Dwh::Tasks::BaseExactTask
   queue_as :default
 
   def perform(account, run, result, task)
     # Wait for alle dependencies to finish
     all_dependencies_finished = wait_on_dependencies(account, run, task)
     if all_dependencies_finished == false
-      Dw::DataPipelineLogger.new.create_log(run.id, "cancelled", "[#{account.name}] Taak [#{task.task_key}] geannuleerd")
+      Dwh::DataPipelineLogger.new.create_log(run.id, "cancelled", "[#{account.name}] Taak [#{task.task_key}] geannuleerd")
       result.update(finished_at: DateTime.now, status: "cancelled")
       return
     end
@@ -14,19 +14,19 @@ class Dw::Tasks::EtlExactTempTask < Dw::Tasks::BaseExactTask
       # Extract users
       ActsAsTenant.without_tenant do
         account     = Account.find(run.account_id)
-        dim_account = Dw::DimAccount.find_by(original_id: account.id)
+        dim_account = Dwh::DimAccount.find_by(original_id: account.id)
 
         api_url, api_key, administration = get_api_keys("synergy")
 
         # Cancel the task if the API keys are not valid
         if api_url.blank? or api_key.blank? or administration.blank?
-          Dw::DataPipelineLogger.new.create_log(run.id, "alert", "[#{account.name}] Invalid API keys")
+          Dwh::DataPipelineLogger.new.create_log(run.id, "alert", "[#{account.name}] Invalid API keys")
           result.update(finished_at: DateTime.now, status: "error")
           return  
         end
 
         # Update leave_date of dim_users
-        dim_users = Dw::DimUser.where(account_id: dim_account.id)
+        dim_users = Dwh::DimUser.where(account_id: dim_account.id)
         dim_users.each do |dim_user|
           if dim_user.original_id == "424"
             dim_user.destroy
@@ -37,11 +37,11 @@ class Dw::Tasks::EtlExactTempTask < Dw::Tasks::BaseExactTask
         end
 
         # Remove fixed price projects
-        #dim_projects = Dw::DimProject.where(account_id: dim_account.id, calculation_type: "fixed_price")
+        #dim_projects = Dwh::DimProject.where(account_id: dim_account.id, calculation_type: "fixed_price")
         #dim_projects.each do |dim_project|
-        #  fact_projectusers = Dw::FactProjectuser.where(project_id: dim_project.id)
+        #  fact_projectusers = Dwh::FactProjectuser.where(project_id: dim_project.id)
         #  fact_projectusers.each do |fact_projectuser|
-        #    fact_activities = Dw::FactActivity.where(projectuser_id: fact_projectuser.id, project_id: dim_project.id).destroy_all
+        #    fact_activities = Dwh::FactActivity.where(projectuser_id: fact_projectuser.id, project_id: dim_project.id).destroy_all
         #    fact_projectuser.destroy
         #  end
         #  dim_project.destroy
@@ -50,11 +50,11 @@ class Dw::Tasks::EtlExactTempTask < Dw::Tasks::BaseExactTask
 
       # Update result
       result.update(finished_at: DateTime.now, status: "finished")
-      Dw::DataPipelineLogger.new.create_log(run.id, "success", "[#{account.name}] Finished task [#{task.task_key}] successfully")
+      Dwh::DataPipelineLogger.new.create_log(run.id, "success", "[#{account.name}] Finished task [#{task.task_key}] successfully")
     rescue => e
       # Update result to failed if an error occurs
       result.update(finished_at: DateTime.now, status: "failed", error: e.message)
-      Dw::DataPipelineLogger.new.create_log(run.id, "alert", "[#{account.name}] Finished task [#{task.task_key}] with error: #{e.message}")
+      Dwh::DataPipelineLogger.new.create_log(run.id, "alert", "[#{account.name}] Finished task [#{task.task_key}] with error: #{e.message}")
     end
   end
 

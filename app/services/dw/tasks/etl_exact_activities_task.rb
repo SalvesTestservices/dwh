@@ -1,11 +1,11 @@
-class Dw::Tasks::EtlExactActivitiesTask < Dw::Tasks::BaseExactTask
+class Dwh::Tasks::EtlExactActivitiesTask < Dwh::Tasks::BaseExactTask
   queue_as :default
 
   def perform(account, run, result, task)
     # Wait for alle dependencies to finish
     all_dependencies_finished = wait_on_dependencies(account, run, task)
     if all_dependencies_finished == false
-      Dw::DataPipelineLogger.new.create_log(run.id, "alert", "[#{account.name}] taak [#{task.task_key}] geannuleerd")
+      Dwh::DataPipelineLogger.new.create_log(run.id, "alert", "[#{account.name}] taak [#{task.task_key}] geannuleerd")
       result.update(finished_at: DateTime.now, status: "cancelled")
       return
     end
@@ -13,7 +13,7 @@ class Dw::Tasks::EtlExactActivitiesTask < Dw::Tasks::BaseExactTask
     begin
       ActsAsTenant.without_tenant do
         account              = Account.find(run.account_id)
-        dim_account          = Dw::DimAccount.find_by(original_id: account.id)
+        dim_account          = Dwh::DimAccount.find_by(original_id: account.id)
         dp_pipeline          = run.dp_pipeline
         year                 = run.dp_pipeline.year.blank? ? Date.current.year : run.dp_pipeline.year.to_i
         month                = run.dp_pipeline.month.blank? ? Date.current.month : run.dp_pipeline.month.to_i
@@ -23,16 +23,16 @@ class Dw::Tasks::EtlExactActivitiesTask < Dw::Tasks::BaseExactTask
         # Cancel the task if the API keys are not valid
         api_url, api_key, administration = get_api_keys("synergy")
         if api_url.blank? or api_key.blank? or administration.blank?
-          Dw::DataPipelineLogger.new.create_log(run.id, "alert", "[#{account.name}] Invalid API keys")
+          Dwh::DataPipelineLogger.new.create_log(run.id, "alert", "[#{account.name}] Invalid API keys")
           result.update(finished_at: DateTime.now, status: "error")
           return  
         end
 
         # Scope users 
         if dp_pipeline.scoped_user_id.blank?
-          dim_users = Dw::DimUser.where(account_id: dim_account.id)
+          dim_users = Dwh::DimUser.where(account_id: dim_account.id)
         else
-          dim_users = Dw::DimUser.where(account_id: dim_account.id, original_id: dp_pipeline.scoped_user_id.to_i)
+          dim_users = Dwh::DimUser.where(account_id: dim_account.id, original_id: dp_pipeline.scoped_user_id.to_i)
         end
 
         # Get activities for user(s)
@@ -72,7 +72,7 @@ class Dw::Tasks::EtlExactActivitiesTask < Dw::Tasks::BaseExactTask
                     if activity["AccountID"].blank?
                       customer_id = nil
                     else
-                      dim_customer = Dw::DimCustomer.find_by(account_id: dim_account.id, original_id: activity["AccountID"].to_s.strip)
+                      dim_customer = Dwh::DimCustomer.find_by(account_id: dim_account.id, original_id: activity["AccountID"].to_s.strip)
                       customer_id = dim_customer.blank? ? nil : dim_customer.original_id
                     end
 
@@ -80,7 +80,7 @@ class Dw::Tasks::EtlExactActivitiesTask < Dw::Tasks::BaseExactTask
                     if activity["ProjectNumber"].blank?
                       project_id = nil
                     else
-                      dim_project = Dw::DimProject.find_by(account_id: dim_account.id, original_id: activity["ProjectNumber"].to_s.strip)
+                      dim_project = Dwh::DimProject.find_by(account_id: dim_account.id, original_id: activity["ProjectNumber"].to_s.strip)
                       project_id = dim_project.blank? ? nil : dim_project.original_id
                     end
 
@@ -89,13 +89,13 @@ class Dw::Tasks::EtlExactActivitiesTask < Dw::Tasks::BaseExactTask
                       user_id = nil
                       company_id = nil
                     else
-                      dim_user = Dw::DimUser.find_by(account_id: dim_account.id, original_id: activity["ResourceID"].to_s.strip)
+                      dim_user = Dwh::DimUser.find_by(account_id: dim_account.id, original_id: activity["ResourceID"].to_s.strip)
                       user_id = dim_user.blank? ? nil : dim_user.original_id
 
                       if user_id.blank?
                         company_id = nil
                       else
-                        dim_company = Dw::DimCompany.find_by(account_id: dim_account.id, id: dim_user.company_id)
+                        dim_company = Dwh::DimCompany.find_by(account_id: dim_account.id, id: dim_user.company_id)
                         company_id = dim_company.blank? ? nil : dim_company.original_id
                       end
                     end
@@ -104,7 +104,7 @@ class Dw::Tasks::EtlExactActivitiesTask < Dw::Tasks::BaseExactTask
                     if dim_user.blank? or dim_project.blank?
                       projectuser_id = nil
                     else
-                      fact_projectuser = Dw::FactProjectuser.find_by(account_id: dim_account.id, user_id:dim_user.id, project_id: dim_project.id)
+                      fact_projectuser = Dwh::FactProjectuser.find_by(account_id: dim_account.id, user_id:dim_user.id, project_id: dim_project.id)
                       projectuser_id = fact_projectuser.blank? ? nil : fact_projectuser.original_id
                     end
 
@@ -127,7 +127,7 @@ class Dw::Tasks::EtlExactActivitiesTask < Dw::Tasks::BaseExactTask
                     activity_hash[:hours]           = get_hours(activity)
                     activity_hash[:rate]            = rate
 
-                    Dw::EtlStorage.create(account_id: account.id, identifier: "activities", etl: "transform", data: activity_hash)
+                    Dwh::EtlStorage.create(account_id: account.id, identifier: "activities", etl: "transform", data: activity_hash)
                   end
                 end
               end
@@ -136,7 +136,7 @@ class Dw::Tasks::EtlExactActivitiesTask < Dw::Tasks::BaseExactTask
             ### Extract unbillable activities
 
             # Send the API GET request as long as the SkipToken is not empty (pagination)
-            dim_unbillables = Dw::DimUnbillable.where(account_id: dim_account.id).where.not(original_id: ["10", "11", "1060006", "LEEGLOOP", "INTERN", "ZIEK_GED_HERST"])
+            dim_unbillables = Dwh::DimUnbillable.where(account_id: dim_account.id).where.not(original_id: ["10", "11", "1060006", "LEEGLOOP", "INTERN", "ZIEK_GED_HERST"])
             unless dim_unbillables.blank?
               dim_unbillables.each do |dim_unbillable|
                 request_type = dim_unbillable.original_id
@@ -171,7 +171,7 @@ class Dw::Tasks::EtlExactActivitiesTask < Dw::Tasks::BaseExactTask
             end
 
             ### Load activities, already because it is needed for sickness hours
-            Dw::Loaders::ActivitiesLoader.new.load_data(account)
+            Dwh::Loaders::ActivitiesLoader.new.load_data(account)
           end
 
           ### Set date patterns for sickness, holiday and maternity leave registrations
@@ -228,7 +228,7 @@ class Dw::Tasks::EtlExactActivitiesTask < Dw::Tasks::BaseExactTask
             end
 
             ### Load activities
-            Dw::Loaders::ActivitiesLoader.new.load_data(account)
+            Dwh::Loaders::ActivitiesLoader.new.load_data(account)
           end
 
           ### Extract sickness registrations
@@ -267,7 +267,7 @@ class Dw::Tasks::EtlExactActivitiesTask < Dw::Tasks::BaseExactTask
             end
 
             ### Load activities, already because it is needed for holiday hours
-            Dw::Loaders::ActivitiesLoader.new.load_data(account)
+            Dwh::Loaders::ActivitiesLoader.new.load_data(account)
           end
 
           ### Extract maternity leave registrations
@@ -307,7 +307,7 @@ class Dw::Tasks::EtlExactActivitiesTask < Dw::Tasks::BaseExactTask
             end
 
             ### Load activities, already because it is needed for holiday hours
-            Dw::Loaders::ActivitiesLoader.new.load_data(account)
+            Dwh::Loaders::ActivitiesLoader.new.load_data(account)
           end
 
         end
@@ -315,11 +315,11 @@ class Dw::Tasks::EtlExactActivitiesTask < Dw::Tasks::BaseExactTask
 
       # Update result
       result.update(finished_at: DateTime.now, status: "finished")
-      Dw::DataPipelineLogger.new.create_log(run.id, "success", "[#{account.name}] Finished task [#{task.task_key}] successfully")
+      Dwh::DataPipelineLogger.new.create_log(run.id, "success", "[#{account.name}] Finished task [#{task.task_key}] successfully")
     rescue => e
       # Update result to failed if an error occurs
       result.update(finished_at: DateTime.now, status: "failed", error: e.message)
-      Dw::DataPipelineLogger.new.create_log(run.id, "alert", "[#{account.name}] Finished task [#{task.task_key}] with error: #{e.message}")
+      Dwh::DataPipelineLogger.new.create_log(run.id, "alert", "[#{account.name}] Finished task [#{task.task_key}] with error: #{e.message}")
     end
   end
 
@@ -345,13 +345,13 @@ class Dw::Tasks::EtlExactActivitiesTask < Dw::Tasks::BaseExactTask
       user_id = nil
       company_id = nil
     else
-      dim_user = Dw::DimUser.find_by(original_id: activity["ResourceID"].to_s.strip)
+      dim_user = Dwh::DimUser.find_by(original_id: activity["ResourceID"].to_s.strip)
       user_id = dim_user.blank? ? nil : dim_user.original_id
 
       if user_id.blank?
         company_id = nil
       else
-        dim_company = Dw::DimCompany.find_by(id: dim_user.company_id)
+        dim_company = Dwh::DimCompany.find_by(id: dim_user.company_id)
         company_id = dim_company.blank? ? nil : dim_company.original_id
       end  
     end
@@ -396,7 +396,7 @@ class Dw::Tasks::EtlExactActivitiesTask < Dw::Tasks::BaseExactTask
         activity_hash[:hours]           = hours
         activity_hash[:rate]            = nil
 
-        Dw::EtlStorage.create(account_id: account.id, identifier: "activities", etl: "transform", data: activity_hash)
+        Dwh::EtlStorage.create(account_id: account.id, identifier: "activities", etl: "transform", data: activity_hash)
       end
     end
   end
@@ -417,17 +417,17 @@ class Dw::Tasks::EtlExactActivitiesTask < Dw::Tasks::BaseExactTask
     # Iterate days and create activity for each day
     (real_start_date..real_end_date).each do |sickness_date|
       # Get already registered hours for this day
-      dim_account = Dw::DimAccount.find_by(original_id: account.id)
-      registered_hours = Dw::FactActivity.where(account_id: dim_account.id, user_id: dim_user.id, activity_date: sickness_date.to_date.strftime("%d%m%Y").to_i).sum(:hours)
+      dim_account = Dwh::DimAccount.find_by(original_id: account.id)
+      registered_hours = Dwh::FactActivity.where(account_id: dim_account.id, user_id: dim_user.id, activity_date: sickness_date.to_date.strftime("%d%m%Y").to_i).sum(:hours)
 
       # Only register weekdays
       if (1..5).include?(sickness_date.wday)
         # Do not register on holidays
-        dim_holiday = Dw::DimHoliday.find_by(account_id: dim_account.id, company_id: dim_user.company_id, holiday_date: sickness_date.to_date.strftime("%d%m%Y").to_i)
+        dim_holiday = Dwh::DimHoliday.find_by(account_id: dim_account.id, company_id: dim_user.company_id, holiday_date: sickness_date.to_date.strftime("%d%m%Y").to_i)
         unless dim_holiday.present?
           # Set user and company
           user_id = dim_user.original_id
-          dim_company = Dw::DimCompany.find_by(id: dim_user.company_id)
+          dim_company = Dwh::DimCompany.find_by(id: dim_user.company_id)
           company_id = dim_company.blank? ? nil : dim_company.original_id
 
           # Calculate sickness hours and remaining hours
@@ -449,7 +449,7 @@ class Dw::Tasks::EtlExactActivitiesTask < Dw::Tasks::BaseExactTask
             activity_hash[:hours]           = remaining_hours
             activity_hash[:rate]            = nil
 
-            Dw::EtlStorage.create(account_id: account.id, identifier: "activities", etl: "transform", data: activity_hash)
+            Dwh::EtlStorage.create(account_id: account.id, identifier: "activities", etl: "transform", data: activity_hash)
           end
         end
       end
@@ -483,17 +483,17 @@ class Dw::Tasks::EtlExactActivitiesTask < Dw::Tasks::BaseExactTask
     # Iterate days and create activity for each day
     (real_start_date..real_end_date).each do |holiday_date|
       # Get already registered hours for this day
-      dim_account = Dw::DimAccount.find_by(original_id: account.id)
-      registered_hours = Dw::FactActivity.where(account_id: dim_account.id, user_id: dim_user.id, activity_date: holiday_date.to_date.strftime("%d%m%Y").to_i).sum(:hours)
+      dim_account = Dwh::DimAccount.find_by(original_id: account.id)
+      registered_hours = Dwh::FactActivity.where(account_id: dim_account.id, user_id: dim_user.id, activity_date: holiday_date.to_date.strftime("%d%m%Y").to_i).sum(:hours)
 
       # Only register weekdays
       if (1..5).include?(holiday_date.wday)
         # Do not register on holidays
-        dim_holiday = Dw::DimHoliday.find_by(account_id: dim_account.id, company_id: dim_user.company_id, holiday_date: holiday_date.to_date.strftime("%d%m%Y").to_i)
+        dim_holiday = Dwh::DimHoliday.find_by(account_id: dim_account.id, company_id: dim_user.company_id, holiday_date: holiday_date.to_date.strftime("%d%m%Y").to_i)
         unless dim_holiday.present?
           # Set user and company
           user_id = dim_user.original_id
-          dim_company = Dw::DimCompany.find_by(id: dim_user.company_id)
+          dim_company = Dwh::DimCompany.find_by(id: dim_user.company_id)
           company_id = dim_company.blank? ? nil : dim_company.original_id
 
           # Calculate remaining hours
@@ -518,7 +518,7 @@ class Dw::Tasks::EtlExactActivitiesTask < Dw::Tasks::BaseExactTask
             activity_hash[:hours]           = holiday_hours
             activity_hash[:rate]            = nil
 
-            Dw::EtlStorage.create(account_id: account.id, identifier: "activities", etl: "transform", data: activity_hash)
+            Dwh::EtlStorage.create(account_id: account.id, identifier: "activities", etl: "transform", data: activity_hash)
           end
         end
       end
@@ -541,17 +541,17 @@ class Dw::Tasks::EtlExactActivitiesTask < Dw::Tasks::BaseExactTask
     # Iterate days and create activity for each day
     (real_start_date..real_end_date).each do |maternity_leave_date|
       # Get already registered hours for this day
-      dim_account = Dw::DimAccount.find_by(original_id: account.id)
-      registered_hours = Dw::FactActivity.where(account_id: dim_account.id, user_id: dim_user.id, activity_date: maternity_leave_date.to_date.strftime("%d%m%Y").to_i).sum(:hours)
+      dim_account = Dwh::DimAccount.find_by(original_id: account.id)
+      registered_hours = Dwh::FactActivity.where(account_id: dim_account.id, user_id: dim_user.id, activity_date: maternity_leave_date.to_date.strftime("%d%m%Y").to_i).sum(:hours)
 
       # Only register weekdays
       if (1..5).include?(maternity_leave_date.wday)
         # Do not register on holidays
-        dim_holiday = Dw::DimHoliday.find_by(account_id: dim_account.id, company_id: dim_user.company_id, holiday_date: maternity_leave_date.to_date.strftime("%d%m%Y").to_i)
+        dim_holiday = Dwh::DimHoliday.find_by(account_id: dim_account.id, company_id: dim_user.company_id, holiday_date: maternity_leave_date.to_date.strftime("%d%m%Y").to_i)
         unless dim_holiday.present?
           # Set user and company
           user_id = dim_user.original_id
-          dim_company = Dw::DimCompany.find_by(id: dim_user.company_id)
+          dim_company = Dwh::DimCompany.find_by(id: dim_user.company_id)
           company_id = dim_company.blank? ? nil : dim_company.original_id
 
           # Calculate maternity leave hours and remaining hours
@@ -573,7 +573,7 @@ class Dw::Tasks::EtlExactActivitiesTask < Dw::Tasks::BaseExactTask
             activity_hash[:hours]           = remaining_hours
             activity_hash[:rate]            = nil
 
-            Dw::EtlStorage.create(account_id: account.id, identifier: "activities", etl: "transform", data: activity_hash)
+            Dwh::EtlStorage.create(account_id: account.id, identifier: "activities", etl: "transform", data: activity_hash)
           end
         end
       end

@@ -1,11 +1,11 @@
-class Dw::Tasks::EtlExactUsersTask < Dw::Tasks::BaseExactTask
+class Dwh::Tasks::EtlExactUsersTask < Dwh::Tasks::BaseExactTask
   queue_as :default
 
   def perform(account, run, result, task)
     # Wait for alle dependencies to finish
     all_dependencies_finished = wait_on_dependencies(account, run, task)
     if all_dependencies_finished == false
-      Dw::DataPipelineLogger.new.create_log(run.id, "cancelled", "[#{account.name}] Taak [#{task.task_key}] geannuleerd")
+      Dwh::DataPipelineLogger.new.create_log(run.id, "cancelled", "[#{account.name}] Taak [#{task.task_key}] geannuleerd")
       result.update(finished_at: DateTime.now, status: "cancelled")
       return
     end
@@ -19,7 +19,7 @@ class Dw::Tasks::EtlExactUsersTask < Dw::Tasks::BaseExactTask
 
         # Cancel the task if the API keys are not valid
         if api_url.blank? or api_key.blank? or administration.blank?
-          Dw::DataPipelineLogger.new.create_log(run.id, "alert", "[#{account.name}] Invalid API keys")
+          Dwh::DataPipelineLogger.new.create_log(run.id, "alert", "[#{account.name}] Invalid API keys")
           result.update(finished_at: DateTime.now, status: "error")
           return  
         end
@@ -56,7 +56,7 @@ class Dw::Tasks::EtlExactUsersTask < Dw::Tasks::BaseExactTask
           unless users["Results"].blank?
             users["Results"].each do |user|
               unless excluded_user_ids.include?(user["ID"])
-                dim_company = Dw::DimCompany.find_by(name_short: user["CostCenter"].gsub(user["CompanyCode"], ""))
+                dim_company = Dwh::DimCompany.find_by(name_short: user["CostCenter"].gsub(user["CompanyCode"], ""))
                 unless dim_company.blank?
                   contract = get_contract(user["ID"])
                   contract_hours = (user["FTE"].to_f * 40).round(1)
@@ -111,7 +111,7 @@ class Dw::Tasks::EtlExactUsersTask < Dw::Tasks::BaseExactTask
                   users_hash[:updated_at]     = user["ModifiedDate"].to_date.strftime("%d%m%Y").to_i
 
 
-                  Dw::EtlStorage.create(account_id: account.id, identifier: "users", etl: "transform", data: users_hash)
+                  Dwh::EtlStorage.create(account_id: account.id, identifier: "users", etl: "transform", data: users_hash)
                 end
               end
             end
@@ -119,16 +119,16 @@ class Dw::Tasks::EtlExactUsersTask < Dw::Tasks::BaseExactTask
         end
 
         ### Load users
-        Dw::Loaders::UsersLoader.new.load_data(account)
+        Dwh::Loaders::UsersLoader.new.load_data(account)
       end
 
       # Update result
       result.update(finished_at: DateTime.now, status: "finished")
-      Dw::DataPipelineLogger.new.create_log(run.id, "success", "[#{account.name}] Finished task [#{task.task_key}] successfully")
+      Dwh::DataPipelineLogger.new.create_log(run.id, "success", "[#{account.name}] Finished task [#{task.task_key}] successfully")
     rescue => e
       # Update result to failed if an error occurs
       result.update(finished_at: DateTime.now, status: "failed", error: e.message)
-      Dw::DataPipelineLogger.new.create_log(run.id, "alert", "[#{account.name}] Finished task [#{task.task_key}] with error: #{e.message}")
+      Dwh::DataPipelineLogger.new.create_log(run.id, "alert", "[#{account.name}] Finished task [#{task.task_key}] with error: #{e.message}")
     end
   end
 

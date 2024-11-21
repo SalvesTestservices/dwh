@@ -1,11 +1,11 @@
-class Dw::Tasks::EtlBbRatesTask < Dw::Tasks::BaseTask
+class Dwh::Tasks::EtlBbRatesTask < Dwh::Tasks::BaseTask
   queue_as :default
 
   def perform(account, run, result, task)
     # Wait for alle dependencies to finish
     all_dependencies_finished = wait_on_dependencies(account, run, task)
     if all_dependencies_finished == false
-      Dw::DataPipelineLogger.new.create_log(run.id, "cancelled", "[#{account.name}] Taak [#{task.task_key}] geannuleerd")
+      Dwh::DataPipelineLogger.new.create_log(run.id, "cancelled", "[#{account.name}] Taak [#{task.task_key}] geannuleerd")
       result.update(finished_at: DateTime.now, status: "cancelled")
       return
     end
@@ -56,21 +56,21 @@ class Dw::Tasks::EtlBbRatesTask < Dw::Tasks::BaseTask
             user_hash[:salary]          = calculator.user_salary(user, month, year)
             user_hash[:show_user]       = "Y"
 
-            Dw::EtlStorage.create(account_id: account.id, identifier: "rates", etl: "transform", data: user_hash)
+            Dwh::EtlStorage.create(account_id: account.id, identifier: "rates", etl: "transform", data: user_hash)
           end
         end
 
         # Load rates
-        Dw::Loaders::RatesLoader.new.load_data(account)
+        Dwh::Loaders::RatesLoader.new.load_data(account)
       end
 
       # Update result
       result.update(finished_at: DateTime.now, status: "finished")
-      Dw::DataPipelineLogger.new.create_log(run.id, "success", "[#{account.name}] Finished task [#{task.task_key}] successfully")
+      Dwh::DataPipelineLogger.new.create_log(run.id, "success", "[#{account.name}] Finished task [#{task.task_key}] successfully")
     rescue => e
       # Update result to failed if an error occurs
       result.update(finished_at: DateTime.now, status: "failed", error: e.message)
-      Dw::DataPipelineLogger.new.create_log(run.id, "alert", "[#{account.name}] Finished task [#{task.task_key}] with error: #{e.message}")
+      Dwh::DataPipelineLogger.new.create_log(run.id, "alert", "[#{account.name}] Finished task [#{task.task_key}] with error: #{e.message}")
     end
   end
 

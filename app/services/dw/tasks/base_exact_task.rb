@@ -1,4 +1,4 @@
-class Dw::Tasks::BaseExactTask < Dw::Tasks::BaseTask
+class Dwh::Tasks::BaseExactTask < Dwh::Tasks::BaseTask
   def get_api_keys(name)
     case name
     when "valori"
