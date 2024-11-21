@@ -1,4 +1,4 @@
-class DwCalculator
+class DwhCalculator
 
   def initialize
   end

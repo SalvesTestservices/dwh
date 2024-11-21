@@ -7,3 +7,6 @@ nl:
   user:
     titles:
       index: "Gebruikers"
+  datalab:
+    titles:
+      index: "Data lab"

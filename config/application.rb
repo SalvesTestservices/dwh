@@ -30,5 +30,17 @@ module Dwh
     config.i18n.available_locales = [:en, :nl]
     config.i18n.default_locale = :nl
     config.i18n.fallbacks = true
+
+    # Configure neighbor for vector search
+    config.neighbor = {
+      # Configure HNSW index parameters
+      index: {
+        m: 16,          # Number of connections per layer
+        ef_construction: 200,  # Size of dynamic candidate list for construction
+        ef: 50,         # Size of dynamic candidate list for search
+      },
+      # Configure distance metrics
+      distance: :cosine  # Use cosine similarity for embeddings
+    }
   end
 end

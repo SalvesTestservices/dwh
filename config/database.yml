@@ -6,21 +6,32 @@ default: &default
 development:
   primary:
     <<: *default
-    host: postgres
+    host: db
     database: dwh_base_development
     username: postgres
     password: postgres
   dwh:
     <<: *default
-    host: postgres
+    host: db
     database: dwh_data_development
     username: postgres
     password: postgres
     migrations_paths: ["db/dwh_migrate"]
 
 test:
-  <<: *default
-  database: dwh_test
+  primary:
+    <<: *default
+    host: db
+    database: dwh_base_test
+    username: postgres
+    password: postgres
+  dwh:
+    <<: *default
+    host: db
+    database: dwh_data_test
+    username: postgres
+    password: postgres
+    migrations_paths: ["db/dwh_migrate"]
 
 production:
   primary:

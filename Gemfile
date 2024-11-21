@@ -21,6 +21,9 @@ gem "acts_as_list"
 gem "devise"
 gem "devise_invitable"
 gem "pagy"
+gem "ruby-openai"
+gem "chartkick"
+
 group :development, :test do
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
   gem "brakeman", require: false
@@ -30,4 +33,5 @@ end
 group :development do
   gem "web-console"
   gem "rails_live_reload"
+  gem 'foreman'
 end

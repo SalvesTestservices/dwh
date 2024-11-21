@@ -6,6 +6,11 @@ Rails.application.routes.draw do
   resources :users do
     post :invite, on: :collection
   end
+  resources :datalab, only: [:index] do
+    collection do
+      post :chat
+    end
+  end
 
   # DWH
   namespace :dwh do
