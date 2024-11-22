@@ -6,15 +6,6 @@ class DatalabCommunicator
   end
 
   def process
-    # Check for similar previous queries first
-    if similar_query = find_similar_query
-      return {
-        data: execute_sql(similar_query.sql),
-        sql: similar_query.sql,
-        source: 'cache'
-      }
-    end
-
     # Generate new SQL
     sql = generate_sql
     result = execute_sql(sql)
@@ -33,20 +24,12 @@ class DatalabCommunicator
     ChartGenerator.new(@query, chart_type).generate
   end
 
-  private
-
-  def find_similar_query
-    ChatHistory.find_similar_queries(@query, threshold: 0.8, limit: 1).first
-  end
-
-  def store_successful_query(sql)
+  private def store_successful_query(sql)
     ChatHistory.create!(
       user: @user,
-      query: @query,
-      sql: sql,
-      result: result,
-      execution_time_ms: execution_time,
-      status: 'completed'
+      question: @query,
+      sql_query: sql,
+      answer: result
     )
   end
 

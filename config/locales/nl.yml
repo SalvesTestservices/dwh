@@ -1,12 +1,15 @@
 nl:
   general:
-    welcome: "Welkom"
+    welcome:        Welkom
     mandatory:      Velden met een (*) zijn verplicht
     save:           Opslaan
     details:        details
   user:
     titles:
-      index: "Gebruikers"
+      index:        Gebruikers
+  site:
+    titles:
+      reports:      rapportages
   datalab:
     titles:
-      index: "Data lab"
+      index:        Data lab

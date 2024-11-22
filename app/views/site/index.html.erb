@@ -17,9 +17,11 @@
         </div>
       </div>
     <% end %>
+
     <div class="overflow-hidden rounded-lg bg-gray-100 border border-gray-200 shadow-sm hover:bg-gray-200">
-      <div class="px-4 py-5 sm:p-6 h-80">
-        <!-- Content goes here -->
+      <div class="px-4 py-5 sm:p-6 h-80 flex flex-col justify-center items-center">
+        <%= render(View::IconComponent.new(icon_type: "table", size: "large", color: "gray")) %>
+        <div class="text-gray-800 text-2xl text-center mt-10"><%= I18n.t(".site.titles.reports").downcase %></div>
       </div>
     </div>
 
