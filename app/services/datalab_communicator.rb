@@ -35,7 +35,7 @@ class DatalabCommunicator
 
   def generate_sql
     response = @client.generate(
-      model: "sqlcoder",  # or your preferred SQL-focused model
+      model: "sqlcoder",
       prompt: generate_prompt,
       stream: false
     )
@@ -60,5 +60,9 @@ class DatalabCommunicator
       
       Return only the SQL query, no explanations.
     PROMPT
+  end
+
+  private def database_schema
+    File.read(Rails.root.join('db', 'dwh_schema.rb'))
   end
 end

@@ -10,41 +10,38 @@ x-base: &base
     - .:/app:cached
     - bundle:/usr/local/bundle
   environment:
-    - DATABASE_URL=postgres://postgres:postgres@db:5432
+    - DATABASE_URL=postgres://postgres:postgres@postgres:5432
     - RAILS_ENV=development
-    - POSTGRES_HOST=db
-    - POSTGRES_DB=dwh_development
+    - POSTGRES_HOST=postgres
+    - POSTGRES_DB=dwh_base_development
     - POSTGRES_USER=postgres
     - POSTGRES_PASSWORD=postgres
   depends_on:
-    - db
+    - postgres
 
 services:
   app:
     <<: *base
-    command: bash -c '
-      rm -f tmp/pids/server.pid && 
-      bundle install && 
-      gem install foreman && 
-      bundle exec rails db:create && 
-      bundle exec rails db:migrate && 
-      foreman start -f Procfile.dev'
+    command: bash -c 'rm -f tmp/pids/server.pid && bundle install && foreman start -f Procfile.dev'
     ports:
       - '3000:3000'
     env_file:
       - .env
     depends_on:
-      - db
+      - postgres
+      - ollama
     environment:
-      OLLAMA_URL: http://ollama:11434
-
-  db:
-    image: ankane/pgvector:latest
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      - OLLAMA_HOST=0.0.0.0
+      - OLLAMA_URL=http://ollama:11434
+    
+  postgres:
+    image: postgres:16
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
 
   ollama:
     image: ollama/ollama:latest
@@ -57,4 +54,4 @@ services:
 
 volumes:
   bundle:
-  postgres_data:
+  postgres:  

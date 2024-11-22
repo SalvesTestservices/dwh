@@ -91,6 +91,7 @@ GEM
     concurrent-ruby (1.3.4)
     connection_pool (2.4.1)
     crass (1.0.6)
+    csv (3.3.0)
     date (3.4.0)
     debug (1.9.2)
       irb (~> 1.10)
@@ -126,6 +127,10 @@ GEM
       raabro (~> 1.4)
     globalid (1.2.1)
       activesupport (>= 6.1)
+    httparty (0.22.0)
+      csv
+      mini_mime (>= 1.0.0)
+      multi_xml (>= 0.5.2)
     i18n (1.14.6)
       concurrent-ruby (~> 1.0)
     importmap-rails (2.0.3)
@@ -178,6 +183,8 @@ GEM
       railties (>= 7.1)
       stimulus-rails
       turbo-rails
+    multi_xml (0.7.1)
+      bigdecimal (~> 3.1)
     multipart-post (2.4.1)
     net-http (0.5.0)
       uri
@@ -396,6 +403,7 @@ DEPENDENCIES
   devise
   devise_invitable
   foreman
+  httparty
   importmap-rails
   jbuilder
   kamal

@@ -4,15 +4,16 @@ class DatalabTrainer
     training_data = generate_training_data
     
     # Train the model using Ollama's API
-    client = OpenAI::Client.new(
-      access_token: ENV['OPENAI_API_KEY'],
-      uri_base: "http://localhost:11434/v1"
-    )
+    client = OllamaClient.new(base_url: ENV.fetch('OLLAMA_URL', 'http://ollama:11434'))
 
-    client.fine_tunes.create(
-      model: "sqlcoder",
+    # Create a fine-tuned model using Ollama's API
+    response = client.create_model(
+      name: "sqlcoder-dwh",
+      base_model: "sqlcoder",
       training_data: training_data
     )
+
+    Rails.logger.info "Model training started: #{response}"
   end
 
   private
@@ -30,16 +31,20 @@ class DatalabTrainer
   end
 
   def generate_schema_examples
-    # Generate examples based on your schema
-    ActiveRecord::Base.connection.tables
+    examples = []
+    
+    # Query only DWH database schema
+    DwhRecord.connection.tables
       .select { |t| t.start_with?('dim_', 'fact_') }
-      .map do |table|
-        columns = ActiveRecord::Base.connection.columns(table)
-        {
+      .each do |table|
+        columns = DwhRecord.connection.columns(table)
+        examples << {
           prompt: "What columns are in the #{table} table?",
           completion: columns.map(&:name).join(", ")
         }
       end
+    
+    examples
   end
 
   def generate_query_examples

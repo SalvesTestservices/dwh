@@ -6,13 +6,13 @@ default: &default
 development:
   primary:
     <<: *default
-    host: db
+    host: postgres
     database: dwh_base_development
     username: postgres
     password: postgres
   dwh:
     <<: *default
-    host: db
+    host: postgres
     database: dwh_data_development
     username: postgres
     password: postgres
@@ -21,13 +21,13 @@ development:
 test:
   primary:
     <<: *default
-    host: db
+    host: postgres
     database: dwh_base_test
     username: postgres
     password: postgres
   dwh:
     <<: *default
-    host: db
+    host: postgres
     database: dwh_data_test
     username: postgres
     password: postgres

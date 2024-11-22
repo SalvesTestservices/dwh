@@ -23,6 +23,7 @@ gem "devise_invitable"
 gem "pagy"
 gem "ruby-openai"
 gem "chartkick"
+gem "httparty"
 
 group :development, :test do
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
