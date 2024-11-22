@@ -3,6 +3,10 @@ class OllamaClient
 
   def initialize(base_url:)
     @base_url = base_url
+    @headers = {
+      'Content-Type' => 'application/json',
+      'Authorization' => "Bearer #{Rails.application.config.x.ollama.api_key}"
+    }
   end
 
   def generate(model:, prompt:, stream: false)
@@ -13,7 +17,8 @@ class OllamaClient
         prompt: prompt,
         stream: stream
       }.to_json,
-      headers: { 'Content-Type' => 'application/json' }
+      headers: @headers,
+      verify: true
     )
 
     JSON.parse(response.body)
@@ -26,7 +31,8 @@ class OllamaClient
         model: "llama2",  # or your preferred embedding model
         prompt: text
       }.to_json,
-      headers: { 'Content-Type' => 'application/json' }
+      headers: @headers,
+      verify: true
     )
 
     JSON.parse(response.body).dig("embedding")
@@ -38,7 +44,8 @@ class OllamaClient
       body: {
         name: model_name
       }.to_json,
-      headers: { 'Content-Type' => 'application/json' }
+      headers: @headers,
+      verify: true
     )
 
     # Parse the response line by line
@@ -69,7 +76,8 @@ class OllamaClient
         name: name,
         modelfile: generate_modelfile(base_model, training_data)
       }.to_json,
-      headers: { 'Content-Type' => 'application/json' }
+      headers: @headers,
+      verify: true
     )
 
     unless response.success?
