@@ -2,7 +2,7 @@ class DatalabCommunicator
   def initialize(query, user)
     @query = query
     @user = user
-    @client = OllamaClient.new(base_url: ENV.fetch('OLLAMA_URL', 'http://localhost:11434'))
+    @client = OllamaClient.new(base_url: ENV['OLLAMA_URL'])
   end
 
   def process

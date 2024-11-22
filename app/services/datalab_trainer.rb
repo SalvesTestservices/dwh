@@ -1,19 +1,24 @@
 class DatalabTrainer
   def train
-    # Generate training data
+    # Break down training data into smaller chunks
     training_data = generate_training_data
+    chunk_size = 1000  # Adjust based on your needs
     
-    # Train the model using Ollama's API
-    client = OllamaClient.new(base_url: ENV.fetch('OLLAMA_URL', 'http://ollama:11434'))
+    training_data.each_slice(chunk_size) do |chunk|
+      client = OllamaClient.new(
+        base_url: ENV.fetch('OLLAMA_URL', 'http://ollama:11434'),
+        timeout: 300  # 5 minutes
+      )
 
-    # Create a fine-tuned model using Ollama's API
-    response = client.create_model(
-      name: "sqlcoder-dwh",
-      base_model: "sqlcoder",
-      training_data: training_data
-    )
+      response = client.create_model(
+        name: "sqlcoder-dwh",
+        base_model: "sqlcoder",
+        training_data: chunk,
+        chunk_size: chunk_size
+      )
 
-    Rails.logger.info "Model training started: #{response}"
+      Rails.logger.info "Model training chunk processed: #{response}"
+    end
   end
 
   private
@@ -21,30 +26,27 @@ class DatalabTrainer
   def generate_training_data
     data = []
     
-    # Add schema information
-    data << generate_schema_examples
+    # Add schema information in smaller batches
+    DwhRecord.connection.tables
+      .select { |t| t.start_with?('dim_', 'fact_') }
+      .each_slice(10) do |tables|
+        data.concat(generate_schema_examples_for_tables(tables))
+      end
     
-    # Add sample queries and results
-    data << generate_query_examples
+    # Add sample queries in smaller batches
+    data.concat(generate_query_examples)
     
     data
   end
 
-  def generate_schema_examples
-    examples = []
-    
-    # Query only DWH database schema
-    DwhRecord.connection.tables
-      .select { |t| t.start_with?('dim_', 'fact_') }
-      .each do |table|
-        columns = DwhRecord.connection.columns(table)
-        examples << {
-          prompt: "What columns are in the #{table} table?",
-          completion: columns.map(&:name).join(", ")
-        }
-      end
-    
-    examples
+  def generate_schema_examples_for_tables(tables)
+    tables.flat_map do |table|
+      columns = DwhRecord.connection.columns(table)
+      {
+        prompt: "What columns are in the #{table} table?",
+        completion: columns.map(&:name).join(", ")
+      }
+    end
   end
 
   def generate_query_examples

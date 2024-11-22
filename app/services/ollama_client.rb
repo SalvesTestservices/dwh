@@ -5,7 +5,7 @@ class OllamaClient
     @base_url = base_url
     @headers = {
       'Content-Type' => 'application/json',
-      'Authorization' => "Bearer #{Rails.application.config.x.ollama.api_key}"
+      'Authorization' => "Bearer #{ENV['OLLAMA_API_KEY']}"
     }
   end
 
@@ -18,10 +18,23 @@ class OllamaClient
         stream: stream
       }.to_json,
       headers: @headers,
-      verify: true
+      verify: true,
+      timeout: 120,  # 2 minutes total timeout
+      read_timeout: 60,  # 1 minute read timeout
+      open_timeout: 10   # 10 seconds connection timeout
     )
 
+    unless response.success?
+      raise "Ollama API error: #{response.code} - #{response.body}"
+    end
+
     JSON.parse(response.body)
+  rescue Net::ReadTimeout, Net::OpenTimeout => e
+    raise "Ollama API timeout: #{e.message}"
+  rescue JSON::ParserError => e
+    raise "Invalid JSON response: #{e.message}"
+  rescue StandardError => e
+    raise "Ollama API error: #{e.message}"
   end
 
   def embeddings(text:)
@@ -69,22 +82,28 @@ class OllamaClient
     raise "Failed to pull model: #{e.message}"
   end
 
-  def create_model(name:, base_model:, training_data:)
-    response = self.class.post(
-      "#{@base_url}/api/create",
+  def create_model(name:, base_model:, training_data:, chunk_size: 1000)
+    self.class.post(
+      "#{@base_url}/api/generate",
       body: {
+        model: base_model,
         name: name,
-        modelfile: generate_modelfile(base_model, training_data)
+        training_data: training_data,
+        chunk_size: chunk_size
       }.to_json,
       headers: @headers,
-      verify: true
-    )
-
-    unless response.success?
-      raise "Failed to create model: #{response.body}"
+      timeout: @timeout,
+      read_timeout: @timeout,
+      stream_body: true
+    ) do |fragment|
+      yield fragment if block_given?
     end
-
-    JSON.parse(response.body)
+  rescue Net::ReadTimeout, Net::OpenTimeout => e
+    Rails.logger.error "Timeout error: #{e.message}"
+    raise OllamaTimeoutError, "Request timed out after #{@timeout} seconds"
+  rescue StandardError => e
+    Rails.logger.error "Ollama API error: #{e.message}"
+    raise OllamaApiError, e.message
   end
 
   private
