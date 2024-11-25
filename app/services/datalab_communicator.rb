@@ -2,20 +2,42 @@ class DatalabCommunicator
   def initialize(query, user)
     @query = query
     @user = user
-    @client = OllamaClient.new(base_url: ENV['OLLAMA_URL'])
+    @client = Anthropic::Client.new(access_token: ENV['ANTHROPIC_API_KEY'])
   end
 
   def process
-    # Generate new SQL
-    sql = generate_sql
+    # Get SQL from Anthropic
+    response = @client.messages(
+      parameters: {
+        model: ENV.fetch("ANTHROPIC_MODEL"),
+        messages: [
+          { "role": "user", "content": generate_prompt}
+        ],
+        max_tokens: 1000
+      }
+    )
+
+    # Extract SQL from response
+    sql = response.dig("content", 0, "text")
+    
+    # Execute SQL and handle results
     result = execute_sql(sql)
+    puts "RESULT: #{result}"
 
     # Store successful query for future use
-    store_successful_query(sql) if result.present?
-
+    store_successful_query(sql, result) if result.present?
+    
     {
       data: result,
       sql: sql,
+      source: 'generated'
+    }
+  rescue StandardError => e
+    Rails.logger.error("DatalabCommunicator Error: #{e.message}")
+    {
+      data: nil,
+      sql: nil,
+      error: "Failed to process query: #{e.message}",
       source: 'generated'
     }
   end
@@ -24,23 +46,13 @@ class DatalabCommunicator
     ChartGenerator.new(@query, chart_type).generate
   end
 
-  private def store_successful_query(sql)
+  private def store_successful_query(sql, result)
     ChatHistory.create!(
       user: @user,
       question: @query,
       sql_query: sql,
       answer: result
     )
-  end
-
-  def generate_sql
-    response = @client.generate(
-      model: "sqlcoder",
-      prompt: generate_prompt,
-      stream: false
-    )
-    
-    response.dig("response")&.strip
   end
 
   def generate_prompt
@@ -64,5 +76,38 @@ class DatalabCommunicator
 
   private def database_schema
     File.read(Rails.root.join('db', 'dwh_schema.rb'))
+  end
+
+  private def execute_sql(sql)
+    return if sql.blank?
+
+    # Sanitize and validate SQL to prevent dangerous operations
+    raise "Invalid SQL: Contains unsafe operations" if unsafe_sql?(sql)
+    
+    # Execute query with timeout protection
+    ActiveRecord::Base.connection.execute(sql).to_a
+  rescue ActiveRecord::StatementInvalid => e
+    Rails.logger.error("SQL Execution Error: #{e.message}\nSQL: #{sql}")
+    raise "Invalid SQL query: #{e.message}"
+  rescue PG::Error => e
+    Rails.logger.error("PostgreSQL Error: #{e.message}\nSQL: #{sql}")
+    raise "Database error: #{e.message}"
+  rescue Timeout::Error => e
+    Rails.logger.error("SQL Query Timeout: #{sql}")
+    raise "Query timed out"
+  end
+
+  def unsafe_sql?(sql)
+    dangerous_keywords = [
+      /\bDROP\b/i,
+      /\bDELETE\b/i,
+      /\bTRUNCATE\b/i,
+      /\bINSERT\b/i,
+      /\bUPDATE\b/i,
+      /\bALTER\b/i,
+      /\bCREATE\b/i
+    ]
+
+    dangerous_keywords.any? { |keyword| sql.match?(keyword) }
   end
 end
