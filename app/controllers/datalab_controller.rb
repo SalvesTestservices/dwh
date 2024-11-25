@@ -8,7 +8,7 @@ class DatalabController < ApplicationController
     @response = DatalabCommunicator.new(@query, current_user).process
     
     respond_to do |format|
-      format.turbo_stream
+      format.turbo_stream { render turbo_stream: turbo_stream.append('chat_results', partial: 'results', locals: { response: @response }) }
       format.html
     end
   end

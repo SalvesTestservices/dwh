@@ -2,12 +2,13 @@ class DatalabCommunicator
   def initialize(query, user)
     @query = query
     @user = user
-    @client = Anthropic::Client.new(access_token: ENV['ANTHROPIC_API_KEY'])
   end
 
   def process
+    client = Anthropic::Client.new(access_token: ENV['ANTHROPIC_API_KEY'])
+
     # Get SQL from Anthropic
-    response = @client.messages(
+    response = client.messages(
       parameters: {
         model: ENV.fetch("ANTHROPIC_MODEL"),
         messages: [
@@ -22,23 +23,20 @@ class DatalabCommunicator
     
     # Execute SQL and handle results
     result = execute_sql(sql)
-    puts "RESULT: #{result}"
 
     # Store successful query for future use
-    store_successful_query(sql, result) if result.present?
+    store_successful_query(@user.id, @query, sql, result) if result.present?
     
     {
       data: result,
-      sql: sql,
-      source: 'generated'
+      sql: sql
     }
   rescue StandardError => e
     Rails.logger.error("DatalabCommunicator Error: #{e.message}")
     {
       data: nil,
       sql: nil,
-      error: "Failed to process query: #{e.message}",
-      source: 'generated'
+      error: "Failed to process query: #{e.message}"
     }
   end
 
@@ -46,10 +44,11 @@ class DatalabCommunicator
     ChartGenerator.new(@query, chart_type).generate
   end
 
-  private def store_successful_query(sql, result)
+  private def store_successful_query(user_id, query, sql, result)
+    puts "Storing successful query: #{user_id},#{query}, #{sql}, #{result}"
     ChatHistory.create!(
-      user: @user,
-      question: @query,
+      user_id: user_id,
+      question: query,
       sql_query: sql,
       answer: result
     )
@@ -85,7 +84,7 @@ class DatalabCommunicator
     raise "Invalid SQL: Contains unsafe operations" if unsafe_sql?(sql)
     
     # Execute query with timeout protection
-    ActiveRecord::Base.connection.execute(sql).to_a
+    DwhRecord.connection.execute(sql).to_a
   rescue ActiveRecord::StatementInvalid => e
     Rails.logger.error("SQL Execution Error: #{e.message}\nSQL: #{sql}")
     raise "Invalid SQL query: #{e.message}"

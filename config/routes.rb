@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   resources :datalab, only: [:index] do
     collection do
       post :chat
+      post :visualize
     end
   end
 
