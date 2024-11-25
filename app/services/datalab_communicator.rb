@@ -27,7 +27,6 @@ class DatalabCommunicator
     # Store successful query for future use
     store_successful_query(@user.id, @query, sql, result) if result.present?
 
-    puts "HUH #{result}"
     {
       data: result,
       sql: sql
@@ -41,43 +40,13 @@ class DatalabCommunicator
     }
   end
 
-  def visualize(chart_type)
-    ChartGenerator.new(@query, chart_type).generate
-  end
-
   private def store_successful_query(user_id, query, sql, result)
-    puts "Storing successful query: #{user_id},#{query}, #{sql}, #{result}"
     ChatHistory.create!(
       user_id: user_id,
       question: query,
       sql_query: sql,
       answer: result
     )
-  end
-
-  def generate_prompt
-    <<~PROMPT
-      Given the following database schema:
-      #{database_schema}
-
-      Important context:
-      - Table names are in English and use the format: dim_* for dimensions and fact_* for fact tables
-      - Common translations:
-        * customers/klanten -> dim_customers
-        * products/producten -> dim_products
-        * sales/verkopen -> fact_sales
-        * orders/bestellingen -> fact_orders
-
-      User question (in Dutch): #{@query}
-      
-      Return only the SQL query, no explanations.
-      Always return all columns in the result, except created_at and updated_at.
-      Use the Dutch translations from the YAML file for column names in the result.
-    PROMPT
-  end
-
-  private def database_schema
-    File.read(Rails.root.join('db', 'dwh_schema.rb'))
   end
 
   private def execute_sql(sql)
@@ -99,7 +68,7 @@ class DatalabCommunicator
     raise "Query timed out"
   end
 
-  def unsafe_sql?(sql)
+  private def unsafe_sql?(sql)
     dangerous_keywords = [
       /\bDROP\b/i,
       /\bDELETE\b/i,
@@ -111,5 +80,42 @@ class DatalabCommunicator
     ]
 
     dangerous_keywords.any? { |keyword| sql.match?(keyword) }
+  end
+
+  def generate_prompt
+    <<~PROMPT
+      Given the following database schema:
+      #{database_schema}
+
+      Important context:
+      - Table names are in English and use the format: dim_* for dimensions and fact_* for fact tables
+      - When querying, always join with related dimension tables to show names instead of IDs:
+        * account_id -> join with dim_accounts to show name
+        * company_id -> join with dim_companies to show name
+        * customer_id -> join with dim_customers to show name
+        * user_id -> join with dim_users to show full_name
+        * project_id -> join with dim_projects to show name
+        * unbillable_id -> join with dim_unbillables to show name
+        * projectuser_id -> join with fact_projectusers
+      - Common translations:
+        * customers/klanten -> dim_customers
+        * products/producten -> dim_products
+        * sales/verkopen -> fact_sales
+        * orders/bestellingen -> fact_orders
+
+      User question (in Dutch): #{@query}
+      
+      Return only the SQL query, no explanations.
+      Always return meaningful columns in the result (names instead of IDs), except created_at and updated_at and translate these to Dutch and replace a underscore with a space.
+      Always use meaningful column aliases when joining multiple tables that might have the same column names.
+    PROMPT
+  end
+
+  private def database_schema
+    File.read(Rails.root.join('db', 'dwh_schema.rb'))
+  end
+
+  private def translation_yml
+    File.read(Rails.root.join('config', 'locales', 'dwh.nl.yml'))
   end
 end
