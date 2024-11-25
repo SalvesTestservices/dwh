@@ -26,7 +26,8 @@ class DatalabCommunicator
 
     # Store successful query for future use
     store_successful_query(@user.id, @query, sql, result) if result.present?
-    
+
+    puts "HUH #{result}"
     {
       data: result,
       sql: sql
@@ -70,6 +71,8 @@ class DatalabCommunicator
       User question (in Dutch): #{@query}
       
       Return only the SQL query, no explanations.
+      Always return all columns in the result, except created_at and updated_at.
+      Use the Dutch translations from the YAML file for column names in the result.
     PROMPT
   end
 

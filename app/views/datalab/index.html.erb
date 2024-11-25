@@ -1,28 +1,26 @@
-<div class="container mx-auto p-4">
-  <div id="chat_results" class="space-y-4">
-    <%= render partial: "results" if @response %>
-  </div>
+<%= render "layouts/page_header", 
+  breadcrumbs: @breadcrumbs, 
+  title: I18n.t('.datalab.titles.index'), 
+  icon: ["datalab", "medium", "gray"],
+  buttons: nil
+%>
 
-  <div class="mb-8">
-    <h1 class="text-2xl font-bold mb-4">Data Lab</h1>
-    
-    <%= form_with url: chat_datalab_index_path, 
-                  class: "space-y-4",
-                  data: { controller: "chat",
-                         action: "turbo:submit-end->chat#handleResponse" } do |f| %>
-      
-      <%= f.text_area :query, 
-                      class: "w-full p-2 border rounded",
-                      placeholder: "Ask about your data...",
-                      data: { chat_target: "input" } %>
-      
-      <%= f.submit "Ask", 
-                   class: "bg-blue-500 text-white px-4 py-2 rounded" %>
+<main>
+  <div class="mx-auto max-w-8xl py-2 md:py-6">
+
+    <div id="chat_results" class="space-y-4">
+      <%= render partial: "results" if @response %>
+    </div>
+
+    <%= form_with url: chat_datalab_index_path, class: "space-y-4",data: { controller: "chat", action: "turbo:submit-end->chat#handleResponse" } do |f| %>
+      <%= f.text_area :query, class: "w-full p-2 border rounded", placeholder: I18n.t('.datalab.titles.chat_question'), data: { chat_target: "input" } %>
+      <%= f.submit I18n.t('.datalab.titles.chat_button'), class: "bg-gray-800 text-white px-4 py-2 rounded" %>
     <% end %>
-  </div>
 
-  <div id="chat_history" class="mt-8">
-    <h2 class="text-xl font-bold mb-4">Recent Questions</h2>
-    <%= render partial: "chat_history", collection: @chat_history %>
+    <div id="chat_history" class="mt-8 hidden">
+      <h2 class="text-xl font-bold mb-4"><%= I18n.t('.datalab.titles.chat_history') %></h2>
+      <%= render partial: "chat_history", collection: @chat_history %>
+    </div>
+
   </div>
-</div>
+</main>

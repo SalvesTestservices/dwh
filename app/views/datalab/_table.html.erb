@@ -2,25 +2,25 @@
   <table class="min-w-full divide-y divide-gray-200">
     <thead class="bg-gray-50">
       <tr>
-        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-          Name
-        </th>
+        <% if @response[:data].first.present? %>
+          <% @response[:data].first.keys.each do |column| %>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <%= column %>
+            </th>
+          <% end %>
+        <% end %>
       </tr>
     </thead>
     <tbody class="bg-white divide-y divide-gray-200">
-      <% @response[:data].each do |customer| %>
+      <% @response[:data].each do |row| %>
         <tr class="hover:bg-gray-50">
-          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-            <%= customer["name"] %>
-          </td>
+          <% row.each do |_key, value| %>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+              <%= value %>
+            </td>
+          <% end %>
         </tr>
       <% end %>
     </tbody>
   </table>
 </div>
-
-<% if @response[:sql].present? %>
-  <div class="mt-4 p-4 bg-gray-50 rounded-lg">
-    <pre class="text-sm text-gray-600 overflow-x-auto"><%= @response[:sql] %></pre>
-  </div>
-<% end %>

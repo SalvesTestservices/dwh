@@ -1,32 +1,21 @@
-<div class="bg-white shadow rounded p-4">
+<div class="bg-white border border-gray-800 rounded p-4">
   <div class="mb-4">
-    <h3 class="font-bold">Your Question:</h3>
+    <h3 class="font-bold"><%= I18n.t('.datalab.titles.question') %>:</h3>
     <p class="text-gray-700"><%= @query %></p>
   </div>
 
   <div class="mb-4">
-    <h3 class="font-bold">SQL Query:</h3>
-    <pre class="bg-gray-100 p-2 rounded"><code><%= @response[:sql] %></code></pre>
+    <h3 class="font-bold"><%= I18n.t('.datalab.titles.sql') %>:</h3>
+    <pre class="bg-gray-100 p-2 rounded text-sm"><code><%= @response[:sql] %></code></pre>
   </div>
 
   <div>
-    <h3 class="font-bold mb-2">Results:</h3>
+    <h3 class="font-bold mb-2"><%= I18n.t('.datalab.titles.answer') %>:</h3>
     <div class="overflow-x-auto">
       <table class="min-w-full table-auto">
         <%= render partial: "table", locals: { data: @response[:data] } %>
       </table>
     </div>
 
-    <div class="mt-4">
-      <%= form_with url: visualize_datalab_index_path, 
-                    data: { controller: "visualization" } do |f| %>
-        <%= f.hidden_field :query, value: @query %>
-        <%= f.select :chart_type, 
-                    options_for_select(['bar', 'line', 'pie']), 
-                    prompt: "Select chart type" %>
-        <%= f.submit "Visualize", 
-                    class: "bg-green-500 text-white px-4 py-2 rounded" %>
-      <% end %>
-    </div>
   </div>
 </div> 
