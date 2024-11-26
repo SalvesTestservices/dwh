@@ -6,6 +6,7 @@ class DatalabCommunicator
   end
 
   def process
+    result = "OK"
     client = Anthropic::Client.new(access_token: ENV['ANTHROPIC_API_KEY'])
 
     # Get SQL from Anthropic
@@ -26,10 +27,24 @@ class DatalabCommunicator
     result = execute_sql(sql)
 
     # Store successful query for future use
-    store_successful_query(@user.id, @chat_session_id, @query, sql, result) if result.present?
+    store_successful_query(@user.id, @chat_session_id, @query, sql, result) unless result.include?("ERROR")
+
+    # Return result
+    result
+  rescue Anthropic::Error => e
+    case e.status
+    when 429
+      result = "ERROR! Rate limit exceeded. Please try again later."
+    when 500..599
+      result = "ERROR! Service temporarily unavailable. Please try again later."
+    else
+      result = "ERROR! Error processing request: #{e.message}"
+    end
+    result
   end
 
   private def store_successful_query(user_id, chat_session_id, query, sql, result)
+    puts "STORE SUCCESSFUL QUERY #{user_id} #{chat_session_id} #{query} #{sql} #{result}"
     ChatHistory.create!(
       user_id: user_id,
       session_id: chat_session_id,
@@ -43,19 +58,16 @@ class DatalabCommunicator
     return if sql.blank?
 
     # Sanitize and validate SQL to prevent dangerous operations
-    raise "Invalid SQL: Contains unsafe operations" if unsafe_sql?(sql)
+    result = "ERROR! Invalid SQL: Contains unsafe operations" if unsafe_sql?(sql)
     
     # Execute query with timeout protection
     DwhRecord.connection.execute(sql).to_a
   rescue ActiveRecord::StatementInvalid => e
-    Rails.logger.error("SQL Execution Error: #{e.message}\nSQL: #{sql}")
-    raise "Invalid SQL query: #{e.message}"
+    result = "ERROR! Invalid SQL query: #{e.message}"
   rescue PG::Error => e
-    Rails.logger.error("PostgreSQL Error: #{e.message}\nSQL: #{sql}")
-    raise "Database error: #{e.message}"
+    result = "ERROR! Database error: #{e.message}"
   rescue Timeout::Error => e
-    Rails.logger.error("SQL Query Timeout: #{sql}")
-    raise "Query timed out"
+    result = "ERROR! Query timed out: #{sql}"
   end
 
   private def unsafe_sql?(sql)
@@ -88,24 +100,53 @@ class DatalabCommunicator
         * unbillable_id -> join with dim_unbillables to show name
         * projectuser_id -> join with fact_projectusers
       - Common translations:
-        * customers/klanten -> dim_customers
-        * products/producten -> dim_products
-        * sales/verkopen -> fact_sales
-        * orders/bestellingen -> fact_orders
+        * bedrijf/bedrijven/label/labels -> dim_accounts
+        * BV's/BV/Unit/Units -> dim_companies
+        * klanten -> dim_customers
+        * projecten -> dim_projects
+        * unbillable/unbillables -> dim_unbillables
+        * user/users/medewerker/medewerkers/consultant/consultants -> dim_users
+        * activiteit/activiteiten/uren/tijd/tarief/tarieven -> fact_activities
+        * projectinzet/projectinzetten/inzet/inzet medewerker/opdracht -> fact_projectusers
+        * tarief/tarieven/kostrpijs.bcr/ucr/contract uren/gemiddeld tarief/uren/salaris -> fact_rates
+      - Ignore these columns:
+        * Table dim_accounts: id, original_id, created_at, updated_at
+        * Table dim_companies: id, original_id, created_at, updated_at
+        * Table dim_customers: id, original_id, created_at, updated_at
+        * Table dim_projects: id, original_id, created_at, updated_at
+        * Table dim_unbillables: id, original_id, created_at, updated_at
+        * Table dim_users: id, original_id, created_at, updated_at, email, address, zipcode, unavailable_before, :employee_type
+        * Table fact_activities: id, original_id, created_at, updated_at, refreshed, projectuser_id
+        * Table fact_projectusers: id, original_id, created_at, updated_at
+        * Table fact_rates: id, show_user, created_at, updated_at
+      - Use the original column names (in English) in WHERE clauses and JOIN conditions
+      - Translate the following columns to Dutch and return them in the same order as shown here, use these translation not for the query itself:
+        * Table dim_accounts: name -> naam
+        * Table dim_companies: name -> naam, name_short -> afkorting, account_id -> label
+        * Table dim_customers: name -> naam, account_id -> label, status -> status
+        * Table dim_projects: name -> naam, account_id -> label, status -> status, company_id -> unit, customer_id -> klant, calculation_type -> type, start_date -> startdatum, end_date -> einddatum, expected_end_date -> verwachte einddatum
+        * Table dim_unbillables: name -> naam, name_short -> afkorting, account_id -> label
+        * Table dim_users: full_name -> naam, account_id -> label, company_id -> unit, start_date -> startdatum, end_date -> datum uit dienst, role -> rol, contract -> contract, contract_hours -> uren, salary -> salaris, city -> woonplaats, country -> land
+        * Table fact_activities: activity_date -> datum, account_id -> label, user_id -> medewerker, project_id -> project, unbillable_id -> unbillable code, customer_id -> klant, company_id -> unit, hours -> uren, rate -> tarief
+        * Table fact_projectusers: project_id -> project, user_id -> medewerker, account_id -> label, start_date -> startdatum, end_date -> einddatum, expected_end_date -> verwachte einddatum
+        * Table fact_rates: label -> label, company_id -> unit, user_id -> medewerker, rate_date -> datum, hours -> uren, avg_rate -> gemiddeld tarief, bcr -> BCR, ucr -> UCR, company_bcr -> BCR unit, company_ucr -> UCR unit, contract -> contract, contract_hours -> uren, salary -> salaris, role -> rol
+      - Do the following actions when you are asked:
+        * Omzet: calculate rate * hours
+        * Productiviteit: calculate sum of hours
 
       User question (in Dutch): #{@query}
       
+      If not explicitly asked, always return in the context of the current month. For instance salary, average rate, etc. Most of these can be calculated by using the fact_rates table and the rate_date column.
+      All dates (columns ending with _date) are integer dates and should be formatted as DD-MM-YYYY.
       Return only the SQL query, no explanations.
-      Always return meaningful columns in the result (names instead of IDs), except created_at and updated_at and translate these to Dutch and replace a underscore with a space.
+      Always show all columns in the result, except for the ignored columns.
+      Always return meaningful columns in the result (names instead of IDs) and translate these to Dutch and replace a underscore with a space.
       Always use meaningful column aliases when joining multiple tables that might have the same column names.
+      Use the original English column names in the query logic, but alias them to Dutch names in the SELECT statement using AS.
     PROMPT
   end
 
   private def database_schema
     File.read(Rails.root.join('db', 'dwh_schema.rb'))
-  end
-
-  private def translation_yml
-    File.read(Rails.root.join('config', 'locales', 'dwh.nl.yml'))
   end
 end

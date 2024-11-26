@@ -6,6 +6,7 @@ class CreateChatHistories < ActiveRecord::Migration[7.1]
       t.text :question
       t.text :sql_query
       t.jsonb :answer, default: []
+      t.string :status
 
       t.timestamps
     end

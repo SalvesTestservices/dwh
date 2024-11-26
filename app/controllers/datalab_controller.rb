@@ -19,9 +19,13 @@ class DatalabController < ApplicationController
     query = params[:query]
     @response = DatalabCommunicator.new(query, current_user, chat_session_id).process
     chat = ChatHistory.where(session_id: chat_session_id).order(:created_at).last
-
+    puts "CHAT #{chat}"
     respond_to do |format|
-      format.turbo_stream { render turbo_stream: turbo_stream.append('chats', partial: 'chat', locals: { chat: chat }) }
+      if chat.is_a?(String)
+        format.turbo_stream { render turbo_stream: turbo_stream.append('chats', partial: 'error', locals: { message: @response }) }
+      else
+        format.turbo_stream { render turbo_stream: turbo_stream.append('chats', partial: 'chat', locals: { chat: chat, show_more: false }) }
+      end
       format.html
     end
   end

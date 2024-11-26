@@ -20,6 +20,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_21_111100) do
     t.text "question"
     t.text "sql_query"
     t.jsonb "answer", default: []
+    t.string "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_chat_histories_on_user_id"
