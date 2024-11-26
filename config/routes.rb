@@ -8,6 +8,8 @@ Rails.application.routes.draw do
   end
   resources :datalab, only: [:index] do
     collection do
+      get :chat_history
+      get :chat_history_details
       post :chat
     end
   end

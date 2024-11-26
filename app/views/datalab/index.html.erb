@@ -2,7 +2,7 @@
   breadcrumbs: @breadcrumbs, 
   title: I18n.t('.datalab.titles.index'), 
   icon: ["datalab", "medium", "gray"],
-  buttons: [[I18n.t('.datalab.titles.reset_session'), datalab_index_path(reset_session: true)]]
+  buttons: [[I18n.t('.datalab.titles.reset_session'), datalab_index_path(reset_session: true)], [I18n.t('.datalab.titles.chat_history'), chat_history_datalab_index_path]]
 %>
 
 <main>
@@ -10,7 +10,7 @@
 
     <div id="chats" class="py-4">
       <% @chat_history.each do |chat| %>
-        <%= render partial: "chat", locals: { chat: chat } %>
+        <%= render partial: "chat", locals: { chat: chat, show_more: false } %>
       <% end %>
     </div>
 
