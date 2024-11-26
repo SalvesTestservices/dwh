@@ -14,7 +14,13 @@
       <% end %>
     </div>
 
-    <%= form_with url: chat_datalab_index_path, class: "space-y-4",data: { controller: "chat", action: "turbo:submit-end->chat#handleResponse" } do |f| %>
+    <%= form_with url: chat_datalab_index_path, 
+              class: "space-y-4",
+              data: { 
+                controller: "chat", 
+                action: "turbo:submit-start->chat#handleSubmit turbo:submit-end->chat#handleResponse",
+                chat_loading_html: render("layouts/loading")
+              } do |f| %>
       <%= f.hidden_field :session_id, value: @chat_session_id %>
       <%= f.text_area :query, class: "w-full p-2 border rounded", placeholder: I18n.t('.datalab.titles.chat_question'), data: { chat_target: "input" } %>
       <%= f.submit I18n.t('.datalab.titles.chat_button'), class: "bg-gray-800 text-white px-4 py-2 rounded" %>
