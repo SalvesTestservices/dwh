@@ -12,10 +12,11 @@ nl:
       reports:      rapportages
   datalab:
     titles:
-      index:        Data lab
-      chat_history: Gestelde vragen
-      chat_button:  Verstuur vraag
-      chat_question: Stel een vraag over het DWH...
+      index:          Data lab
+      chat_history:   Gestelde vragen
+      chat_button:    Verstuur vraag
+      chat_question:  Stel een vraag over het DWH...
       question:       Vraag
       answer:         Antwoord
       sql:            SQL query
+      reset_session:  Start een nieuwe chat

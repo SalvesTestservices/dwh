@@ -1,6 +1,12 @@
 class DatalabController < ApplicationController
   def index
-    @chat_session_id = ChatHistory.for_user(current_user).recent.first&.session_id || SecureRandom.uuid
+    if params[:reset_session]
+      @chat_session_id = SecureRandom.uuid
+      @chat_history = []
+      return redirect_to datalab_index_path(session_id: @chat_session_id)
+    end
+
+    @chat_session_id = params[:session_id] || ChatHistory.for_user(current_user).recent.first&.session_id || SecureRandom.uuid
     @chat_history = ChatHistory.for_user(current_user).where(session_id: @chat_session_id).order(:created_at)
   end
 
