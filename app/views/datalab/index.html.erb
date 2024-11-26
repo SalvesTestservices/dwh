@@ -23,7 +23,7 @@
               } do |f| %>
       <%= f.hidden_field :session_id, value: @chat_session_id %>
       <%= f.text_area :query, class: "w-full p-2 border rounded", placeholder: I18n.t('.datalab.titles.chat_question'), data: { chat_target: "input" } %>
-      <%= f.submit I18n.t('.datalab.titles.chat_button'), class: "bg-gray-800 text-white px-4 py-2 rounded" %>
+      <%= f.submit I18n.t('.datalab.titles.chat_button'), class: "whitespace-nowrap text-gray-700 bg-gray-100 hover:bg-gray-50 sm:h-10 mt-1 px-1 px-2 sm:px-4 py-2 text-sm mr-1 border border-gray-300 shadow-sm font-medium rounded" %>
     <% end %>
   </div>
 </main>

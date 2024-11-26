@@ -20,3 +20,4 @@ nl:
       answer:         Antwoord
       sql:            SQL query
       reset_session:  Start een nieuwe chat
+      show_sql:       SQL

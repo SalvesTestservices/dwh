@@ -1,10 +1,15 @@
-<div class="bg-white border border-gray-800 rounded p-4 my-1">
+<div class="bg-white border border-gray-800 rounded p-4 my-1" data-controller="toggle">
   <div class="mb-4">
     <h3 class="font-bold"><%= I18n.t('.datalab.titles.question') %>:</h3>
-    <p class="text-gray-700"><%= chat.question %></p>
+    <p class="text-gray-700">
+      <%= chat.question %>
+      <button data-action="click->toggle#toggle" class="text-blue-600 hover:text-blue-800 text-sm ml-2">
+        <%= I18n.t(".datalab.titles.show_sql") %>
+      </button>
+    </p>
   </div>
 
-  <div class="mb-4">
+  <div data-toggle-target="content" class="mb-4 hidden">
     <h3 class="font-bold"><%= I18n.t('.datalab.titles.sql') %>:</h3>
     <pre class="bg-gray-100 p-2 rounded text-sm"><code><%= chat.sql_query %></code></pre>
   </div>
