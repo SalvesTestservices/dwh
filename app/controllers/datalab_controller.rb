@@ -1,14 +1,17 @@
 class DatalabController < ApplicationController
   def index
-    @chat_history = ChatHistory.for_user(current_user).recent
+    @chat_session_id = ChatHistory.for_user(current_user).recent.first&.session_id || SecureRandom.uuid
+    @chat_history = ChatHistory.for_user(current_user).where(session_id: @chat_session_id).order(:created_at)
   end
 
   def chat
-    @query = params[:query]
-    @response = DatalabCommunicator.new(@query, current_user).process
-    
+    chat_session_id = params[:session_id] || SecureRandom.uuid
+    query = params[:query]
+    @response = DatalabCommunicator.new(query, current_user, chat_session_id).process
+    chat = ChatHistory.where(session_id: chat_session_id).order(:created_at).last
+
     respond_to do |format|
-      format.turbo_stream { render turbo_stream: turbo_stream.append('chat_results', partial: 'results', locals: { response: @response }) }
+      format.turbo_stream { render turbo_stream: turbo_stream.append('chats', partial: 'chat', locals: { chat: chat }) }
       format.html
     end
   end

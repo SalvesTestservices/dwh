@@ -1,7 +1,8 @@
 class DatalabCommunicator
-  def initialize(query, user)
+  def initialize(query, user, chat_session_id)
     @query = query
     @user = user
+    @chat_session_id = chat_session_id
   end
 
   def process
@@ -12,7 +13,7 @@ class DatalabCommunicator
       parameters: {
         model: ENV.fetch("ANTHROPIC_MODEL"),
         messages: [
-          { "role": "user", "content": generate_prompt}
+          { "role": "user", "content": generate_prompt }
         ],
         max_tokens: 1000
       }
@@ -25,24 +26,13 @@ class DatalabCommunicator
     result = execute_sql(sql)
 
     # Store successful query for future use
-    store_successful_query(@user.id, @query, sql, result) if result.present?
-
-    {
-      data: result,
-      sql: sql
-    }
-  rescue StandardError => e
-    Rails.logger.error("DatalabCommunicator Error: #{e.message}")
-    {
-      data: nil,
-      sql: nil,
-      error: "Failed to process query: #{e.message}"
-    }
+    store_successful_query(@user.id, @chat_session_id, @query, sql, result) if result.present?
   end
 
-  private def store_successful_query(user_id, query, sql, result)
+  private def store_successful_query(user_id, chat_session_id, query, sql, result)
     ChatHistory.create!(
       user_id: user_id,
+      session_id: chat_session_id,
       question: query,
       sql_query: sql,
       answer: result

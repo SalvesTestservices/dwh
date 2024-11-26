@@ -8,19 +8,16 @@
 <main>
   <div class="mx-auto max-w-8xl py-2 md:py-6">
 
-    <div id="chat_results" class="space-y-4">
-      <%= render partial: "results" if @response %>
+    <div id="chats" class="py-4">
+      <% @chat_history.each do |chat| %>
+        <%= render partial: "chat", locals: { chat: chat } %>
+      <% end %>
     </div>
 
     <%= form_with url: chat_datalab_index_path, class: "space-y-4",data: { controller: "chat", action: "turbo:submit-end->chat#handleResponse" } do |f| %>
+      <%= f.hidden_field :session_id, value: @chat_session_id %>
       <%= f.text_area :query, class: "w-full p-2 border rounded", placeholder: I18n.t('.datalab.titles.chat_question'), data: { chat_target: "input" } %>
       <%= f.submit I18n.t('.datalab.titles.chat_button'), class: "bg-gray-800 text-white px-4 py-2 rounded" %>
     <% end %>
-
-    <div id="chat_history" class="mt-8 hidden">
-      <h2 class="text-xl font-bold mb-4"><%= I18n.t('.datalab.titles.chat_history') %></h2>
-      <%= render partial: "chat_history", collection: @chat_history %>
-    </div>
-
   </div>
 </main>

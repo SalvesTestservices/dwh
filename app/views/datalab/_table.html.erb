@@ -1,26 +1,24 @@
-<div class="overflow-x-auto">
-  <table class="min-w-full divide-y divide-gray-200">
-    <thead class="bg-gray-50">
-      <tr>
-        <% if @response[:data].first.present? %>
-          <% @response[:data].first.keys.each do |column| %>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              <%= column %>
-            </th>
-          <% end %>
+<table class="min-w-full divide-y divide-gray-200">
+  <thead class="bg-gray-50">
+    <tr>
+      <% if answer.first.present? %>
+        <% answer.first.keys.each do |column| %>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <%= column %>
+          </th>
+        <% end %>
+      <% end %>
+    </tr>
+  </thead>
+  <tbody class="bg-white divide-y divide-gray-200">
+    <% answer.each do |row| %>
+      <tr class="hover:bg-gray-50">
+        <% row.each do |_key, value| %>
+          <td class="px-6 py-4 whitespace-nowrap text-xs text-gray-900">
+            <%= value %>
+          </td>
         <% end %>
       </tr>
-    </thead>
-    <tbody class="bg-white divide-y divide-gray-200">
-      <% @response[:data].each do |row| %>
-        <tr class="hover:bg-gray-50">
-          <% row.each do |_key, value| %>
-            <td class="px-6 py-4 whitespace-nowrap text-xs text-gray-900">
-              <%= value %>
-            </td>
-          <% end %>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-</div>
+    <% end %>
+  </tbody>
+</table>
