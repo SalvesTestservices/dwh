@@ -136,20 +136,11 @@ class DatalabCommunicator
         * Table fact_projectusers: id, original_id, created_at, updated_at
         * Table fact_rates: id, show_user, created_at, updated_at
       - Use the original column names (in English) in WHERE clauses and JOIN conditions
-      - Translate the following columns to Dutch and return them in the same order as shown here, use these translation not for the query itself:
-        * Table dim_accounts: name -> naam
-        * Table dim_companies: name -> naam, name_short -> afkorting, account_id -> label
-        * Table dim_customers: name -> naam, account_id -> label, status -> status
-        * Table dim_projects: name -> naam, account_id -> label, status -> status, company_id -> unit, customer_id -> klant, calculation_type -> type, start_date -> startdatum, end_date -> einddatum, expected_end_date -> verwachte einddatum
-        * Table dim_unbillables: name -> naam, name_short -> afkorting, account_id -> label
-        * Table dim_users: full_name -> naam, account_id -> label, company_id -> unit, start_date -> startdatum, end_date -> datum uit dienst, role -> rol, contract -> contract, contract_hours -> uren, salary -> salaris, city -> woonplaats, country -> land
-        * Table fact_activities: activity_date -> datum, account_id -> label, user_id -> medewerker, project_id -> project, unbillable_id -> unbillable code, customer_id -> klant, company_id -> unit, hours -> uren, rate -> tarief
-        * Table fact_projectusers: project_id -> project, user_id -> medewerker, account_id -> label, start_date -> startdatum, end_date -> einddatum, expected_end_date -> verwachte einddatum
-        * Table fact_rates: label -> label, company_id -> unit, user_id -> medewerker, rate_date -> datum, hours -> uren, avg_rate -> gemiddeld tarief, bcr -> BCR, ucr -> UCR, company_bcr -> BCR unit, company_ucr -> UCR unit, contract -> contract, contract_hours -> uren, salary -> salaris, role -> rol
       - Do the following actions when you are asked:
         * Omzet: calculate rate * hours
         * Productiviteit: calculate sum of hours
         * In dienst/Uit dienst use: (leave_date IS NULL OR leave_date >= [current_date_integer])
+        * Binnenkort in dienst: (start_date <= [current_date_integer] AND end_date >= [current_date_integer])
 
       Additional query guidelines:
       - For date handling:

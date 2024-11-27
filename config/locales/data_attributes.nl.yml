@@ -1,0 +1,165 @@
+nl:
+  data_attributes:
+    tables:
+      dim_accounts:
+        name: Bedrijf/Label
+        attributes:
+          name: Naam
+          is_holding: Is holding
+      dim_companies:
+        name: BV/Unit/Company
+        attributes:
+          account_id: Bedrijf/Label
+          name: Naam
+          name_short: Afkorting
+      dim_customers:
+        name: Klant
+        attributes:
+          account_id: Bedrijf/Label
+          name: Naam
+          status: Status
+      dim_dates:
+        name: Datum
+        attributes:
+          year: Jaar
+          month: Maand
+          month_name: Maandnaam
+          month_name_short: Korte maandnaam
+          day: Dag
+          day_of_week: Dag van de week
+          day_name: Dagnaam
+          day_name_short: Korte dagnaam
+          quarter: Kwartaal
+          week_nr: Weeknummer
+          is_workday: Is werkdag
+          is_holiday_nl: Is feestdag NL
+          is_holiday_be: Is feestdag BE
+          original_date: Originele datum
+          yearmonth: Jaar-maand
+          iso_year: ISO jaar
+          iso_week: ISO week
+      dim_holidays:
+        name: Feestdag
+        attributes:
+          uid: Unieke ID
+          account_id: Bedrijf/Label
+          company_id: BV/Unit/Company
+          holiday_date: Feestdag datum
+          name: Naam
+          country: Land
+      dim_projects:
+        name: Project
+        attributes:
+          account_id: Bedrijf/Label
+          name: Naam
+          status: Status
+          company_id: BV/Unit/Company
+          calculation_type: Type project/Project type
+          start_date: Startdatum
+          end_date: Einddatum
+          expected_end_date: Verwachte einddatum
+          customer_id: Klant
+      dim_roles:
+        name: Rol
+        attributes:
+          role: Rol
+          category: Categorie
+      dim_unbillables:
+        name: Unbillable code
+        attributes:
+          account_id: Bedrijf/Label
+          name: Naam
+          name_short: Afkorting
+      dim_users:
+        name: Medewerker/Consultant
+        attributes:
+          account_id: Bedrijf/Label
+          full_name: Volledige naam
+          company_id: BV/Unit/Company
+          start_date: Startdatum
+          leave_date: Vertrekdatum
+          role: Rol
+          email: E-mail
+          employee_type: Type medewerker
+          contract: Contract type
+          contract_hours: Contract uren
+          salary: Salaris
+          address: Adres
+          zipcode: Postcode
+          city: Plaats
+          country: Land
+      fact_activities:
+        name: Activiteit/Tijdschrijfregel/Geschreven uren/Uren
+        attributes:
+          account_id: Bedrijf/Label
+          customer_id: Klant
+          unbillable_id: Unbillable code
+          user_id: Medewerker/Consultant
+          company_id: BV/Unit/Company
+          projectuser_id: Projectinzet
+          project_id: Project
+          activity_date: Activiteit datum
+          hours: Uren
+          rate: Tarief
+      fact_projectusers:
+        name: Projectinzet
+        attributes:
+          account_id: Bedrijf/Label
+          user_id: Medewerker/Consultant
+          project_id: Project
+          start_date: Startdatum
+          end_date: Einddatum
+          expected_end_date: Verwachte einddatum
+      fact_rates:
+        name: Tarieven
+        attributes:
+          account_id: Bedrijf/Label
+          company_id: BV/Unit/Company
+          user_id: Medewerker/Consultant
+          rate_date: Tarief datum
+          hours: Uren
+          avg_rate: Gemiddeld tarief
+          bcr: BCR
+          ucr: UCR
+          company_bcr: BCR BV/Unit/Company
+          company_ucr: UCR BV/Unit/Company
+          contract: Contract type
+          contract_hours: Contract uren
+          salary: Salaris
+          role: Rol
+      fact_targets:
+        name: Targets/Doelen
+        attributes:
+          account_id: Bedrijf/Label
+          company_id: BV/Unit/Company
+          year: Jaar
+          month: Maand
+          role_group: Rol groep
+          fte: FTE
+          billable_hours: Facturabele uren
+          cost_price: Kostprijs
+          bruto_margin: Bruto marge
+          target_date: Doeldatum/Target datum
+          workable_hours: Werkbare uren
+          productivity: Productiviteit
+          hour_rate: Uurtarief
+          turnover: Omzet
+          quarter: Kwartaal
+          employee_attrition: Medewerker verloop
+          employee_absence: Medewerker verzuim
+    enums:
+      status:
+        active: Actief
+        inactive: Inactief
+      role:
+        employee: Medewerker
+        subco: Subco
+      contract:
+        permanent: Vast
+        temporary: Tijdelijk
+        fixed: Bepaalde tijd
+      calculation_type:
+        fixed: Vast/Fixed price
+        hours: Nacalculatie/Uurtje-factuurtje/Time & Material
+        service: Dienst
+        training: Training
