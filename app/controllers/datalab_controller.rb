@@ -17,16 +17,16 @@ class DatalabController < ApplicationController
   def chat
     chat_session_id = params[:session_id] || SecureRandom.uuid
     query = params[:query]
-    @response = DatalabCommunicator.new(query, current_user, chat_session_id).process
-    chat = ChatHistory.where(session_id: chat_session_id).order(:created_at).last
-    puts "CHAT #{chat}"
+    response = DatalabCommunicator.new(query, current_user, chat_session_id).process
+    
     respond_to do |format|
-      if chat.is_a?(String)
-        format.turbo_stream { render turbo_stream: turbo_stream.append('chats', partial: 'error', locals: { message: @response }) }
+      if response.include?("ERROR") or response.blank?
+        format.turbo_stream { render turbo_stream: turbo_stream.append('chats', partial: 'error', locals: { message: response }) }
       else
+        chat = ChatHistory.where(session_id: chat_session_id).order(:created_at).last
+        puts "CHAT #{chat}"
         format.turbo_stream { render turbo_stream: turbo_stream.append('chats', partial: 'chat', locals: { chat: chat, show_more: false }) }
       end
-      format.html
     end
   end
 

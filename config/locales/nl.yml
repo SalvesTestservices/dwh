@@ -10,6 +10,7 @@ nl:
   site:
     titles:
       data_views:   Data views
+      data_checks:  Data checks
   datalab:
     titles:
       index:          Data lab

@@ -1,0 +1,5 @@
+nl:
+  data_attributes:
+    employee:
+      in_service: In dienst
+      out_of_service: Uit dienst

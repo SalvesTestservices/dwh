@@ -22,7 +22,7 @@ class DatalabCommunicator
 
     # Extract SQL from response
     sql = response.dig("content", 0, "text")
-    
+
     # Execute SQL and handle results
     result = execute_sql(sql)
 
@@ -30,6 +30,7 @@ class DatalabCommunicator
     store_successful_query(@user.id, @chat_session_id, @query, sql, result) unless result.include?("ERROR")
 
     # Return result
+    puts "RESULT: #{result}"
     result
   rescue Anthropic::Error => e
     case e.status
@@ -89,6 +90,21 @@ class DatalabCommunicator
       Given the following database schema:
       #{database_schema}
 
+      Previous successful queries:
+      #{generate_chat_history}
+
+      Dutch to English translations:
+      #{load_translations}
+
+      Query Guidelines:
+      - When filtering on translated fields, use English values in WHERE clauses
+      - Example: "medewerkers" -> WHERE role = 'employee'
+
+      CRITICAL RULES:
+      1. NEVER format or transform dates - they must be shown as raw integers
+      2. NEVER use CONCAT, SUBSTRING, TO_CHAR, TO_DATE or any other date formatting
+      3. Always use column::text for date columns to show the raw integer value
+
       Important context:
       - Table names are in English and use the format: dim_* for dimensions and fact_* for fact tables
       - When querying, always join with related dimension tables to show names instead of IDs:
@@ -133,20 +149,55 @@ class DatalabCommunicator
       - Do the following actions when you are asked:
         * Omzet: calculate rate * hours
         * Productiviteit: calculate sum of hours
+        * In dienst/Uit dienst use: (leave_date IS NULL OR leave_date >= [current_date_integer])
+
+      Additional query guidelines:
+      - For date handling:
+        * Dates are stored and must be displayed as raw integers in YYYYMMDD format
+        * Example: 20230101 for January 1st, 2023
+        * Simply use: start_date::text, leave_date::text
+        * For date comparisons, use: date_column >= EXTRACT(YEAR FROM CURRENT_DATE)::integer * 10000 + 
+                                                   EXTRACT(MONTH FROM CURRENT_DATE)::integer * 100 + 
+                                                   EXTRACT(DAY FROM CURRENT_DATE)::integer
+      - When matching company/account names:
+        * Use ILIKE for case-insensitive partial matches
+        * Example: name ILIKE '%SALVES%' OR name_short ILIKE '%SALVES%'
+      - For simple listing queries:
+        * Return only relevant columns based on the question
+        * Default sort should be by name/full_name
+      - Active employee filter:
+        * Use: (leave_date IS NULL OR leave_date >= [current_date_integer])
 
       User question (in Dutch): #{@query}
-      
-      If not explicitly asked, always return in the context of the current month. For instance salary, average rate, etc. Most of these can be calculated by using the fact_rates table and the rate_date column.
-      All dates (columns ending with _date) are integer dates and should be formatted as DD-MM-YYYY.
+
+      Keep queries simple and focused on what's specifically asked. Only include columns that are relevant to the question.
       Return only the SQL query, no explanations.
-      Always show all columns in the result, except for the ignored columns.
-      Always return meaningful columns in the result (names instead of IDs) and translate these to Dutch and replace a underscore with a space.
-      Always use meaningful column aliases when joining multiple tables that might have the same column names.
+      Always show meaningful columns in the result (names instead of IDs) and translate these to Dutch.
       Use the original English column names in the query logic, but alias them to Dutch names in the SELECT statement using AS.
     PROMPT
   end
 
   private def database_schema
     File.read(Rails.root.join('db', 'dwh_schema.rb'))
+  end
+
+  private def generate_chat_history
+    # Get last 5 successful queries from the current chat session
+    history = ChatHistory.where(session_id: @chat_session_id,).where.not(sql_query: nil).order(created_at: :desc).limit(5)
+
+    return "" if history.empty?
+
+    history.map do |chat|
+      <<~HISTORY
+        Question: #{chat.question}
+        SQL: #{chat.sql_query}
+        Result: #{chat.answer}
+        ---
+      HISTORY
+    end.join("\n")
+  end
+
+  private def load_translations
+    YAML.load_file(Rails.root.join('config', 'locales', 'data_attributes.nl.yml')).dig('nl', 'data_attributes').to_yaml
   end
 end
