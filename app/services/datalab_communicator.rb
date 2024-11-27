@@ -6,17 +6,24 @@ class DatalabCommunicator
   end
 
   def process
+    complexity = DatalabQueryAnalyzer.analyze(@query)
+    
+    # Adjust token limit based on complexity
+    max_tokens = complexity[:is_complex] ? 2000 : 1000
+    
     result = "OK"
     client = Anthropic::Client.new(access_token: ENV['ANTHROPIC_API_KEY'])
 
-    # Get SQL from Anthropic
     response = client.messages(
       parameters: {
         model: ENV.fetch("ANTHROPIC_MODEL"),
         messages: [
-          { "role": "user", "content": generate_prompt }
+          { 
+            role: "user", 
+            content: generate_prompt(complexity) 
+          }
         ],
-        max_tokens: 1000
+        max_tokens: max_tokens
       }
     )
 
@@ -59,16 +66,21 @@ class DatalabCommunicator
     return if sql.blank?
 
     # Sanitize and validate SQL to prevent dangerous operations
-    result = "ERROR! Invalid SQL: Contains unsafe operations" if unsafe_sql?(sql)
+    return "ERROR! Invalid SQL: Contains unsafe operations" if unsafe_sql?(sql)
+    
+    # Clean up double quotes in SQL string
+    cleaned_sql = sql
+      .gsub("''", "'")     # Replace double single quotes with single quotes
+      .gsub('""', '"')     # Replace double double quotes with single double quotes
     
     # Execute query with timeout protection
-    DwhRecord.connection.execute(sql).to_a
+    DwhRecord.connection.execute(cleaned_sql).to_a
   rescue ActiveRecord::StatementInvalid => e
-    result = "ERROR! Invalid SQL query: #{e.message}"
+    "ERROR! Invalid SQL query: #{e.message}"
   rescue PG::Error => e
-    result = "ERROR! Database error: #{e.message}"
+    "ERROR! Database error: #{e.message}"
   rescue Timeout::Error => e
-    result = "ERROR! Query timed out: #{sql}"
+    "ERROR! Query timed out: #{sql}"
   end
 
   private def unsafe_sql?(sql)
@@ -85,8 +97,8 @@ class DatalabCommunicator
     dangerous_keywords.any? { |keyword| sql.match?(keyword) }
   end
 
-  def generate_prompt
-    <<~PROMPT
+  def generate_prompt(complexity = nil)
+    base_prompt = <<~PROMPT
       Given the following database schema:
       #{database_schema}
 
@@ -146,10 +158,8 @@ class DatalabCommunicator
       - For date handling:
         * Dates are stored and must be displayed as raw integers in YYYYMMDD format
         * Example: 20230101 for January 1st, 2023
-        * Simply use: start_date::text, leave_date::text
-        * For date comparisons, use: date_column >= EXTRACT(YEAR FROM CURRENT_DATE)::integer * 10000 + 
-                                                   EXTRACT(MONTH FROM CURRENT_DATE)::integer * 100 + 
-                                                   EXTRACT(DAY FROM CURRENT_DATE)::integer
+        * The real date can be found in the dim_dates table, by simply use the integer date value for the ID column in dim_dates
+        * Always convert integer dates with dim_dates, do not do calculations with them, only with the real date in dim_dates
       - When matching company/account names:
         * Use ILIKE for case-insensitive partial matches
         * Example: name ILIKE '%SALVES%' OR name_short ILIKE '%SALVES%'
@@ -158,6 +168,31 @@ class DatalabCommunicator
         * Default sort should be by name/full_name
       - Active employee filter:
         * Use: (leave_date IS NULL OR leave_date >= [current_date_integer])
+      - For employees:
+        * If not asked explicitly, only use employees that are currently in service, so where leave_date IS NULL OR leave_date >= current_date
+
+      Complex Question Analysis:
+      1. If the question contains multiple parts, address each part separately
+      2. If calculations are needed:
+         - First get the base data in a CTE (WITH clause)
+         - Then perform calculations on the results
+      3. For time-based comparisons:
+         - Use separate CTEs for different time periods
+         - Join or UNION the results as needed
+      4. For aggregations:
+         - Start with the most detailed level
+         - Use GROUP BY with ROLLUP or multiple GROUP BY levels
+
+      Example structure for complex queries:
+      WITH base_data AS (
+        -- Get basic data needed
+      ),
+      calculations AS (
+        -- Perform necessary calculations
+      )
+      SELECT
+        -- Final results with meaningful column names
+      FROM calculations;
 
       User question (in Dutch): #{@query}
 
@@ -166,6 +201,25 @@ class DatalabCommunicator
       Always show meaningful columns in the result (names instead of IDs) and translate these to Dutch.
       Use the original English column names in the query logic, but alias them to Dutch names in the SELECT statement using AS.
     PROMPT
+
+    return base_prompt unless complexity&.dig(:is_complex)
+    
+    # Add specific guidance based on complexity
+    additional_guidance = complexity[:aspects].map do |aspect|
+      case aspect
+      when :time_comparison
+        "Use separate CTEs for each time period being compared."
+      when :calculations
+        "Break down calculations into steps using CTEs."
+      when :grouping
+        "Start with detailed data and gradually aggregate up."
+      when :multiple_entities
+        "Join relevant entities in a base CTE before calculations."
+      end
+    end
+
+    base_prompt + "\n\nSpecific guidance for this complex query:\n" +
+      additional_guidance.join("\n")
   end
 
   private def database_schema
@@ -181,7 +235,7 @@ class DatalabCommunicator
     history.map do |chat|
       <<~HISTORY
         Question: #{chat.question}
-        SQL: #{chat.sql_query}
+        SQL: #{chat.sql_query}å
         Result: #{chat.answer}
         ---
       HISTORY
