@@ -9,17 +9,6 @@
                   data: { turbo: true },
                   class: "space-y-6" do |f| %>
       
-      <%# Step indicator %>
-      <div class="border-b border-gray-200 pb-4">
-        <nav class="flex space-x-4" aria-label="Progress">
-          <div class="step-item current">
-            <span class="text-sm font-medium text-blue-600">
-              1. Select Metric
-            </span>
-          </div>
-        </nav>
-      </div>
-
       <%# Metric Selection Step %>
       <div class="step" data-query-builder-target="stepContainer">
         <div class="space-y-4">
@@ -41,16 +30,6 @@
 
         <%# This is where the next step will be loaded %>
         <div id="nextStep" data-query-builder-target="nextStep"></div>
-      </div>
-
-      <%# Initial Action Buttons %>
-      <div class="flex justify-end space-x-3 pt-4 border-t border-gray-200">
-        <%= link_to "Cancel",
-                    dataview_index_path,
-                    class: "inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50" %>
-        
-        <%= f.submit "Continue",
-                    class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
       </div>
     <% end %>
   </div>

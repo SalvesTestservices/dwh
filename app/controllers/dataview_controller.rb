@@ -1,10 +1,12 @@
 class DataviewController < ApplicationController
   def index
-    # We'll implement this later if needed
+    @breadcrumbs = []
+    @breadcrumbs << [I18n.t(".datalab.titles.index")]
   end
 
   def new
     @available_metrics = QueryBuilder::Base::AVAILABLE_METRICS
+
   end
 
   def create
@@ -50,19 +52,20 @@ class DataviewController < ApplicationController
   end
 
   def export
-    result_id = SecureRandom.uuid
-    Rails.cache.write("report_result_#{result_id}", session[:last_result], expires_in: 1.hour)
+    @result = session[:last_result] # We'll store the last result in session
     
-    ReportGenerationJob.perform_later(result_id, params[:format], current_user.id)
-
     respond_to do |format|
-      format.html do
-        flash[:notice] = "Your report is being generated. You'll receive an email when it's ready."
-        redirect_back(fallback_location: dataview_index_path)
+      format.csv do
+        send_data generate_csv(@result),
+          filename: "report-#{Time.current.strftime('%Y%m%d%H%M%S')}.csv"
       end
-      format.turbo_stream do
-        flash.now[:notice] = "Your report is being generated. You'll receive an email when it's ready."
-        render turbo_stream: turbo_stream.update("flash", partial: "shared/flash")
+      format.xlsx do
+        response.headers['Content-Disposition'] = "attachment; filename=report-#{Time.current.strftime('%Y%m%d%H%M%S')}.xlsx"
+        render xlsx: "export", locals: { result: @result }
+      end
+      format.pdf do
+        send_data generate_pdf(@result),
+          filename: "report-#{Time.current.strftime('%Y%m%d%H%M%S')}.pdf"
       end
     end
   end
