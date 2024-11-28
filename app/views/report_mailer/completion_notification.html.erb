@@ -1,0 +1,15 @@
+<div>
+  <h1>Your report is ready</h1>
+  
+  <p>Hello <%= @user.name %>,</p>
+  
+  <p>Your requested report has been generated and is attached to this email.</p>
+  
+  <p>Report details:</p>
+  <ul>
+    <li>Format: <%= @report.format.upcase %></li>
+    <li>Generated at: <%= @report.created_at.strftime('%B %d, %Y %H:%M') %></li>
+  </ul>
+  
+  <p>Thank you for using our service!</p>
+</div>

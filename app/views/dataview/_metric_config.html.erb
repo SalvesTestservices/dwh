@@ -1,0 +1,107 @@
+<div class="mt-6 border-t border-gray-200 pt-6"
+     data-controller="form">
+  <div class="flex items-center justify-between mb-4">
+    <h3 class="text-lg font-medium text-gray-900">
+      Configure <%= metric_name %>
+    </h3>
+    
+    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+      Step 2 of 2
+    </span>
+  </div>
+
+  <%= form_with url: dataview_index_path,
+                method: :post,
+                class: "space-y-6",
+                data: { 
+                  turbo: true,
+                  action: "form#submit"
+                } do |f| %>
+    
+    <%= f.hidden_field :metric, value: metric_type %>
+
+    <%# Time Period Selection %>
+    <div class="space-y-4">
+      <div class="flex justify-between items-center">
+        <%= f.label :time_period, "Select Time Period",
+                    class: "block text-sm font-medium text-gray-700" %>
+        <span class="text-xs text-red-600 hidden" 
+              data-form-target="timeperiodError">
+          Required
+        </span>
+      </div>
+      
+      <%= f.select :time_period,
+                  time_period_options,
+                  { prompt: "Select time period" },
+                  { 
+                    class: "mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md",
+                    required: true,
+                    data: {
+                      action: "change->query-builder#timeperiodSelected change->form#validate",
+                      "query-builder-target" => "timeperiodSelect"
+                    }
+                  } %>
+    </div>
+
+    <%# Metric Specific Options %>
+    <div class="mt-4">
+      <% case metric_type.to_sym %>
+      <% when :productivity %>
+        <div class="flex justify-between items-center">
+          <%= f.label :group, "Select Team",
+                      class: "block text-sm font-medium text-gray-700" %>
+          <span class="text-xs text-red-600 hidden" 
+                data-form-target="groupError">
+            Required
+          </span>
+        </div>
+        <%= f.select :group,
+                    metric_options[:groups],
+                    { prompt: "Select team" },
+                    { 
+                      class: "mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md",
+                      required: true,
+                      data: { action: "change->form#validate" }
+                    } %>
+      <% when :revenue %>
+        <div class="flex justify-between items-center">
+          <%= f.label :category, "Select Category",
+                      class: "block text-sm font-medium text-gray-700" %>
+          <span class="text-xs text-red-600 hidden" 
+                data-form-target="categoryError">
+            Required
+          </span>
+        </div>
+        <%= f.select :category,
+                    metric_options[:categories],
+                    { prompt: "Select category" },
+                    { 
+                      class: "mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md",
+                      required: true,
+                      data: { action: "change->form#validate" }
+                    } %>
+      <% end %>
+    </div>
+
+    <%# Loading indicator %>
+    <div class="hidden" data-form-target="loading">
+      <div class="flex items-center justify-center">
+        <svg class="animate-spin h-5 w-5 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        <span class="ml-2 text-sm text-gray-500">Generating report...</span>
+      </div>
+    </div>
+
+    <%# Action Buttons %>
+    <div class="flex justify-end space-x-3 pt-4">
+      <%= f.submit "Generate Report",
+                  class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed",
+                  data: { 
+                    "form-target" => "submitButton"
+                  } %>
+    </div>
+  <% end %>
+</div>

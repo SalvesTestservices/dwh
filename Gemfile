@@ -24,6 +24,9 @@ gem "pagy"
 gem "ruby-openai"
 gem "chartkick"
 gem "anthropic"
+gem 'caxlsx'
+gem 'caxlsx_rails'
+gem 'prawn'
 
 group :development, :test do
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"

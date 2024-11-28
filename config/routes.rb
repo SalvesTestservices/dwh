@@ -13,6 +13,13 @@ Rails.application.routes.draw do
       post :chat
     end
   end
+  resources :dataview, only: [:index, :new, :create] do
+    collection do
+      get :metric_config
+      get :export
+    end
+  end
+
 
   # DWH
   namespace :dwh do

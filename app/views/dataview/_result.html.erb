@@ -1,0 +1,119 @@
+<div class="mt-6 bg-white shadow rounded-lg overflow-hidden">
+  <%# Header %>
+  <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+    <div class="flex items-center justify-between">
+      <div>
+        <h2 class="text-xl font-semibold text-gray-900"><%= result[:title] %></h2>
+        <p class="mt-1 text-sm text-gray-500">
+          <%= result[:time_period] %> • 
+          <%= result[:group]&.humanize || result[:category]&.humanize || result[:department]&.humanize %>
+        </p>
+      </div>
+      
+      <%# Export/Share buttons %>
+      <div class="flex space-x-2" data-controller="export">
+        <div class="relative inline-block text-left">
+          <div>
+            <button type="button"
+                    class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                    data-action="click->export#export"
+                    data-export-format-value="csv"
+                    data-export-url-value="<%= export_dataview_index_path(format: :csv) %>">
+              <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+              </svg>
+              Export CSV
+            </button>
+          </div>
+        </div>
+
+        <div class="relative inline-block text-left">
+          <div>
+            <button type="button"
+                    class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                    data-action="click->export#export"
+                    data-export-format-value="xlsx"
+                    data-export-url-value="<%= export_dataview_index_path(format: :xlsx) %>">
+              <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+              </svg>
+              Export Excel
+            </button>
+          </div>
+        </div>
+
+        <div class="relative inline-block text-left">
+          <div>
+            <button type="button"
+                    class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                    data-action="click->export#export"
+                    data-export-format-value="pdf"
+                    data-export-url-value="<%= export_dataview_index_path(format: :pdf) %>">
+              <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+              </svg>
+              Export PDF
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%# Main content %>
+  <div class="p-6">
+    <%# Metrics grid %>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <% result[:data].each do |key, value| %>
+        <div class="bg-gray-50 rounded-lg p-6">
+          <div class="flex items-center justify-between">
+            <h3 class="text-sm font-medium text-gray-500"><%= key.to_s.titleize %></h3>
+            
+            <%# Trend indicator if available %>
+            <% if key == :trend %>
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                         <%= value == 'increasing' ? 'bg-green-100 text-green-800' : 
+                             value == 'decreasing' ? 'bg-red-100 text-red-800' : 
+                             'bg-yellow-100 text-yellow-800' %>">
+                <%= value.titleize %>
+                <% if value == 'increasing' %>
+                  <svg class="ml-1 h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
+                  </svg>
+                <% elsif value == 'decreasing' %>
+                  <svg class="ml-1 h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+                  </svg>
+                <% end %>
+              </span>
+            <% end %>
+          </div>
+
+          <p class="mt-2 flex items-baseline">
+            <span class="text-2xl font-semibold text-gray-900">
+              <% if value.is_a?(Numeric) %>
+                <% if key.to_s.include?('rate') %>
+                  <%= number_to_percentage(value, precision: 1) %>
+                <% elsif key.to_s.include?('revenue') %>
+                  <%= number_to_currency(value, unit: '€', delimiter: '.', separator: ',') %>
+                <% elsif key.to_s.include?('hours') %>
+                  <%= number_with_precision(value, precision: 1) %>
+                <% else %>
+                  <%= number_with_delimiter(value) %>
+                <% end %>
+              <% else %>
+                <%= value %>
+              <% end %>
+            </span>
+            
+            <% if key.to_s.include?('hours') %>
+              <span class="text-sm text-gray-500">
+                <%= key.to_s.humanize %>
+              </span>
+            <% end %>
+          </p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

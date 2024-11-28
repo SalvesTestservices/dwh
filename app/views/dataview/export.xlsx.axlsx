@@ -1,0 +1,27 @@
+wb = xlsx_package.workbook
+
+wb.add_worksheet(name: "Report") do |sheet|
+  # Add title
+  sheet.add_row [result[:title]], style: sheet.styles.add_style(b: true, sz: 14)
+  sheet.add_row [] # Empty row for spacing
+  
+  # Add metadata
+  sheet.add_row ["Time Period:", result[:time_period]]
+  sheet.add_row ["Category/Group:", result[:group] || result[:category] || result[:department]]
+  sheet.add_row [] # Empty row for spacing
+  
+  # Add headers
+  headers = ['Metric', 'Value']
+  sheet.add_row headers, style: sheet.styles.add_style(b: true)
+  
+  # Add data
+  result[:data].each do |key, value|
+    sheet.add_row [
+      key.to_s.titleize,
+      format_metric_value(key, value)
+    ]
+  end
+  
+  # Auto-fit columns
+  sheet.column_widths nil, nil
+end

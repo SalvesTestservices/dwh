@@ -1,0 +1,61 @@
+<div class="max-w-4xl mx-auto mt-10">
+  <h1 class="text-2xl font-semibold text-gray-900 mb-6">
+    Create New Dataview
+  </h1>
+
+  <div class="bg-white shadow rounded-lg p-6" 
+       data-controller="query-builder">
+    <%= form_with url: dataview_index_path, 
+                  data: { turbo: true },
+                  class: "space-y-6" do |f| %>
+      
+      <%# Step indicator %>
+      <div class="border-b border-gray-200 pb-4">
+        <nav class="flex space-x-4" aria-label="Progress">
+          <div class="step-item current">
+            <span class="text-sm font-medium text-blue-600">
+              1. Select Metric
+            </span>
+          </div>
+        </nav>
+      </div>
+
+      <%# Metric Selection Step %>
+      <div class="step" data-query-builder-target="stepContainer">
+        <div class="space-y-4">
+          <%= f.label :metric, 
+                      "What would you like to measure?",
+                      class: "block text-sm font-medium text-gray-700" %>
+          
+          <%= f.select :metric,
+                      @available_metrics.map { |k, v| [v, k] },
+                      { prompt: "Select a metric" },
+                      { 
+                        class: "mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md",
+                        data: {
+                          action: "change->query-builder#metricSelected",
+                          "query-builder-target" => "metricSelect"
+                        }
+                      } %>
+        </div>
+
+        <%# This is where the next step will be loaded %>
+        <div id="nextStep" data-query-builder-target="nextStep"></div>
+      </div>
+
+      <%# Initial Action Buttons %>
+      <div class="flex justify-end space-x-3 pt-4 border-t border-gray-200">
+        <%= link_to "Cancel",
+                    dataview_index_path,
+                    class: "inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50" %>
+        
+        <%= f.submit "Continue",
+                    class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+      </div>
+    <% end %>
+  </div>
+
+  <div id="result" class="mt-8">
+    <%# Results will be loaded here %>
+  </div>
+</div>
