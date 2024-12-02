@@ -4,6 +4,9 @@ nl:
     mandatory:      Velden met een (*) zijn verplicht
     save:           Opslaan
     details:        details
+    edit:           Wijzigen
+    month:          Maand
+    year:           Jaar
   user:
     titles:
       index:        Gebruikers

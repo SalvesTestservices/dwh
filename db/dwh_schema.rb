@@ -11,6 +11,8 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[8.0].define(version: 2024_10_03_080000) do
+  create_schema "test"
+
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -193,7 +195,6 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_03_080000) do
 
   create_table "dp_pipelines", force: :cascade do |t|
     t.string "name"
-    t.string "description"
     t.string "status", default: "inactive"
     t.datetime "last_executed_at"
     t.integer "frequency", default: 24
@@ -215,8 +216,8 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_03_080000) do
     t.index ["last_executed_at"], name: "index_dp_pipelines_on_last_executed_at"
     t.index ["load_method"], name: "index_dp_pipelines_on_load_method"
     t.index ["month"], name: "index_dp_pipelines_on_month"
-    t.index ["name"], name: "index_dp_pipelines_on_name", unique: true
-    t.index ["pipeline_key"], name: "index_dp_pipelines_on_pipeline_key"
+    t.index ["name"], name: "index_dp_pipelines_on_name"
+    t.index ["pipeline_key"], name: "index_dp_pipelines_on_pipeline_key", unique: true
     t.index ["position"], name: "index_dp_pipelines_on_position"
     t.index ["scoped_user_id"], name: "index_dp_pipelines_on_scoped_user_id"
     t.index ["status"], name: "index_dp_pipelines_on_status"

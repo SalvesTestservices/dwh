@@ -2,7 +2,7 @@
 
 <% if @position == "inline" %>
   <div class="py-3 mt-0 grid grid-cols-3 gap-4 items-start border-t border-gray-200">
-    <%= @form.label label, class: "block text-sm font-medium text-gray-700 pt-2" %>
+    <%= @form.label label, class: "block text-sm font-medium text-gray-700 pt-3" %>
     <%= @form.text_field @attribute, autofocus: @autofocus, class: "col-span-2 bg-gray-100 block #{@width} shadow-sm focus:ring-gray-500 focus:border-gray-500 text-sm border-gray-300 rounded-md" %>
   </div>
 <% else %>

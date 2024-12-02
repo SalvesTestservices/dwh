@@ -6,7 +6,7 @@
 %>
 
 <main>
-  <div class="mx-auto max-w-8xl py-2 md:py-6">
+  <div class="mx-auto max-w-8xl py-6 mt-10">
 
     <% unless @dp_pipelines.blank? %>
       <%= turbo_frame_tag "dp_pipelines", data: { controller: "drag" , "drag-url": "/dwh/dp_pipelines/:id/move"} do %>

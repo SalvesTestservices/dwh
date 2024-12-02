@@ -1,16 +1,16 @@
 <%= turbo_frame_tag dom_id(dp_pipeline) do %>
   <% decorate dp_pipeline do |decorates| %>
-    <% status = dp_pipeline.status == "active" ? "border-green-500" : "border-gray-500" %>
+    <% status = dp_pipeline.status == "active" ? "border-l-green-500" : "border-l-gray-500" %>
     <% dp_run = dp_pipeline.dp_runs.order(started_at: :desc).first %>
 
-    <div class="bg-white shadow rounded-lg mx-auto max-w-7xl mb-3 px-5 py-3 grid grid-cols-12 gap-4 border-l-8 <%= status %>">
+    <div class="bg-gray-50 rounded-lg mx-auto max-w-7xl mb-3 p-5 grid grid-cols-12 gap-4 border-l-8 <%= status %> border-t border-r border-b border-gray-300">
       <div class="col-span-3 flex flex-col">
-        <div class="text-sm font-medium leading-6 text-gray-800"><%= decorates.data_field(dp_pipeline.name) %></div>
-        <div class="mt-1 text-xs leading-5 text-gray-500"><%= decorates.data_field(dp_pipeline.description) %></div>
+        <div class="text-base font-medium leading-6 text-gray-800"><%= decorates.data_field(dp_pipeline.name) %></div>
+        <div class="mt-1 text-xs leading-5 text-gray-500"><%= decorates.data_field(dp_pipeline.pipeline_key) %></div>
       </div>
       <div class="col-span-1 flex flex-col">
-        <div class="text-sm font-medium leading-6 text-gray-800 text-center"><%= I18n.t('.dp_pipeline.form.account_ids') %></div>
-        <div class="mt-1 text-xs leading-5 text-gray-500"><%= decorates.account %></div>
+        <div class="text-sm font-medium leading-6 text-gray-800 text-center"><%= I18n.t('.dp_pipeline.form.account') %></div>
+        <div class="mt-1 text-sm leading-5 text-gray-500 text-center"><%= decorates.account %></div>
       </div>
       <div class="col-span-1 flex flex-col">
         <div class="text-sm font-medium leading-6 text-gray-800 text-center"><%= I18n.t('.dp_pipeline.form.frequency') %></div>

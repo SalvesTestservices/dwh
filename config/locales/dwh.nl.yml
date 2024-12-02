@@ -20,7 +20,7 @@ nl:
       status:           Status
       load_method:      Laad methode
       last_executed_at: Laatst uitgevoerd op
-      account_ids:      Bedrijven
+      account:          Label
       frequency:        Frequentie
       pipeline_key:     Pipeline identificatie
       month:            Maand

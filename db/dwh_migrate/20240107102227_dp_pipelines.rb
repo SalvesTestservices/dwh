@@ -2,7 +2,6 @@ class DpPipelines < ActiveRecord::Migration[7.0]
   def change
     create_table :dp_pipelines do |t|
       t.string    :name
-      t.string    :description
       t.string    :status, default: "inactive"
       t.datetime  :last_executed_at
       t.integer   :frequency, default: 24
@@ -18,7 +17,7 @@ class DpPipelines < ActiveRecord::Migration[7.0]
 
       t.timestamps
     end
-    add_index :dp_pipelines, :name, unique: true
+    add_index :dp_pipelines, :name
     add_index :dp_pipelines, :status
     add_index :dp_pipelines, :last_executed_at
     add_index :dp_pipelines, :frequency
@@ -26,7 +25,7 @@ class DpPipelines < ActiveRecord::Migration[7.0]
     add_index :dp_pipelines, :dp_tasks_count
     add_index :dp_pipelines, :dp_runs_count
     add_index :dp_pipelines, :account
-    add_index :dp_pipelines, :pipeline_key
+    add_index :dp_pipelines, :pipeline_key, unique: true
     add_index :dp_pipelines, :month
     add_index :dp_pipelines, :year
     add_index :dp_pipelines, :position

@@ -1,18 +1,18 @@
 <%= form_with(model: @dp_pipeline, url: @dp_pipeline.new_record? ? dwh_dp_pipelines_path : dwh_dp_pipeline_path(@dp_pipeline), method: @dp_pipeline.new_record? ? :post : :patch, local: true) do |form| %>
-  <div class="mt-2 space-y-8 divide-y divide-gray-200 bg-white p-10 shadow">
+  <div class="mt-2 space-y-8 divide-y divide-gray-200 bg-white p-10">
     <%= render "shared/error_messages", resource: @dp_pipeline %>
 
     <div class="divide-y divide-gray-200 sm:space-y-5">
       <div class="sm:pt-2 sm:space-y-5">
         <span class="text-sm italic"><%= I18n.t(".general.mandatory") %></span>
+
+        <%= render(Form::SelectComponent.new(label: I18n.t(".dp_pipeline.form.account"), form: form, attribute: :account, collection: @accounts, value: nil, mandatory: true)) %>
         <%= render(Form::TextFieldComponent.new(label: I18n.t(".dp_pipeline.form.name"), form: form, attribute: :name, mandatory: true, autofocus: true, width: "medium")) %>
-        <%= render(Form::TextFieldComponent.new(label: I18n.t(".dp_pipeline.form.pipeline_key"), form: form, attribute: :pipeline_key, mandatory: false, autofocus: false, width: "medium")) %>
-        <%= render(Form::TextFieldComponent.new(label: I18n.t(".dp_pipeline.form.description"), form: form, attribute: :description, mandatory: false, autofocus: false, width: "large")) %>
+        <%= render(Form::TextFieldComponent.new(label: I18n.t(".dp_pipeline.form.pipeline_key"), form: form, attribute: :pipeline_key, mandatory: true, autofocus: false, width: "medium")) %>
         <%= render(Form::TextFieldComponent.new(label: I18n.t(".dp_pipeline.form.frequency"), form: form, attribute: :frequency, mandatory: true, autofocus: false, width: "small")) %>
 
         <% collection = [['active', I18n.t('.dp_pipeline.states.active')],['inactive', I18n.t('.dp_pipeline.states.inactive')]] %>
         <%= render(Form::SelectComponent.new(label: I18n.t(".dp_pipeline.form.status"), form: form, attribute: :status, collection: collection, value: nil, mandatory: true)) %>
-        <%= render(Form::SelectComponent.new(label: I18n.t(".dp_pipeline.form.account"), form: form, attribute: :status, collection: @accounts, value: nil, mandatory: true)) %>
 
         <div class="grid grid-cols-3 gap-4 items-start border-t border-gray-200 pt-5">
           <div class="col-start-2">

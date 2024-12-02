@@ -1,13 +1,10 @@
 <%= turbo_frame_tag dom_id(dp_pipeline) do %>
-  <% decorate dp_pipeline do |decorates| %>    
-    <div class="bg-white -mx-4 px-4 py-8 shadow-sm ring-1 ring-gray-900/5 sm:mx-0 sm:rounded-lg sm:px-8 sm:pb-4 mb-3 border-l-8 <%= decorates.status %>">
+  <% decorate dp_pipeline do |decorates| %>
+    <% status = dp_pipeline.status == "active" ? "border-l-green-500" : "border-l-gray-500" %>
+
+    <div class="bg-gray-50 -mx-4 px-4 py-8 shadow-sm ring-1 ring-gray-900/5 sm:mx-0 sm:rounded-lg sm:px-8 sm:pb-4 my-3 border-l-8 <%= status %> border-t border-r border-b border-gray-300">
       <div class="flex flex-row justify-between">
-        <div class="flex flex-col w-6/12">
-          <h2 class="text-2xl font-semibold leading-6 text-gray-900"><%= dp_pipeline.name %></h2>
-          <div class="mt-2">
-            <dt class="inline text-gray-500"><%= dp_pipeline.description %></dt>
-          </div>
-        </div>
+        <h2 class="pt-3 text-3xl font-semibold leading-6 text-gray-900"><%= dp_pipeline.name %></h2>
         <div class="w-3/12 flex flex-row justify-center mt-2">
           <% unless @dp_runs.blank? %>
             <%= render "dwh/dp_runs/quality_checks_overall", size: "medium", dp_run: @dp_runs.first, dp_quality_checks: @dp_runs.first.dp_quality_checks %>
@@ -42,7 +39,7 @@
       </dl>
       <dl class="mt-1 grid grid-cols-4 text-sm leading-6 w-full">
         <div class="mt-6 border-t border-gray-200 pt-6 sm:pr-4">
-          <dt class="font-semibold text-gray-900 text-center"><%= I18n.t('.dp_pipeline.form.account_ids') %></dt>
+          <dt class="font-semibold text-gray-900 text-center"><%= I18n.t('.dp_pipeline.form.account') %></dt>
           <dd class="mt-2 text-gray-500 text-center"><%= decorates.account %></dd>
         </div>
         <div class="mt-6 border-t border-gray-200 pt-6 sm:pr-4">
