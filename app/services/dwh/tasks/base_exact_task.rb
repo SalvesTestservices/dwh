@@ -1,4 +1,4 @@
-class Dwh::Tasks::BaseExactTask < Dwh::Tasks::BaseTask
+class Dw::Tasks::BaseExactTask < Dw::Tasks::BaseTask
   def get_api_keys(name)
     case name
     when "valori"
@@ -75,34 +75,6 @@ class Dwh::Tasks::BaseExactTask < Dwh::Tasks::BaseTask
   
   def filled(month)
     month.to_s.rjust(3, " ")
-  end
-
-  def transform_ledger_item(account, ledger_item)
-    transformed_ledger_item = Hash.new
-
-    case account.name.downcase
-    when "valori"
-      transformed_ledger_item["reknr"] = ledger_item["reknr"].strip
-      transformed_ledger_item["original_reknr"] = ledger_item["reknr"]
-      transformed_ledger_item["description"] = ledger_item["description"]
-    end
-    transformed_ledger_item
-  end
-
-  def transform_ledger_mutation(account, ledger_mutation)
-    transformed_ledger_mutation = Hash.new
-
-    case account.name.downcase
-    when "valori"
-      transformed_ledger_mutation["reknr"] = ledger_mutation["reknr"].strip
-      transformed_ledger_mutation["original_reknr"] = ledger_mutation["reknr"]
-      transformed_ledger_mutation["year"] = ledger_mutation["year"]
-      transformed_ledger_mutation["month"] = ledger_mutation["month"].strip.to_i
-      transformed_ledger_mutation["mutation_date"]  = ledger_mutation["mutation_date"].to_date.strftime("%d%m%Y").to_i
-      transformed_ledger_mutation["amount"] = ledger_mutation["amount"]
-      transformed_ledger_mutation["description"] = ledger_mutation["description"]
-    end
-    transformed_ledger_mutation
   end
 
   def role_field(user_role)
