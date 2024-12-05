@@ -201,7 +201,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_03_080000) do
     t.string "load_method", default: "incremental"
     t.integer "dp_tasks_count", default: 0
     t.integer "dp_runs_count", default: 0
-    t.string "account"
+    t.integer "account_id"
     t.string "pipeline_key"
     t.integer "month"
     t.integer "year"
@@ -209,7 +209,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_03_080000) do
     t.integer "scoped_user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["account"], name: "index_dp_pipelines_on_account"
+    t.index ["account_id"], name: "index_dp_pipelines_on_account_id"
     t.index ["dp_runs_count"], name: "index_dp_pipelines_on_dp_runs_count"
     t.index ["dp_tasks_count"], name: "index_dp_pipelines_on_dp_tasks_count"
     t.index ["frequency"], name: "index_dp_pipelines_on_frequency"

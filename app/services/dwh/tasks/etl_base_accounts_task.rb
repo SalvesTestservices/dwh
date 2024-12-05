@@ -13,7 +13,7 @@ class Dwh::Tasks::EtlBbAccountsTask < Dwh::Tasks::BaseTask
     begin
       # Extract and load accounts
       ActsAsTenant.without_tenant do
-        accounts = Account.where.not(name: ["Pallas","Supportbook"])
+        accounts = Account.all
         accounts.each do |account|
           Dwh::DimAccount.upsert({ original_id: account.id, name: account.name, is_holding: account.is_holding }, unique_by: [:original_id])
         end

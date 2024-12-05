@@ -74,11 +74,11 @@ class Dwh::DpPipelinesController < ApplicationController
   end
 
   private def get_form_data
-    @accounts = [['cerios','Cerios'],['salves','Salves'],['valori','Valori'],['qdata','QDat'],['test_crew_it','Test Crew IT']]
+    @accounts = Account.order(:name)
     @years = { "2025" => "2025", "2024" => "2024", "2023" => "2023","2022" => "2022", "2021" => "2021", "2020" => "2020" }
   end
 
   private def dp_pipeline_params
-    params.require(:dwh_dp_pipeline).permit(:name, :status, :frequency, :load_method, :pipeline_key, :month, :year, :scoped_user_id, :account)
+    params.require(:dwh_dp_pipeline).permit(:name, :status, :frequency, :load_method, :pipeline_key, :month, :year, :scoped_user_id, :account_id)
   end
 end

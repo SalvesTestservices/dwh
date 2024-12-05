@@ -2,17 +2,11 @@ class Dwh::DpPipelineDecorator < BaseDecorator
   decorates :dp_pipeline
 
   def account
-    case dp_pipeline.account
-    when "cerios"
-      "Cerios"
-    when "salves"
-      "Salves"
-    when "valori"
-      "Valori"
-    when "qdata"
-      "QDat"
-    when "test_crew_it"
-      "Test Crew IT"
+    account = Account.find(dp_pipeline.account_id)
+    if account.blank?
+      "-"
+    else
+      account.name
     end
   end
 
