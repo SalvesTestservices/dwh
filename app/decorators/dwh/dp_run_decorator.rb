@@ -2,22 +2,22 @@ class Dwh::DpRunDecorator < BaseDecorator
   decorates :dp_run
 
   def status
-    return "border-sky-500" if dp_run.status == "started"
-    return "border-gray-300" if dp_run.status == "cancelled"
+    return "border-l-sky-500" if dp_run.status == "started"
+    return "border-l-gray-300" if dp_run.status == "cancelled"
   
     dp_quality_checks = dp_run.dp_quality_checks  
     if dp_quality_checks.blank?
       case dp_run.status
       when "finished"
-        "border-green-500"
+        "border-l-green-500"
       when "failed"
-        "border-red-500"
+        "border-l-red-500"
       end
     else
       if dp_quality_checks.where(result: "failed").exists?
-        "border-red-500"
+        "border-l-red-500"
       else
-        "border-green-500"
+        "border-l-green-500"
       end
     end
   end

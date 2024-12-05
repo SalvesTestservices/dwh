@@ -8,9 +8,7 @@ gem "stimulus-rails"
 gem "tailwindcss-rails"
 gem "requestjs-rails"
 gem "solid_cache"
-gem "solid_queue"
 gem "solid_cable"
-gem "mission_control-jobs"
 gem "kamal", require: false
 gem "thruster", require: false
 
@@ -25,6 +23,7 @@ gem "pagy"
 gem "ruby-openai"
 gem "chartkick"
 gem "anthropic"
+gem "good_job"
 
 group :development, :test do
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"

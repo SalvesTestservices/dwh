@@ -40,6 +40,10 @@ services:
     ports:
       - "5432:5432"
 
+  good_job:
+    <<: *base
+    command: bash -c 'bundle exec good_job start'
+
 volumes:
   bundle:
   postgres:  

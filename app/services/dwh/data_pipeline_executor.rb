@@ -33,6 +33,6 @@ class Dwh::DataPipelineExecutor < ApplicationJob
     end
 
     # Check if all jobs of run are finished
-    Dwh::DataPipelineChecker.perform_later(account, run, result_ids)
+    Dwh::DataPipelineChecker.perform_later(account.id, run, result_ids)
   end
 end

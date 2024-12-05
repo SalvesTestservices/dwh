@@ -3,7 +3,7 @@ class Dwh::Tasks::EtlBaseAccountsTask < Dwh::Tasks::BaseTask
 
   def perform(task_account_name, run, result, task)
     # Wait for alle dependencies to finish
-    all_dependencies_finished = wait_on_dependencies(account, run, task)
+    all_dependencies_finished = wait_on_dependencies(task_account_name, run, task)
     if all_dependencies_finished == false
       Dwh::DataPipelineLogger.new.create_log(run.id, "cancelled", "[#{task_account_name}] Taak [#{task.task_key}] geannuleerd")
       result.update(finished_at: DateTime.now, status: "cancelled")

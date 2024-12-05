@@ -130,6 +130,13 @@ GEM
       raabro (~> 1.4)
     globalid (1.2.1)
       activesupport (>= 6.1)
+    good_job (4.5.1)
+      activejob (>= 6.1.0)
+      activerecord (>= 6.1.0)
+      concurrent-ruby (>= 1.3.1)
+      fugit (>= 1.11.0)
+      railties (>= 6.1.0)
+      thor (>= 1.0.0)
     i18n (1.14.6)
       concurrent-ruby (~> 1.0)
     importmap-rails (2.0.3)
@@ -172,16 +179,6 @@ GEM
     method_source (1.1.0)
     mini_mime (1.1.5)
     minitest (5.25.1)
-    mission_control-jobs (0.6.0)
-      actioncable (>= 7.1)
-      actionpack (>= 7.1)
-      activejob (>= 7.1)
-      activerecord (>= 7.1)
-      importmap-rails (>= 1.2.1)
-      irb (~> 1.13)
-      railties (>= 7.1)
-      stimulus-rails
-      turbo-rails
     multipart-post (2.4.1)
     net-http (0.5.0)
       uri
@@ -330,13 +327,6 @@ GEM
       activejob (>= 7.2)
       activerecord (>= 7.2)
       railties (>= 7.2)
-    solid_queue (1.0.2)
-      activejob (>= 7.1)
-      activerecord (>= 7.1)
-      concurrent-ruby (>= 1.3.1)
-      fugit (~> 1.11.0)
-      railties (>= 7.1)
-      thor (~> 1.3.1)
     sshkit (1.23.2)
       base64
       net-scp (>= 1.1.2)
@@ -403,10 +393,10 @@ DEPENDENCIES
   devise
   devise_invitable
   foreman
+  good_job
   importmap-rails
   jbuilder
   kamal
-  mission_control-jobs
   pagy
   pg (~> 1.1)
   propshaft
@@ -418,7 +408,6 @@ DEPENDENCIES
   ruby-openai
   solid_cable
   solid_cache
-  solid_queue
   stimulus-rails
   tailwindcss-rails
   thruster
