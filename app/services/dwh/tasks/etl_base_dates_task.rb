@@ -1,4 +1,4 @@
-class Dwh::Tasks::EtlBbDatesTask < Dwh::Tasks::BaseTask
+class Dwh::Tasks::EtlBaseDatesTask < Dwh::Tasks::BaseTask
   queue_as :default
 
   def perform(account, run, result, task)

@@ -1,7 +1,6 @@
 class DpRuns < ActiveRecord::Migration[7.0]
   def change
     create_table :dp_runs do |t|
-      t.string    :account
       t.string    :status, default: "new"
       t.datetime  :started_at
       t.datetime  :finished_at
@@ -9,7 +8,6 @@ class DpRuns < ActiveRecord::Migration[7.0]
 
       t.timestamps
     end
-    add_index :dp_runs, :account
     add_index :dp_runs, :status
     add_index :dp_runs, :dp_pipeline_id
   end

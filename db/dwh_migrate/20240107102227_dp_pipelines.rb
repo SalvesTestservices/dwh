@@ -8,7 +8,7 @@ class DpPipelines < ActiveRecord::Migration[7.0]
       t.string    :load_method, default: "incremental"
       t.integer   :dp_tasks_count, default: 0
       t.integer   :dp_runs_count, default: 0
-      t.integer    :account_id
+      t.integer   :account_id
       t.string    :pipeline_key
       t.integer   :month
       t.integer   :year

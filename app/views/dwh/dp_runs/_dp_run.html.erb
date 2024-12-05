@@ -1,22 +1,16 @@
 <%= turbo_frame_tag dom_id(dp_run) do %>
   <% decorate dp_run do |decorates| %>
     <li class="bg-white mb-1 px-4 py-4 shadow-sm sm:rounded-lg flex items-center justify-between gap-x-6 border-l-8 <%= decorates.status %>">
-      <div class="w-2/12">
-        <div class="flex flex-col">
-          <p class="text-sm font-semibold leading-6 text-gray-900"><%= I18n.t('.dp_run.form.account_id') %></p>
-          <p class="text-xs leading-5 text-gray-500"><%= decorates.data_field(Account.find(dp_run.account_id).name) %></p>
-        </div>
-      </div>
       <div class="w-3/12">
         <div class="flex flex-col">
           <p class="text-sm font-semibold leading-6 text-gray-900"><%= I18n.t('.dp_run.form.started_at') %></p>
-          <p class="text-xs leading-5 text-gray-500"><%= decorates.data_field_time(dp_run.started_at, true) %></p>
+          <p class="text-xs leading-5 text-gray-500"><%= decorates.data_field(dp_run.started_at, "time") %></p>
         </div>
       </div>
       <div class="w-3/12">
         <div class="flex flex-col">
           <p class="text-sm font-semibold leading-6 text-gray-900"><%= I18n.t('.dp_run.form.finished_at') %></p>
-          <p class="text-xs leading-5 text-gray-500"><%= decorates.data_field_time(dp_run.finished_at, true) %></p>
+          <p class="text-xs leading-5 text-gray-500"><%= decorates.data_field(dp_run.finished_at, "time") %></p>
         </div>
       </div>
       <div class="w-3/12">

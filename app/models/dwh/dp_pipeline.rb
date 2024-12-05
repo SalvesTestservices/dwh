@@ -4,7 +4,7 @@ class Dwh::DpPipeline < DwhRecord
   has_many :dp_tasks, class_name: 'Dwh::DpTask'
   has_many :dp_runs, class_name: 'Dwh::DpRun'
 
-  validates :name, :pipeline_key, :status, :frequency, presence: true
+  validates :account_id, :name, :pipeline_key, :status, :frequency, presence: true
 
   def active?
     status == "active" ? true : false

@@ -258,14 +258,12 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_03_080000) do
   end
 
   create_table "dp_runs", force: :cascade do |t|
-    t.string "account"
     t.string "status", default: "new"
     t.datetime "started_at"
     t.datetime "finished_at"
     t.integer "dp_pipeline_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["account"], name: "index_dp_runs_on_account"
     t.index ["dp_pipeline_id"], name: "index_dp_runs_on_dp_pipeline_id"
     t.index ["status"], name: "index_dp_runs_on_status"
   end

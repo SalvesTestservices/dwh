@@ -10,8 +10,8 @@ class Dwh::DataPipelineExecutor < ApplicationJob
     # Get the account
     account = Account.find(dp_pipeline.account_id.to_i)
 
-    # Create a new run for the account
-    run = Dwh::DpRun.create(account_id: account.id, status: "started", started_at: DateTime.now, dp_pipeline_id: dp_pipeline.id)
+    # Create a new run for the pipeline
+    run = Dwh::DpRun.create(status: "started", started_at: DateTime.now, dp_pipeline_id: dp_pipeline.id)
 
     Dwh::DataPipelineLogger.new.create_log(run.id, "success", "[#{account.name}] Run gestart")
 
@@ -26,7 +26,7 @@ class Dwh::DataPipelineExecutor < ApplicationJob
 
       # Execute the task by finding the class and running it
       task_class = class_eval("Dwh::Tasks::#{task.task_key.split('_').map(&:capitalize).join}Task")
-      job = task_class.perform_later(account, run, result, task)
+      job = task_class.perform_later(account.name, run, result, task)
 
       # Save the job ID
       result.update(job_id: job.job_id)
