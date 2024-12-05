@@ -16,6 +16,8 @@ class Form::TextFieldComponent < ViewComponent::Base
         @width = "w-2/3"
       when "large"
         @width = "w-full"
+      else
+        @width = width
       end
     end
   end

@@ -8,7 +8,7 @@ class View::IconComponent < ViewComponent::Base
   private def set_size(size)
     case size
     when "small"
-      size = "24"
+      size = "20"
     when "medium"
       size = "32"
     when "large"
@@ -61,6 +61,10 @@ class View::IconComponent < ViewComponent::Base
       icon = "<svg xmlns='http://www.w3.org/2000/svg' class='icon icon-tabler icon-tabler-history' width='#{@size}' height='#{@size}' viewBox='0 0 24 24' stroke-width='1.5' stroke='#{@color}' fill='none' stroke-linecap='round' stroke-linejoin='round'><path stroke='none' d='M0 0h24v24H0z' fill='none'/><path d='M12 8l0 4l2 2' /><path d='M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5' /></svg>"
     when "check"
       icon = "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='#{@color}' stroke-linecap='round' stroke-linejoin='round' width='#{@size}' height='#{@size}' stroke-width='2'> <path d='M3.5 5.5l1.5 1.5l2.5 -2.5'></path> <path d='M3.5 11.5l1.5 1.5l2.5 -2.5'></path> <path d='M3.5 17.5l1.5 1.5l2.5 -2.5'></path> <path d='M11 6l9 0'></path> <path d='M11 12l9 0'></path> <path d='M11 18l9 0'></path> </svg>"
+    when "pause"
+      icon = "<svg xmlns='http://www.w3.org/2000/svg' class='icon icon-tabler icon-tabler-player-pause' width='#{@size}' height='#{@size}' viewBox='0 0 24 24' stroke-width='1.5' stroke='#{@color}' fill='none' stroke-linecap='round' stroke-linejoin='round'><path stroke='none' d='M0 0h24v24H0z' fill='none'/><path d='M6 5m0 1a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v12a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1z' /><path d='M14 5m0 1a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v12a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1z' /></svg>"
+    when "start"
+      icon = "<svg xmlns='http://www.w3.org/2000/svg' class='icon icon-tabler icon-tabler-player-play' width='#{@size}' height='#{@size}' viewBox='0 0 24 24' stroke-width='1.5' stroke='#{@color}' fill='none' stroke-linecap='round' stroke-linejoin='round'><path stroke='none' d='M0 0h24v24H0z' fill='none'/><path d='M7 4v16l13 -8z' /></svg>"
     end
     icon.html_safe
   end

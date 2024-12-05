@@ -2,7 +2,7 @@
   <% decorate @dp_pipeline do |decorates| %>
     <% status = @dp_pipeline.status == "active" ? "border-l-green-500" : "border-l-gray-500" %>
 
-    <%= form_with(model: @dp_pipeline, data: { turbo: false }) do |form| %>
+    <%= form_with(model: @dp_pipeline, local: true) do |form| %>
       <%= render "shared/error_messages", resource: @dp_pipeline %>
 
       <div class="bg-gray-50 -mx-4 px-4 py-8 shadow-sm ring-1 ring-gray-900/5 sm:mx-0 sm:rounded-lg sm:px-8 sm:pb-4 my-3 border-l-8 <%= status %> border-t border-r border-b border-gray-300">
