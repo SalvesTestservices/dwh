@@ -1,7 +1,7 @@
 <%= render "layouts/page_header", 
   breadcrumbs: @breadcrumbs, 
   title: I18n.t('.dp_run.titles.show'), 
-  icon: ["pipeline", "medium", "gray"],
+  icon: ["timer", "medium", "gray"],
   buttons: [[I18n.t('.dp_run.titles.destroy'), dwh_dp_run_path(@dp_run), "delete"]]
 %>
 
@@ -13,27 +13,27 @@
       <% decorate @dp_run do |decorates| %>
         <div class="bg-gray-50 -mx-4 px-4 py-8 shadow-sm ring-1 ring-gray-900/5 sm:mx-0 sm:rounded-lg sm:px-8 sm:pb-4 my-3 border border-gray-300">
           <div class="flex flex-col border-b border-gray-300 pb-5">
-            <h2 class="text-2xl font-semibold leading-6 text-gray-900"><%= @dp_run.dp_pipeline.name %></h2>
+            <h2 class="text-2xl font-semibold leading-6 text-gray-700"><%= @dp_run.dp_pipeline.name %></h2>
           </div>
           <div class="mt-5 grid grid-cols-5 gap-4">
             <div class="flex flex-col">
-              <div class="text-base font-semibold leading-6 text-gray-900 text-center"><%= I18n.t('.dp_run.form.started_at') %></div>
+              <div class="text-base font-semibold leading-6 text-gray-700 text-center"><%= I18n.t('.dp_run.form.started_at') %></div>
               <div class="mt-2 text-base font-semibold leading-6 text-gray-500 text-center"><%= decorates.data_field(@dp_run.started_at, "time") %></div>
             </div>
             <div class="flex flex-col">
-              <div class="text-base font-semibold leading-6 text-gray-900 text-center"><%= I18n.t('.dp_run.form.finished_at') %></div>
+              <div class="text-base font-semibold leading-6 text-gray-700 text-center"><%= I18n.t('.dp_run.form.finished_at') %></div>
               <div class="mt-2 text-base font-semibold leading-6 text-gray-500 text-center"><%= decorates.data_field(@dp_run.finished_at, "time") %></div>
             </div>
             <div class="flex flex-col">
-              <div class="text-base font-semibold leading-6 text-gray-900 text-center"><%= I18n.t('.dp_run.form.duration') %></div>
+              <div class="text-base font-semibold leading-6 text-gray-700 text-center"><%= I18n.t('.dp_run.form.duration') %></div>
               <div class="mt-2 text-base font-semibold leading-6 text-gray-500 text-center"><%= decorates.duration %></div>
             </div>
             <div class="flex flex-col">
-              <div class="text-base font-semibold leading-6 text-gray-900 text-center"><%= I18n.t('.dp_run.form.dp_tasks_count') %></div>
+              <div class="text-base font-semibold leading-6 text-gray-700 text-center"><%= I18n.t('.dp_run.form.dp_tasks_count') %></div>
               <div class="mt-2 text-base font-semibold leading-6 text-gray-500 text-center"><%= decorates.data_field(@dp_run.dp_tasks.count) %></div>
             </div>
             <div class="flex flex-col">
-              <div class="text-base font-semibold leading-6 text-gray-900 text-center"><%= I18n.t('.dp_run.form.dp_logs_count') %></div>
+              <div class="text-base font-semibold leading-6 text-gray-700 text-center"><%= I18n.t('.dp_run.form.dp_logs_count') %></div>
               <div class="mt-2 text-base font-semibold leading-6 text-gray-500 text-center"><%= decorates.data_field(@dp_run.dp_logs.count) %></div>
             </div>
           </div>
@@ -46,7 +46,7 @@
         <div class="flex flex-col">
           <div class="bg-white mb-2 shadow-sm sm:rounded-lg h-20">
             <div class="py-5 flex flex-row justify-between">
-              <h2 class="mt-2 text-2xl font-semibold leading-6 text-gray-900"><%= I18n.t('.dp_run.titles.results') %></h2>
+              <h2 class="mt-2 text-2xl font-semibold leading-6 text-gray-700"><%= I18n.t('.dp_run.titles.results') %></h2>
               <%= render "quality_checks_overall", size: "medium", dp_run: @dp_run, dp_quality_checks: @dp_quality_checks %>
             </div>
           </div>
@@ -64,7 +64,7 @@
         <div class="flex flex-col">
           <div class="bg-white mb-2 shadow-sm sm:rounded-lg h-20">
             <div class="py-5 flex flex-row justify-between">
-              <h2 class="mt-2 text-2xl font-semibold leading-6 text-gray-900"><%= I18n.t('.dp_run.titles.logs') %></h2>
+              <h2 class="mt-2 text-2xl font-semibold leading-6 text-gray-700"><%= I18n.t('.dp_run.titles.logs') %></h2>
             </div>
           </div>
 

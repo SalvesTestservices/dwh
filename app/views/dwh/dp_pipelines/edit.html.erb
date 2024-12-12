@@ -8,13 +8,13 @@
       <div class="bg-gray-50 -mx-4 px-4 py-8 shadow-sm ring-1 ring-gray-900/5 sm:mx-0 sm:rounded-lg sm:px-8 sm:pb-4 my-3 border-l-8 <%= status %> border-t border-r border-b border-gray-300">
         <div class="flex flex-row justify-between">
           <div class="w-4/12 flex flex-col mt-2">
-            <div class="font-semibold text-gray-900 text-center"><%= I18n.t('.dp_pipeline.form.name') %></div>
+            <div class="font-semibold text-gray-700 text-center"><%= I18n.t('.dp_pipeline.form.name') %></div>
             <div class="mt-2 flex flex-row justify-center">
               <%= form.text_field :name, autofocus: true, class: "bg-white w-full block text-sm text-gray-800 p-1 border-gray-300 rounded focus:ring-gray-500 focus:border-gray-500" %>
             </div>
           </div>
           <div class="w-3/12 flex flex-col mt-2">
-            <div class="font-semibold text-gray-900 text-center"><%= I18n.t('.dp_pipeline.form.frequency') %></div>
+            <div class="font-semibold text-gray-700 text-center"><%= I18n.t('.dp_pipeline.form.frequency') %></div>
             <div class="mt-2 flex flex-row justify-center">
               <% collection = [['active', I18n.t('.dp_pipeline.states.active')],['inactive', I18n.t('.dp_pipeline.states.inactive')]] %>
               <%= form.collection_select :status, collection, :first, :last, { include_blank: true }, { class: 'block w-1/2 rounded border-gray-300 bg-white p-1 text-sm focus:border-gray-500 focus:outline-none focus:ring-gray-500 sm:text-sm' } %>
@@ -27,25 +27,25 @@
         </div>
         <dl class="mt-1 grid grid-cols-4 text-sm leading-6 w-full">
           <div class="mt-6 border-t border-gray-200 pt-6 sm:pr-4">
-            <dt class="font-semibold text-gray-900 text-center"><%= I18n.t('.dp_pipeline.form.pipeline_key') %></dt>
+            <dt class="font-semibold text-gray-700 text-center"><%= I18n.t('.dp_pipeline.form.pipeline_key') %></dt>
             <dd class="mt-2 flex flex-row justify-center">
               <%= form.text_field :pipeline_key, class: "bg-white w-11/12 block text-sm text-gray-800 p-1 border-gray-300 rounded focus:ring-gray-500 focus:border-gray-500" %>
             </dd>
           </div>
           <div class="mt-6 border-t border-gray-200 pt-6 sm:pr-4">
-            <dt class="font-semibold text-gray-900 text-center"><%= I18n.t('.dp_pipeline.form.month') %></dt>
+            <dt class="font-semibold text-gray-700 text-center"><%= I18n.t('.dp_pipeline.form.month') %></dt>
             <dd class="mt-2 flex flex-row justify-center">
               <%= form.select :month, options_for_select([['Januari', '1'],['Februari', '2'],['Maart', '3'],['April', '4'],['Mei', '5'],['Juni', '6'],['Juli', '7'],['Augustus', '8'],['September', '9'],['Oktober', '10'],['November', '11'],['December', '12']], @dp_pipeline.month), { include_blank: true, prompt: "- #{I18n.t('.general.month').downcase} -" }, { class: "block w-36 rounded border-gray-300 bg-white p-1 text-sm focus:border-gray-500 focus:outline-none focus:ring-gray-500 sm:text-sm" } %>
             </dd>
           </div>
           <div class="mt-6 border-t border-gray-200 pt-6 sm:pr-4">
-            <dt class="font-semibold text-gray-900 text-center"><%= I18n.t('.dp_pipeline.form.year') %></dt>
+            <dt class="font-semibold text-gray-700 text-center"><%= I18n.t('.dp_pipeline.form.year') %></dt>
             <dd class="mt-2 flex flex-row justify-center">
               <%= form.select :year, options_for_select(@years, @dp_pipeline.year), {include_blank: true, prompt: "- #{I18n.t('.general.year').downcase} -" }, { class: "block w-36 rounded border-gray-300 bg-white p-1 text-sm focus:border-gray-500 focus:outline-none focus:ring-gray-500 sm:text-sm" } %>
             </dd>
           </div>
           <div class="mt-6 border-t border-gray-200 pt-6 sm:pr-4">
-            <dt class="font-semibold text-gray-900 text-center"><%= I18n.t('.dp_pipeline.form.scoped_user_id') %></dt>
+            <dt class="font-semibold text-gray-700 text-center"><%= I18n.t('.dp_pipeline.form.scoped_user_id') %></dt>
             <dd class="mt-2 flex flex-row justify-center">
               <%= form.text_field :scoped_user_id, class: "bg-white w-36 block text-sm text-gray-800 p-1 border-gray-300 rounded focus:ring-gray-500 focus:border-gray-500" %>
             </dd>
@@ -53,23 +53,23 @@
         </dl>
         <dl class="mt-1 grid grid-cols-4 text-sm leading-6 w-full">
           <div class="mt-6 border-t border-gray-200 pt-6 sm:pr-4">
-            <dt class="font-semibold text-gray-900 text-center"><%= I18n.t('.dp_pipeline.form.account_id') %></dt>
+            <dt class="font-semibold text-gray-700 text-center"><%= I18n.t('.dp_pipeline.form.account_id') %></dt>
             <dd class="mt-2 flex flex-row justify-center">
               <%= form.collection_select :account_id, @accounts, :id, :name, { include_blank: true }, { class: 'block w-48 rounded border-gray-300 bg-white p-1 text-sm focus:border-gray-500 focus:outline-none focus:ring-gray-500 sm:text-sm' } %>
             </dd>
           </div>
           <div class="mt-6 border-t border-gray-200 pt-6 sm:pr-4">
-            <dt class="font-semibold text-gray-900 text-center"><%= I18n.t('.dp_pipeline.form.frequency') %></dt>
+            <dt class="font-semibold text-gray-700 text-center"><%= I18n.t('.dp_pipeline.form.frequency') %></dt>
             <dd class="mt-2 flex flex-row justify-center">
               <%= form.text_field :frequency, class: "bg-white w-16 block text-xs text-gray-800 p-1 border-gray-300 rounded focus:ring-gray-500 focus:border-gray-500" %>
             </dd>
           </div>
           <div class="mt-6 border-t border-gray-200 pt-6 sm:pr-4">
-            <dt class="font-semibold text-gray-900 text-center"><%= I18n.t('.dp_pipeline.form.dp_runs_count') %></dt>
+            <dt class="font-semibold text-gray-700 text-center"><%= I18n.t('.dp_pipeline.form.dp_runs_count') %></dt>
             <dd class="mt-2 text-gray-500 text-center"><%= decorates.data_field(@dp_pipeline.dp_runs_count) %></dd>
           </div>
           <div class="mt-6 border-t border-gray-200 pt-6 sm:pr-4">
-            <dt class="font-semibold text-gray-900 text-center"><%= I18n.t('.dp_pipeline.form.dp_tasks_count') %></dt>
+            <dt class="font-semibold text-gray-700 text-center"><%= I18n.t('.dp_pipeline.form.dp_tasks_count') %></dt>
             <dd class="mt-2 text-gray-500 text-center"><%= decorates.data_field(@dp_pipeline.dp_tasks_count) %></dd>
           </div>
         </dl>

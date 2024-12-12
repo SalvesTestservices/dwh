@@ -17,8 +17,11 @@
         <!-- Tasks -->
         <div class="flex flex-col">
           <div class="bg-white mb-2 border-b-2 border-gray-400">
-            <div class="p-5 flex flex-row justify-between">
-              <h2 class="mt-2 text-2xl font-semibold leading-6 text-gray-900"><%= I18n.t('.dp_task.titles.index') %></h2>
+            <div class="py-5 flex flex-row justify-between">
+              <div class="flex flex-row items-start">
+                <%= render(View::IconComponent.new(icon_type: "check", size: "medium", color: "gray")) %>
+                <h2 class="ml-2 mt-1 text-2xl font-semibold leading-6 text-gray-700"><%= I18n.t('.dp_task.titles.index') %></h2>
+              </div>
               <%= link_to I18n.t('.dp_task.titles.new'), new_dwh_dp_task_path(dp_pipeline_id: @dp_pipeline), class: "px-4 py-2 text-sm text-gray-700 bg-gray-100 hover:bg-gray-50 mr-1 border border-gray-300 shadow-sm font-medium rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500" %>
             </div>
           </div>
@@ -39,8 +42,11 @@
         <!-- Runs -->
         <div class="flex flex-col">
           <div class="bg-white mb-2 border-b-2 border-gray-400">
-            <div class="p-5 flex flex-row justify-between">
-              <h2 class="mt-2 text-2xl font-semibold leading-6 text-gray-900"><%= I18n.t('.dp_run.titles.index') %></h2>
+            <div class="py-5 flex flex-row justify-between">
+              <div class="flex flex-row items-start">
+                <%= render(View::IconComponent.new(icon_type: "timer", size: "medium", color: "gray")) %>
+                <h2 class="ml-2 mt-1 text-2xl font-semibold leading-6 text-gray-700"><%= I18n.t('.dp_run.titles.index') %></h2>
+              </div>
 
               <% if @dp_pipeline.active? %>
                 <%= render(View::ButtonComponent.new(title: I18n.t('.dp_run.titles.new'), url: dwh_dp_runs_path(dp_pipeline_id: @dp_pipeline), button_type: "button", size: "medium")) %>
