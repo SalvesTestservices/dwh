@@ -1,17 +1,16 @@
 class Dwh::Tasks::EtlBaseDatesTask < Dwh::Tasks::BaseTask
   queue_as :default
 
-  def perform(account, run, result, task)
+  def perform(task_account_id, task_account_name, run, result, task)
     # Wait for alle dependencies to finish
-    all_dependencies_finished = wait_on_dependencies(account, run, task)
+    all_dependencies_finished = wait_on_dependencies(task_account_name, run, task)
     if all_dependencies_finished == false
-      Dwh::DataPipelineLogger.new.create_log(run.id, "cancelled", "[#{account.name}] Taak [#{task.task_key}] geannuleerd")
+      Dwh::DataPipelineLogger.new.create_log(run.id, "cancelled", "[#{task_account_name}] Taak [#{task.task_key}] geannuleerd")
       result.update(finished_at: DateTime.now, status: "cancelled")
       return
     end
 
     begin
-      account     = Account.find(4) # Use QDAT because of Belgian holidays
       year        = run.dp_pipeline.year.blank? ? Date.current.year : run.dp_pipeline.year.to_i
       month       = run.dp_pipeline.month.blank? ? Date.current.month : run.dp_pipeline.month.to_i
 
@@ -48,10 +47,10 @@ class Dwh::Tasks::EtlBaseDatesTask < Dwh::Tasks::BaseTask
             day_hash[:is_workday] = true
           end
     
-          day_hash[:is_holiday_nl]    = account.holidays.find_by(holiday_date: date, country: "NL").blank? ? false : true
-          day_hash[:is_holiday_be]    = account.holidays.find_by(holiday_date: date, country: "BE").blank? ? false : true
+          day_hash[:is_holiday_nl] = false #account.holidays.find_by(holiday_date: date, country: "NL").blank? ? false : true
+          day_hash[:is_holiday_be] = false #account.holidays.find_by(holiday_date: date, country: "BE").blank? ? false : true
     
-          Dwh::EtlStorage.create(account_id: account.id, identifier: "dates", etl: "extract", data: day_hash)
+          Dwh::EtlStorage.create(account_id: task_account_id, identifier: "dates", etl: "extract", data: day_hash)
         end
 
         # Load dates
@@ -87,11 +86,11 @@ class Dwh::Tasks::EtlBaseDatesTask < Dwh::Tasks::BaseTask
 
       # Update result
       result.update(finished_at: DateTime.now, status: "finished")
-      Dwh::DataPipelineLogger.new.create_log(run.id, "success", "[#{account.name}] Finished task [#{task.task_key}] successfully")
+      Dwh::DataPipelineLogger.new.create_log(run.id, "success", "[#{task_account_name}] Finished task [#{task.task_key}] successfully")
     rescue => e
       # Update result to failed if an error occurs
       result.update(finished_at: DateTime.now, status: "failed", error: e.message)
-      Dwh::DataPipelineLogger.new.create_log(run.id, "alert", "[#{account.name}] Finished task [#{task.task_key}] with error: #{e.message}")
+      Dwh::DataPipelineLogger.new.create_log(run.id, "alert", "[#{task_account_name}] Finished task [#{task.task_key}] with error: #{e.message}")
     end
   end
 end

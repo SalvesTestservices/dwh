@@ -1,7 +1,7 @@
 class Dwh::Tasks::EtlBaseAccountsTask < Dwh::Tasks::BaseTask
   queue_as :default
 
-  def perform(task_account_name, run, result, task)
+  def perform(task_account_id, task_account_name, run, result, task)
     # Wait for alle dependencies to finish
     all_dependencies_finished = wait_on_dependencies(task_account_name, run, task)
     if all_dependencies_finished == false

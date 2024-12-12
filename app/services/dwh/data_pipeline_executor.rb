@@ -26,7 +26,7 @@ class Dwh::DataPipelineExecutor < ApplicationJob
 
       # Execute the task by finding the class and running it
       task_class = class_eval("Dwh::Tasks::#{task.task_key.split('_').map(&:capitalize).join}Task")
-      job = task_class.perform_later(account.name, run, result, task)
+      job = task_class.perform_later(account.id, account.name, run, result, task)
 
       # Save the job ID
       result.update(job_id: job.job_id)
