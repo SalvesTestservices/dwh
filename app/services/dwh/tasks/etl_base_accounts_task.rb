@@ -12,16 +12,14 @@ class Dwh::Tasks::EtlBaseAccountsTask < Dwh::Tasks::BaseTask
 
     begin
       # Extract and load accounts
-      ActsAsTenant.without_tenant do
-        accounts = Account.all
-        accounts.each do |account|
-          Dwh::DimAccount.upsert({ original_id: account.id, name: account.name, is_holding: account.is_holding }, unique_by: [:original_id])
-        end
-        
-        # Update result
-        result.update(finished_at: DateTime.now, status: "finished")
-        Dwh::DataPipelineLogger.new.create_log(run.id, "success", "[#{account.name}] Finished task [#{task.task_key}] successfully")        
+      accounts = Account.all
+      accounts.each do |account|
+        Dwh::DimAccount.upsert({ original_id: account.id, name: account.name, is_holding: account.is_holding }, unique_by: [:original_id])
       end
+        
+      # Update result
+      result.update(finished_at: DateTime.now, status: "finished")
+      Dwh::DataPipelineLogger.new.create_log(run.id, "success", "[#{task_account_name}] Finished task [#{task.task_key}] successfully")        
     rescue => e
       # Update result to failed if an error occurs
       result.update(finished_at: DateTime.now, status: "failed", error: e.message)
