@@ -7,7 +7,6 @@ class Dwh::DpRunsController < ApplicationController
     @dp_tasks = @dp_run.dp_pipeline.dp_tasks.order(:sequence)
     @dp_results = @dp_run.dp_results.order(:created_at)
     @dp_quality_checks = @dp_run.dp_quality_checks
-    @account = Account.find(@dp_run.account_id)
 
     @breadcrumbs = []
     @breadcrumbs << [I18n.t('.dp_pipeline.titles.index'), dwh_dp_pipelines_path]

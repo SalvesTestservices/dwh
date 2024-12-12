@@ -17,11 +17,11 @@ class Dwh::DpResultDecorator < BaseDecorator
   def status
     case dp_result.status
     when "started"
-      "border-sky-500"
+      "border-l-sky-500"
     when "finished"
-      "border-green-500"
+      "border-l-green-500"
     when "failed"
-      "border-red-500"
+      "border-l-red-500"
     end
   end
 end
