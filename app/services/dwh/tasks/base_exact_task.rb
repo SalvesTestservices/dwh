@@ -1,14 +1,14 @@
 class Dwh::Tasks::BaseExactTask < Dwh::Tasks::BaseTask
   def get_api_keys(name)
     case name
-    when "valori"
-      api_url        = ENV["DW_CLICKKER_VALORI_URL"]
-      api_key        = ENV["DW_CLICKKER_VALORI_KEY"]
-      administration = ENV["DW_CLICKKER_VALORI_ADMINISTRATION"]
+    when "globe"
+      api_url        = ENV["DWH_CLICKKER_GLOBE_URL"]
+      api_key        = ENV["DWH_CLICKKER_GLOBE_KEY"]
+      administration = ENV["DWH_CLICKKER_GLOBE_ADMINISTRATION"]
     when "synergy"
-      api_url        = ENV["DW_CLICKKER_VALORI_URL"]
-      api_key        = ENV["DW_CLICKKER_VALORI_KEY"]
-      administration = ENV["DW_CLICKKER_VALORI_SYNERGY_ADMINISTRATION"]
+      api_url        = ENV["DWH_CLICKKER_SYNERGY_URL"]
+      api_key        = ENV["DWH_CLICKKER_SYNERGY_KEY"]
+      administration = ENV["DWH_CLICKKER_SYNERGY_ADMINISTRATION"]
     end
     
     return api_url, api_key, administration

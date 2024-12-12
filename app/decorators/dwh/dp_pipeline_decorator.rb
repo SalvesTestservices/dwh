@@ -31,6 +31,7 @@ class Dwh::DpPipelineDecorator < BaseDecorator
     progress = ""
 
     height_width = size == "large" ? "w-10 h-10" : "w-6 h-6"
+    margin = size == "large" ? "my-1 mx-3" : "my-1 mx-1"
 
     dp_pipeline.dp_tasks.order(:sequence).each do |task|
       last_run = dp_pipeline.dp_runs.order(:created_at).last
@@ -50,7 +51,7 @@ class Dwh::DpPipelineDecorator < BaseDecorator
           color = "bg-gray-300 text-gray-800"
         end
 
-        progress += "<div class='#{height_width} #{color} rounded-full flex text-xs font-bold items-center justify-center m-1'><span>#{task.sequence}</span></div>"
+        progress += "<div class='#{height_width} #{color} rounded-full flex text-xs font-bold items-center justify-center #{margin}'><span>#{task.sequence}</span></div>"
       end
     end
     progress.html_safe

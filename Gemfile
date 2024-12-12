@@ -24,6 +24,7 @@ gem "ruby-openai"
 gem "chartkick"
 gem "anthropic"
 gem "good_job"
+gem "httparty"
 
 group :development, :test do
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"

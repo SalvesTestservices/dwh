@@ -1,11 +1,11 @@
 class Dwh::Tasks::EtlBaseTargetsTask < Dwh::Tasks::BaseTask
   queue_as :default
 
-  def perform(account, run, result, task)
+  def perform(task_account_id, task_account_name, run, result, task)
     # Wait for alle dependencies to finish
-    all_dependencies_finished = wait_on_dependencies(account, run, task)
+    all_dependencies_finished = wait_on_dependencies(task_account_id, task_account_name, run, task)
     if all_dependencies_finished == false
-      Dwh::DataPipelineLogger.new.create_log(run.id, "cancelled", "[#{account.name}] Taak [#{task.task_key}] geannuleerd")
+      Dwh::DataPipelineLogger.new.create_log(run.id, "cancelled", "[#{task_account_name}] Taak [#{task.task_key}] geannuleerd")
       result.update(finished_at: DateTime.now, status: "cancelled")
       return
     end
@@ -13,7 +13,7 @@ class Dwh::Tasks::EtlBaseTargetsTask < Dwh::Tasks::BaseTask
     begin
       # Extract company_targets
       ActsAsTenant.without_tenant do
-        account     = Account.find(run.account_id)
+        account     = Account.find(task_account_id)
         dim_account = Dwh::DimAccount.find_by(original_id: account.id)
         companies   = account.companies.where.not(id: get_excluded_company_ids)
         year        = account.company_targets.blank? ? Date.current.year : account.company_targets.order(:year).last.year
@@ -118,12 +118,12 @@ class Dwh::Tasks::EtlBaseTargetsTask < Dwh::Tasks::BaseTask
 
         # Update result
         result.update(finished_at: DateTime.now, status: "finished")
-        Dwh::DataPipelineLogger.new.create_log(run.id, "success", "[#{account.name}] Finished task [#{task.task_key}] successfully")
+        Dwh::DataPipelineLogger.new.create_log(run.id, "success", "[#{task_account_name}] Finished task [#{task.task_key}] successfully")
       end
     rescue => e
       # Update result to failed if an error occurs
       result.update(finished_at: DateTime.now, status: "failed", error: e.message)
-      Dwh::DataPipelineLogger.new.create_log(run.id, "alert", "[#{account.name}] Finished task [#{task.task_key}] with error: #{e.message}")
+      Dwh::DataPipelineLogger.new.create_log(run.id, "alert", "[#{task_account_name}] Finished task [#{task.task_key}] with error: #{e.message}")
     end
   end
 
