@@ -32,14 +32,6 @@ class Dwh::Tasks::BaseTask < ApplicationJob
     all_dependencies_finished
   end
 
-  def get_excluded_company_ids
-    [2,3,4,5,8,48]
-  end
-
-  def get_excluded_roles
-    ["admin","company_admin","backoffice_admin","manager","viewer","rws_level1","rws_level2","api","powerbi"]
-  end
-
   def convert_to_fractional(value)
     value.blank? ? nil : value / 100.0
   end

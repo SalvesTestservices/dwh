@@ -2,13 +2,15 @@ class DataTargetsController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    company_targets = DataTarget.where(company_id: params[:company_id]) if params[:company_id].present?
+    if params[:company_id].present?
+      company_targets = DataTarget.where(company_id: params[:company_id])
     
-    @company = Dwh::DimCompany.find(params[:company_id])
-    @year = params[:year] || Date.current.year
-    @current_quarter = Date.current.quarter
-    @data_targets = company_targets.where(year: @year, quarter: @current_quarter).order(:month)
-    @year_target = company_targets.find_by(year: @year, month: 1, role: "employee")
+      @company = Dwh::DimCompany.find(params[:company_id])
+      @year = params[:year].blank? ? Date.current.year : params[:year].to_i
+      @current_quarter = Date.current.quarter
+      @data_targets = company_targets.where(year: @year, quarter: @current_quarter).order(:month)
+      @year_target = company_targets.find_by(year: @year, month: 1, role: "employee")
+    end
 
     @account_companies = Dwh::DimCompany
       .joins("INNER JOIN dim_accounts ON dim_companies.account_id = dim_accounts.id")
