@@ -56,7 +56,7 @@ class Dwh::Tasks::EtlExactCompaniesTask < Dwh::Tasks::BaseExactTask
             companies_hash[:account_id]   = account.id
             companies_hash[:original_id]  = company["Code"].gsub(company["CompanyCode"], "")
             companies_hash[:name]         = company["Description"]
-            companies_hash[:name_short]   = company["Code"].gsub(company["CompanyCode"], "")
+            companies_hash[:name_short]   = company["Code"].gsub(company["CompanyCode"], "").gsub("CC", "")
             companies_hash[:updated_at]   = company["ModifiedDate"].to_date.strftime("%d%m%Y").to_i
 
             Dwh::EtlStorage.create(account_id: account.id, identifier: "companies", etl: "transform", data: companies_hash)

@@ -1,99 +1,52 @@
-namespace :dw do
-  task import_targetsin_dw: :environment do
-    require 'roo'
-
-    workbook = Roo::Excelx.new(Rails.root.join('targets.xlsx'))
-
-    # Iterate over each sheet in the workbook
-    workbook.sheets.each do |sheet|
-      puts "Importing company #{sheet}..."
-      dim_company = Dw::DimCompany.find_by(original_id: sheet)
-      unless dim_company.blank?
-        workbook.sheet(sheet).each_row_streaming(offset: 5) do |row|
-          unless row[1].blank?
-            (1..4).each do |quarter|
-              uid = "#{quarter}#{Time.now.to_i * 1000 + Time.now.usec / 1000}"
-
-              fact_target = Dw::FactTarget.new
-              fact_target.uid             = uid 
-              fact_target.account_id      = dim_company.account_id
-              fact_target.original_id     = uid
-              fact_target.company_id      = dim_company.id
-              fact_target.year            = row[0].value.to_i
-              fact_target.month           = row[1].value.to_i
-              fact_target.role_group      = "Medewerker"
-              fact_target.fte             = row[2].value.to_f.round(1)
-              fact_target.billable_hours  = row[3].value.to_f.round(1)
-              fact_target.bruto_margin    = (row[4].value.to_s.gsub("%","").to_f / 100.0).round(1)
-              fact_target.cost_price      = row[5].value.to_f.round(2)
-              fact_target.target_date     = Date.new(row[0].value.to_i, row[1].value.to_i, 1).strftime("%d%m%Y").to_i
-              fact_target.workable_hours  = row[6].value.to_f.round(1)
-              fact_target.productivity    = (row[7].value.to_s.gsub("%","").to_f / 100.0).round(1)
-              fact_target.hour_rate       = row[8].value.to_f.round(2)
-              fact_target.turnover        = row[10].value.to_f.round(2)
-              fact_target.quarter         = quarter
-              fact_target.employee_attrition = 0.04
-              fact_target.employee_absence = 0.04
-              fact_target.save!
-            end
-          end
-        end
-      end
-    end
-
-    puts "Import completed!"
-  end
-
-  task import_targets_in_backbone: :environment do
+namespace :dwh do
+  task import_targets: :environment do
     require 'roo'
 
     if ENV['YEAR'].blank?
-      puts "Please provide a year! Example: rake dw:import_targets_in_backbone YEAR=2024"
+      puts "Please provide a year! Example: rake dw:import_targets_in_backbone YEAR=2024"    
     else
-      ActsAsTenant.without_tenant do
-        year = ENV['YEAR'].to_i
-        scoped_account_name = ENV['ACCOUNT_NAME']
-        workbook = Roo::Excelx.new(Rails.root.join("db", "dw_data", "targets_#{year}.xlsx"))
+      year = ENV['YEAR'].to_i
+      scoped_account_name = ENV['ACCOUNT_NAME']
+      workbook = Roo::Excelx.new(Rails.root.join("db", "dwh_data", "targets_#{year}.xlsx"))
 
-        # Iterate over each sheet in the workbook
-        workbook.sheets.each do |sheet|
-          # Get account and company
-          account_name, company_name = sheet.split(' - ')
-          account = Account.find_by(name: account_name)
-          company = Company.find_by(name_short: company_name)
+      # Iterate over each sheet in the workbook
+      workbook.sheets.each do |sheet|
+        # Get account and company
+        account_name, company_name = sheet.split(' - ')
+        account = Dwh::DimAccount.find_by(name: account_name)
+        company = Dwh::DimCompany.find_by(name_short: company_name)
 
-          # If scoped_account_name is present and it doesn't match the current account.name, skip this iteration
-          next if scoped_account_name.present? && account.name.downcase != scoped_account_name.downcase
+        # If scoped_account_name is present and it doesn't match the current account.name, skip this iteration
+        next if scoped_account_name.present? && account.name.downcase != scoped_account_name.downcase
 
-          unless account.blank? or company.blank?
-            workbook.sheet(sheet).each_row_streaming(offset: 2) do |row|
-              unless row[0].blank?
-                # Set role
-                case row[0].value.downcase
-                when "medewerker"
-                  role = "employee"
-                when "trainee"
-                  role = "trainee"
-                when "subco"
-                  role = "subco"
-                end
+        unless account.blank? or company.blank?
+          workbook.sheet(sheet).each_row_streaming(offset: 2) do |row|
+            unless row[0].blank?
+              # Set role
+              case row[0].value.downcase
+              when "medewerker"
+                role = "employee"
+              when "trainee"
+                role = "trainee"
+              when "subco"
+                role = "subco"
+              end
 
-                # Set values
-                month               = row[2].value.to_i
-                fte                 = row[3].value.to_f.round(1)
-                billable_hours      = row[4].value.to_f.round(0)
-                bruto_margin        = (row[5].value.to_s.gsub("%","").to_f*100).round(2)
-                cost_price          = row[6].value.to_f.round(2)
-                employee_attrition  = 4.0
-                employee_absence    = 4.0
+              # Set values
+              month               = row[2].value.to_i
+              fte                 = row[3].value.to_f.round(1)
+              billable_hours      = row[4].value.to_f.round(0)
+              bruto_margin        = (row[5].value.to_s.gsub("%","").to_f*100).round(2)
+              cost_price          = row[6].value.to_f.round(2)
+              employee_attrition  = 4.0
+              employee_absence    = 4.0
 
-                (1..4).each do |quarter|
-                  target = CompanyTarget.find_by(account_id: account.id, company_id: company.id, year: year, month: month, quarter: quarter, role: role)
-                  if target.blank?
-                    CompanyTarget.create!(account_id: account.id, company_id: company.id, quarter: quarter, year: year, month: month, role: role, fte: fte, billable_hours: billable_hours, bruto_margin: bruto_margin, cost_price: cost_price, employee_attrition: employee_attrition, employee_absence: employee_absence)
-                  else
-                    target.update!(fte: fte, billable_hours: billable_hours, bruto_margin: bruto_margin, cost_price: cost_price, employee_attrition: employee_attrition, employee_absence: employee_absence)
-                  end
+              (1..4).each do |quarter|
+                target = DataTarget.find_by(account_id: account.id, company_id: company.id, year: year, month: month, quarter: quarter, role: role)
+                if target.blank?
+                  DataTarget.create!(account_id: account.id, company_id: company.id, quarter: quarter, year: year, month: month, role: role, fte: fte, billable_hours: billable_hours, bruto_margin: bruto_margin, cost_price: cost_price, employee_attrition: employee_attrition, employee_absence: employee_absence)
+                else
+                  target.update!(fte: fte, billable_hours: billable_hours, bruto_margin: bruto_margin, cost_price: cost_price, employee_attrition: employee_attrition, employee_absence: employee_absence)
                 end
               end
             end
