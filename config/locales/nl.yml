@@ -3,6 +3,7 @@ nl:
     welcome:        Welkom
     mandatory:      Velden met een (*) zijn verplicht
     save:           Opslaan
+    select:         Selecteer
     details:        details
     edit:           Wijzigen
     month:          Maand
@@ -15,4 +16,8 @@ nl:
     titles:
       data_views:   Data views
       data_checks:  Data checks
-      data_targets: Data targets
+  data_target:
+    titles:
+      index:        Data targets
+    messages:
+      select_company: Selecteer eerst een unit

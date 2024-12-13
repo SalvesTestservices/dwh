@@ -1,0 +1,50 @@
+<%= render "layouts/page_header", 
+  breadcrumbs: @breadcrumbs, 
+  title: I18n.t('.dp_pipeline.titles.index'), 
+  icon: ["pipeline", "medium", "gray"],
+  buttons: [[I18n.t('.dp_pipeline.titles.new'), new_dwh_dp_pipeline_path]]
+%>
+
+<main>
+  <div class="mx-auto max-w-8xl py-6 mt-10">
+
+    <div class="mt-5 flex flex-row mb-5 pb-2 border-b-4 border-gray-400">
+      <div class="text-2xl text-gray-800 font-medium"><%= "#{I18n.t('.company_target.titles.group')} #{I18n.t('.company_target.form.year')} [#{@year}]" %></div>
+    </div>
+
+    <% unless @year_target.blank? %>
+      <div class="py-5 w-1/3">
+        <div class="mt-2 space-y-4 bg-white p-5 shadow">
+          <div class="grid grid-cols-2 items-start">
+            <div class="block text-sm pt-1 font-medium text-gray-700"><%= I18n.t(".company_target.form.employee_attrition") %>:</div>
+            <div class="block text-sm pt-1 font-medium text-gray-700"><%= @year_target.employee_attrition %></div>
+          </div>
+          <div class="grid grid-cols-2 items-start">
+            <div class="block text-sm pt-1 font-medium text-gray-700"><%= I18n.t(".company_target.form.employee_absence") %>:</div>
+            <div class="block text-sm pt-1 font-medium text-gray-700"><%= @year_target.employee_absence %></div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <% roles = ["employee","trainee","subco"] %>
+    <% roles.each do |role| %>
+      <% case role %>
+      <% when "employee" %>
+        <% role_title = I18n.t('.company_target.roles.employee') %>
+      <% when "trainee" %>
+        <% role_title = I18n.t('.company_target.roles.trainee') %>
+      <% when "subco" %>
+        <% role_title = I18n.t('.company_target.roles.subco') %>
+      <% end %>
+
+      <div class="mt-5 flex flex-row mb-5 pb-2 border-b-4 border-gray-400">
+        <div class="text-2xl text-gray-800 font-medium"><%= "#{I18n.t('.company_target.titles.group')} #{I18n.t('.company_target.form.role')} [#{role_title}] en #{I18n.t('.company_target.form.year')} [#{@year}]" %></div>
+      </div>
+
+      <%= render "admin/companies/quarters", company: @company, year: @year, current_quarter: @current_quarter, role: role %>
+      <%= render "admin/companies/quarter_table", company_targets: @company_targets, current_quarter: @current_quarter, role: role %>
+    <% end %>
+
+  </div>
+</main>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_12_05_094154) do
+ActiveRecord::Schema[8.0].define(version: 2024_12_13_114505) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -52,6 +52,31 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_05_094154) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_chat_histories_on_user_id"
+  end
+
+  create_table "data_targets", force: :cascade do |t|
+    t.integer "account_id"
+    t.integer "company_id"
+    t.integer "year"
+    t.integer "month"
+    t.string "role"
+    t.decimal "fte"
+    t.integer "billable_hours"
+    t.decimal "cost_price"
+    t.decimal "bruto_margin"
+    t.integer "quarter"
+    t.decimal "employee_attrition"
+    t.decimal "employee_absence"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_data_targets_on_account_id"
+    t.index ["company_id"], name: "index_data_targets_on_company_id"
+    t.index ["employee_absence"], name: "index_data_targets_on_employee_absence"
+    t.index ["employee_attrition"], name: "index_data_targets_on_employee_attrition"
+    t.index ["month"], name: "index_data_targets_on_month"
+    t.index ["quarter"], name: "index_data_targets_on_quarter"
+    t.index ["role"], name: "index_data_targets_on_role"
+    t.index ["year"], name: "index_data_targets_on_year"
   end
 
   create_table "good_job_batches", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

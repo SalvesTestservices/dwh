@@ -1,0 +1,7 @@
+<%= turbo_stream.replace "#{@role}-quarters" do %>
+  <%= render "admin/companies/quarters", company: @company, year: @year, current_quarter: @current_quarter, role: @role %>
+<% end %>
+
+<%= turbo_stream.replace "#{@role}-quarters-table" do %>
+  <%= render "admin/companies/quarter_table", company_targets: @company_targets, current_quarter: @current_quarter, role: @role %>
+<% end %>

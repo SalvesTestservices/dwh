@@ -6,6 +6,11 @@ Rails.application.routes.draw do
   resources :users do
     post :invite, on: :collection
   end
+  resources :data_targets, only: [:index] do
+    collection do
+      post :import_data_targets
+    end
+  end
 
   # DWH
   namespace :dwh do

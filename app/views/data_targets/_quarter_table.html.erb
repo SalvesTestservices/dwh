@@ -1,0 +1,86 @@
+<div id="<%= role %>-quarters-table" class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg mt-5">
+  <div class="min-w-full divide-y divide-gray-200">
+    <div class="bg-primary grid grid-cols-1">
+      <%= render(DivTable::HeaderComponent.new(title: "#{I18n.t('.company_target.form.fte_previous')}: #{DwCalculator.new.fte_previous_year(@company, role, @year)}", align: "text-left", mobile: "show")) %>
+    </div>
+    <div class="bg-primary grid grid-cols-11">
+      <%= render(DivTable::HeaderComponent.new(title: I18n.t('.company_target.form.year'), align: "text-center", mobile: "show")) %>
+      <%= render(DivTable::HeaderComponent.new(title: I18n.t('.company_target.form.month'), align: "text-left", mobile: "show")) %>
+      <%= render(DivTable::HeaderComponent.new(title: I18n.t('.company_target.form.fte'), align: "text-center", mobile: "show")) %>
+      <%= render(DivTable::HeaderComponent.new(title: I18n.t('.company_target.form.billable_hours'), align: "text-center", mobile: "show")) %>
+      <%= render(DivTable::HeaderComponent.new(title: I18n.t('.company_target.form.bruto_margin'), align: "text-center", mobile: "show")) %>
+      <%= render(DivTable::HeaderComponent.new(title: I18n.t('.company_target.form.cost_price'), align: "text-center", mobile: "show")) %>
+      <%= render(DivTable::HeaderComponent.new(title: I18n.t('.company_target.form.workable_hours'), align: "text-center", mobile: "show")) %>
+      <%= render(DivTable::HeaderComponent.new(title: I18n.t('.company_target.form.productivity'), align: "text-center", mobile: "show")) %>
+      <%= render(DivTable::HeaderComponent.new(title: I18n.t('.company_target.form.hour_rate'), align: "text-center", mobile: "show")) %>
+      <%= render(DivTable::HeaderComponent.new(title: I18n.t('.company_target.form.fte_delta'), align: "text-center", mobile: "show")) %>
+      <%= render(DivTable::HeaderComponent.new(title: I18n.t('.company_target.form.turnover'), align: "text-center", mobile: "show")) %>
+    </div>
+
+    <% @total_billable_hours  = 0 %>
+    <% @total_bruto_margin    = 0.0 %>
+    <% @total_cost_price      = 0.0 %>
+    <% @total_workable_hours  = 0 %>
+    <% @total_productivity    = 0.0 %>
+    <% @total_hour_rate       = 0.0 %>
+    <% @total_fte_delta       = 0.0 %>
+    <% @total_turnover        = 0.0 %>
+    <% @nr_months_filled      = 0 %>
+
+    <% targets = company_targets.where(role: role) %>
+    <% if targets.blank? %>
+      <div class="bg-white grid grid-cols-1">
+        <div class="table-cell h-20 pt-7 whitespace-nowrap text-xm text-center text-gray-900"><%= I18n.t('.company_target.titles.no_records') %></div>
+      </div>
+    <% else %>
+      <% targets.each do |company_target| %>
+        <%= render "admin/companies/company_target", company_target: company_target %>
+
+        <% decorate company_target do |decorates| %>
+          <% @total_billable_hours  += company_target.billable_hours %>
+          <% @total_bruto_margin    += company_target.bruto_margin %>
+          <% @total_cost_price      += company_target.cost_price %>
+          <% @total_workable_hours  += company_target.workable_hours %>
+          <% @total_productivity    += company_target.productivity(false) %>
+          <% @total_hour_rate       += company_target.hour_rate(false) %>
+          <% @total_fte_delta       += company_target.fte_delta %>
+          <% @total_turnover        += company_target.turnover(false) %>
+          <% @nr_months_filled      += 1 if company_target.fte > 0 %>
+        <% end %>
+      <% end %>
+    <% end %>
+
+    <% decorate company_targets.first do |decorates| %>
+      <div class="bg-primary grid grid-cols-11">
+        <%= render(DivTable::HeaderComponent.new(title: nil, align: "text-center", mobile: "show")) %>
+        <%= render(DivTable::HeaderComponent.new(title: nil, align: "text-left", mobile: "show")) %>
+        <%= render(DivTable::HeaderComponent.new(title: nil, align: "text-right", mobile: "show")) %>
+
+        <div class="table-cell align-top px-2 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">
+          <span id="<%= role %>_workable_hours"><%= decorates.sum(@total_billable_hours) %></span>
+        </div>
+        <div class="table-cell align-top px-2 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">
+          <span id="<%= role %>_bruto_margin"><%= "#{decorates.avg(@total_bruto_margin, @nr_months_filled)}%" %></span>
+        </div>
+        <div class="table-cell align-top px-2 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">
+          <span id="<%= role %>_cost_price"><%= decorates.avg(@total_cost_price, @nr_months_filled) %></span>
+        </div>
+
+        <%= render(DivTable::HeaderComponent.new(title: decorates.sum(@total_workable_hours), align: "text-center", mobile: "show")) %>
+
+        <div class="table-cell align-top px-2 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">
+          <span id="<%= role %>_productivity"><%= "#{decorates.avg(@total_productivity, @nr_months_filled)}%" %></span>
+        </div>
+        <div class="table-cell align-top px-2 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">
+          <span id="<%= role %>_hour_rate"><%= number_to_currency(decorates.avg(@total_hour_rate, @nr_months_filled), precision: 2, separator: ',') %></span>
+        </div>
+        <div class="table-cell align-top px-2 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">
+          <span id="<%= role %>_fte_delta"><%= decorates.sum(@total_fte_delta) %></span>
+        </div>
+        <div class="table-cell align-top px-2 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">
+          <span id="<%= role %>_turnover"><%= number_to_currency(decorates.sum(@total_turnover), precision: 2, separator: ',') %></span>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
