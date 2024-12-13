@@ -3,7 +3,8 @@ class DataTargetsController < ApplicationController
 
   def index
     @data_targets = DataTarget.where(company_id: params[:company_id]) if params[:company_id].present?
-
+    @year = params[:year] || Date.current.year
+    
     @account_companies = Dwh::DimCompany
       .joins("INNER JOIN dim_accounts ON dim_companies.account_id = dim_accounts.id")
       .select('dim_companies.*, dim_accounts.name as account_name')
