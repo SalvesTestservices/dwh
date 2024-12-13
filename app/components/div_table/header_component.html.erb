@@ -1,0 +1,7 @@
+<% if @title.blank? %>
+  <div class="table-cell align-top relative px-2 py-3"></div>
+<% else %>
+  <div class="table-cell align-top px-2 py-3 <%= @align %> <%= @mobile %> text-xs font-medium text-gray-700 uppercase tracking-wider">
+    <%= @title %>
+  </div>
+<% end %>

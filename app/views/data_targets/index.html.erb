@@ -17,7 +17,42 @@
         </div>
       </div>
     <% else %>
-      <%= @data_targets.count %>
+      <div class="mt-5 flex flex-row mb-5 pb-2 border-b-4 border-gray-400">
+        <div class="text-2xl text-gray-800 font-medium"><%= "#{I18n.t('.data_target.form.year')} [#{@year}]" %></div>
+      </div>
+
+      <% unless @year_target.blank? %>
+        <div class="w-1/3 bg-gray-50 shadow-sm ring-1 ring-gray-900/5 sm:mx-0 sm:rounded-lg p-4 my-3 border border-gray-300">
+          <div class="grid grid-cols-2 items-start py-1">
+            <div class="block text-sm pt-1 font-medium text-gray-700"><%= I18n.t(".data_target.form.employee_attrition") %>:</div>
+            <div class="block text-sm pt-1 font-medium text-gray-700"><%= @year_target.employee_attrition %></div>
+          </div>
+          <div class="grid grid-cols-2 items-start py-1">
+            <div class="block text-sm pt-1 font-medium text-gray-700"><%= I18n.t(".data_target.form.employee_absence") %>:</div>
+            <div class="block text-sm pt-1 font-medium text-gray-700"><%= @year_target.employee_absence %></div>
+          </div>
+        </div>
+      <% end %>
+
+      <% roles = ["employee","trainee","subco"] %>
+      <% roles.each do |role| %>
+        <% case role %>
+        <% when "employee" %>
+          <% role_title = I18n.t('.data_target.roles.employee') %>
+        <% when "trainee" %>
+          <% role_title = I18n.t('.data_target.roles.trainee') %>
+        <% when "subco" %>
+          <% role_title = I18n.t('.data_target.roles.subco') %>
+        <% end %>
+
+        <div class="mt-5 flex flex-row mb-5 pb-2 border-b-4 border-gray-400">
+          <div class="text-2xl text-gray-800 font-medium"><%= "#{I18n.t('.data_target.form.role')} [#{role_title}] en #{I18n.t('.data_target.form.year')} [#{@year}]" %></div>
+        </div>
+
+        <%= render "quarters", company: @company, year: @year, current_quarter: @current_quarter, role: role %>
+        <%= render "quarter_table", data_targets: @data_targets, current_quarter: @current_quarter, role: role %>
+
+      <% end %>
     <% end %>
 
   </div>

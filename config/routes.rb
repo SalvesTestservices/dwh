@@ -7,9 +7,7 @@ Rails.application.routes.draw do
     post :invite, on: :collection
   end
   resources :data_targets, only: [:index] do
-    collection do
-      post :import_data_targets
-    end
+    get :quarter_targets, on: :collection
   end
 
   # DWH

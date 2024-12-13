@@ -6,7 +6,7 @@ class DataTarget < ApplicationRecord
   after_save :update_remaining_quarters
 
   def workable_hours
-    DwCalculator.new.workable_hours_in_month(year, month)
+    DwhCalculator.new.workable_hours_in_month(year, month)
   end
 
   def productivity(show_percentage = true)

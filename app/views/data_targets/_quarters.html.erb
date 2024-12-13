@@ -3,8 +3,8 @@
     <% if quarter == current_quarter %>
       <div class="px-4 py-3 mr-5 text-base bg-sky-100 rounded border-2 border-sky-700 text-sky-700">Q<%= current_quarter %></div>
     <% else %>
-      <%= link_to admin_company_quarter_targets_path(company, year: year, quarter: quarter, role: role), data: { turbo_stream: true } do %>
-        <div class="text-gray-700 bg-gray-100 hover:bg-gray-50 px-4 py-3 mr-5 text-base border border-gray-300 shadow-sm font-medium rounded"><%= I18n.t(".company_target.quarters.q#{quarter}") %></div>
+      <%= link_to quarter_targets_data_targets_path(company, year: year, quarter: quarter, role: role), data: { turbo_stream: true } do %>
+        <div class="text-gray-700 bg-gray-100 hover:bg-gray-50 px-4 py-3 mr-5 text-base border border-gray-300 shadow-sm font-medium rounded"><%= I18n.t(".data_target.quarters.q#{quarter}") %></div>
       <% end %>
     <% end %>
   <% end %>

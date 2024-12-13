@@ -2,17 +2,18 @@ class DataTargetsController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    @data_targets = DataTarget.where(company_id: params[:company_id]) if params[:company_id].present?
-    @year = params[:year] || Date.current.year
+    company_targets = DataTarget.where(company_id: params[:company_id]) if params[:company_id].present?
     
+    @company = Dwh::DimCompany.find(params[:company_id])
+    @year = params[:year] || Date.current.year
+    @current_quarter = Date.current.quarter
+    @data_targets = company_targets.where(year: @year, quarter: @current_quarter).order(:month)
+    @year_target = company_targets.find_by(year: @year, month: 1, role: "employee")
+
     @account_companies = Dwh::DimCompany
       .joins("INNER JOIN dim_accounts ON dim_companies.account_id = dim_accounts.id")
       .select('dim_companies.*, dim_accounts.name as account_name')
       .order('dim_accounts.name, dim_companies.name')
-
-    #@current_quarter = Date.current.quarter
-    #@data_targets = @company.company_targets.where(year: @year, quarter: @current_quarter).order(:month)
-    #@year_target = @company.company_targets.find_by(year: @year, month: 1, role: "employee")
 
     @breadcrumbs = []
     @breadcrumbs << [I18n.t('.data_target.titles.index')]
@@ -32,6 +33,15 @@ class DataTargetsController < ApplicationController
     else
       render action: "edit", status: 422
     end
+  end
+
+  def quarter_targets
+    @role = params[:role]
+    @year = params[:year].to_i
+
+    @company = Dwh::DimCompany.find(params[:company_id])
+    @current_quarter = params[:quarter].to_i
+    @data_targets = DataTarget.where(company_id: @company.id, year: @year, quarter: @current_quarter).order(:month)
   end
 
   private def set_totals(data_target)

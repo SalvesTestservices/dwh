@@ -118,16 +118,16 @@ class DwhCalculator
 
   def fte_previous_year(company, role, current_year)
     fte = 0.0
-    current_month_date = Date.new(current_year.to_i, 1, 1)
-    users = company.users.where("start_date < ? AND (leave_date IS NULL OR leave_date >= ?)", current_month_date, current_month_date)
+    current_month_date = Date.new(current_year.to_i, 1, 1).to_time.to_i
+    users = Dwh::DimUser.where("company_id = ? AND start_date < ? AND (leave_date IS NULL OR leave_date >= ?)", company.id, current_month_date, current_month_date)
 
     case role
     when "trainee"
-      users = users.where(trainee: true)
+      users = users.where(employee_type: "trainee")
     when "subco"
       users = users.where(role: "external")
     when "employee"
-      users = users.where(trainee: false, role: ["employee","mc", "dm"])
+      users = users.where(employee_type: "employee")
     end
 
     unless users.blank?

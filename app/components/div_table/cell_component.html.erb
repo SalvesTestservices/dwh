@@ -1,0 +1,7 @@
+<% if @value.blank? %>
+  <div class="table-cell <%= @align %> <%= @mobile %> px-2 pt-2 h-9 whitespace-nowrap text-xs text-gray-900"></div>
+<% else %>
+  <div class="table-cell <%= @align %> <%= @mobile %> px-2 pt-2 h-9 whitespace-nowrap text-xs text-gray-900">
+    <%= @value %>
+  </div>
+<% end %>
