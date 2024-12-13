@@ -2,7 +2,7 @@
   <% decorate data_target do |decorates| %>
     <div class="bg-white grid grid-cols-11">
       <%= render(DivTable::CellComponent.new(value: "#{data_target.year} - Q#{data_target.quarter}", align: "text-center", mobile: "show")) %>
-      <%= render(DivTable::CellComponent.new(value: I18n.t("date.month_names")[data_target.month].capitalize, align: "text-left", mobile: "show")) %>
+      <%= render(DivTable::CellComponent.new(value: I18n.t(".data_target.date.month_names")[data_target.month].capitalize, align: "text-left", mobile: "show")) %>
 
       <div class="table-cell px-2 pt-2 h-9 whitespace-nowrap text-center text-xs text-gray-900"><%= data_target.fte %></div>
       <div class="table-cell px-2 pt-2 h-9 whitespace-nowrap text-center text-xs text-gray-900"><%= data_target.billable_hours %></div>

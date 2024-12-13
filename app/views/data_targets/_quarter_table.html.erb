@@ -56,28 +56,28 @@
         <%= render(DivTable::HeaderComponent.new(title: nil, align: "text-left", mobile: "show")) %>
         <%= render(DivTable::HeaderComponent.new(title: nil, align: "text-right", mobile: "show")) %>
 
-        <div class="table-cell align-top px-2 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">
+        <div class="table-cell align-top px-2 py-3 text-center text-xs font-medium text-gray-700 uppercase tracking-wider">
           <span id="<%= role %>_workable_hours"><%= decorates.sum(@total_billable_hours) %></span>
         </div>
-        <div class="table-cell align-top px-2 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">
+        <div class="table-cell align-top px-2 py-3 text-center text-xs font-medium text-gray-700 uppercase tracking-wider">
           <span id="<%= role %>_bruto_margin"><%= "#{decorates.avg(@total_bruto_margin, @nr_months_filled)}%" %></span>
         </div>
-        <div class="table-cell align-top px-2 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">
+        <div class="table-cell align-top px-2 py-3 text-center text-xs font-medium text-gray-700 uppercase tracking-wider">
           <span id="<%= role %>_cost_price"><%= decorates.avg(@total_cost_price, @nr_months_filled) %></span>
         </div>
 
         <%= render(DivTable::HeaderComponent.new(title: decorates.sum(@total_workable_hours), align: "text-center", mobile: "show")) %>
 
-        <div class="table-cell align-top px-2 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">
+        <div class="table-cell align-top px-2 py-3 text-center text-xs font-medium text-gray-700 uppercase tracking-wider">
           <span id="<%= role %>_productivity"><%= "#{decorates.avg(@total_productivity, @nr_months_filled)}%" %></span>
         </div>
-        <div class="table-cell align-top px-2 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">
+        <div class="table-cell align-top px-2 py-3 text-center text-xs font-medium text-gray-700 uppercase tracking-wider">
           <span id="<%= role %>_hour_rate"><%= number_to_currency(decorates.avg(@total_hour_rate, @nr_months_filled), precision: 2, separator: ',') %></span>
         </div>
-        <div class="table-cell align-top px-2 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">
+        <div class="table-cell align-top px-2 py-3 text-center text-xs font-medium text-gray-700 uppercase tracking-wider">
           <span id="<%= role %>_fte_delta"><%= decorates.sum(@total_fte_delta) %></span>
         </div>
-        <div class="table-cell align-top px-2 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">
+        <div class="table-cell align-top px-2 py-3 text-center text-xs font-medium text-gray-700 uppercase tracking-wider">
           <span id="<%= role %>_turnover"><%= number_to_currency(decorates.sum(@total_turnover), precision: 2, separator: ',') %></span>
         </div>
       </div>
