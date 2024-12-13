@@ -15,16 +15,3 @@ nl:
     titles:
       data_views:   Data views
       data_checks:  Data checks
-  datalab:
-    titles:
-      index:          Data lab
-      chat_history:   Chat historie
-      chat_history_details: Chat historie details
-      chat_button:    Verstuur vraag
-      chat_question:  Stel een vraag aan het DWH...
-      question:       Vraag
-      answer:         Antwoord
-      sql:            SQL query
-      reset_session:  Start een nieuwe chat
-      show_sql:       SQL
-      show_more:      "Toon %{nr_other_chats} meer chat berichten"
