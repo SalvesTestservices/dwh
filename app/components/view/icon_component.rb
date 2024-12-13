@@ -67,6 +67,8 @@ class View::IconComponent < ViewComponent::Base
       icon = "<svg xmlns='http://www.w3.org/2000/svg' class='icon icon-tabler icon-tabler-player-play' width='#{@size}' height='#{@size}' viewBox='0 0 24 24' stroke-width='1.5' stroke='#{@color}' fill='none' stroke-linecap='round' stroke-linejoin='round'><path stroke='none' d='M0 0h24v24H0z' fill='none'/><path d='M7 4v16l13 -8z' /></svg>"
     when "timer"
       icon = "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='#{@color}' stroke-linecap='round' stroke-linejoin='round' width='#{@size}' height='#{@size}' stroke-width='2'> <path d='M5 13a7 7 0 1 0 14 0a7 7 0 0 0 -14 0z'></path> <path d='M14.5 10.5l-2.5 2.5'></path> <path d='M17 8l1 -1'></path> <path d='M14 3h-4'></path> </svg>"
+    when "target"
+      icon = "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='#{@color}' stroke-linecap='round' stroke-linejoin='round' width='#{@size}' height='#{@size}' stroke-width='2'> <path d='M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0'></path> <path d='M12 7a5 5 0 1 0 5 5'></path> <path d='M13 3.055a9 9 0 1 0 7.941 7.945'></path> <path d='M15 6v3h3l3 -3h-3v-3z'></path> <path d='M15 9l-3 3'></path> </svg>"
     end
     icon.html_safe
   end

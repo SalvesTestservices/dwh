@@ -15,3 +15,4 @@ nl:
     titles:
       data_views:   Data views
       data_checks:  Data checks
+      data_targets: Data targets
