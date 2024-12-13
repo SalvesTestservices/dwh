@@ -1,18 +1,18 @@
 class Dwh::Tasks::EtlExactActivitiesTask < Dwh::Tasks::BaseExactTask
   queue_as :default
 
-  def perform(account, run, result, task)
+  def perform(task_account_id, task_account_name, run, result, task)
     # Wait for alle dependencies to finish
-    all_dependencies_finished = wait_on_dependencies(account, run, task)
+    all_dependencies_finished = wait_on_dependencies(task_account_name, run, task)
     if all_dependencies_finished == false
-      Dwh::DataPipelineLogger.new.create_log(run.id, "alert", "[#{account.name}] taak [#{task.task_key}] geannuleerd")
+      Dwh::DataPipelineLogger.new.create_log(run.id, "alert", "[#{task_account_name}] taak [#{task.task_key}] geannuleerd")
       result.update(finished_at: DateTime.now, status: "cancelled")
       return
     end
 
     begin
       ActsAsTenant.without_tenant do
-        account              = Account.find(run.account_id)
+        account              = Account.find(task_account_id)
         dim_account          = Dwh::DimAccount.find_by(original_id: account.id)
         dp_pipeline          = run.dp_pipeline
         year                 = run.dp_pipeline.year.blank? ? Date.current.year : run.dp_pipeline.year.to_i
@@ -23,7 +23,7 @@ class Dwh::Tasks::EtlExactActivitiesTask < Dwh::Tasks::BaseExactTask
         # Cancel the task if the API keys are not valid
         api_url, api_key, administration = get_api_keys("synergy")
         if api_url.blank? or api_key.blank? or administration.blank?
-          Dwh::DataPipelineLogger.new.create_log(run.id, "alert", "[#{account.name}] Invalid API keys")
+          Dwh::DataPipelineLogger.new.create_log(run.id, "alert", "[#{task_account_name}] Invalid API keys")
           result.update(finished_at: DateTime.now, status: "error")
           return  
         end
@@ -315,11 +315,11 @@ class Dwh::Tasks::EtlExactActivitiesTask < Dwh::Tasks::BaseExactTask
 
       # Update result
       result.update(finished_at: DateTime.now, status: "finished")
-      Dwh::DataPipelineLogger.new.create_log(run.id, "success", "[#{account.name}] Finished task [#{task.task_key}] successfully")
+      Dwh::DataPipelineLogger.new.create_log(run.id, "success", "[#{task_account_name}] Finished task [#{task.task_key}] successfully")
     rescue => e
       # Update result to failed if an error occurs
       result.update(finished_at: DateTime.now, status: "failed", error: e.message)
-      Dwh::DataPipelineLogger.new.create_log(run.id, "alert", "[#{account.name}] Finished task [#{task.task_key}] with error: #{e.message}")
+      Dwh::DataPipelineLogger.new.create_log(run.id, "alert", "[#{task_account_name}] Finished task [#{task.task_key}] with error: #{e.message}")
     end
   end
 

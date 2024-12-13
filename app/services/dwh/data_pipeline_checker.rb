@@ -1,7 +1,8 @@
 class Dwh::DataPipelineChecker < ApplicationJob
   queue_as :default
 
-  def perform(account, run, result_ids)
+  def perform(account_id, run, result_ids)
+    account = Account.find(account_id)
     results = Dwh::DpResult.where(id: result_ids)
     job_ids = results.pluck(:job_id)
 

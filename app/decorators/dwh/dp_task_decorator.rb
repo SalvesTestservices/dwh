@@ -1,15 +1,6 @@
 class Dwh::DpTaskDecorator < BaseDecorator
   decorates :dp_task
 
-  def status
-    case dp_task.status
-    when "inactive"
-      "border-gray-300"
-    when "active"
-      "border-green-500"
-    end
-  end
-
   def depends_on
     if dp_task.depends_on.blank?
       "-"

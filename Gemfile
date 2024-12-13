@@ -6,10 +6,9 @@ gem "importmap-rails"
 gem "turbo-rails"
 gem "stimulus-rails"
 gem "tailwindcss-rails"
+gem "requestjs-rails"
 gem "solid_cache"
-gem "solid_queue"
 gem "solid_cable"
-gem "mission_control-jobs"
 gem "kamal", require: false
 gem "thruster", require: false
 
@@ -23,7 +22,10 @@ gem "devise_invitable"
 gem "pagy"
 gem "ruby-openai"
 gem "chartkick"
-gem "anthropic"
+gem "good_job"
+gem "httparty"
+
+# Dataviews
 gem 'caxlsx'
 gem 'caxlsx_rails'
 gem 'prawn'

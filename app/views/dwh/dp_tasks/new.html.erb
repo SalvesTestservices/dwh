@@ -1,46 +1,44 @@
-<%= render "shared/page_header", 
+<%= render "layouts/page_header", 
   breadcrumbs: @breadcrumbs, 
   title: I18n.t('.dp_task.titles.new'), 
-  icon: ["rotate", "large", "gray"],
+  icon: ["check", "medium", "gray"],
   buttons: nil
 %>
 
 <main>
   <div class="mx-auto max-w-7xl py-2 md:py-6">
-    <div class="px-0 md:px-4">
 
-      <%= form_with(model: @dp_task, url: dwh_dp_tasks_path, method: :post, local: true) do |form| %>
-        <%= form.hidden_field :dp_pipeline_id, value: @dp_pipeline.id %>
+    <%= form_with(model: @dp_task, url: dwh_dp_tasks_path, method: :post, local: true) do |form| %>
+      <%= form.hidden_field :dp_pipeline_id, value: @dp_pipeline.id %>
 
-        <div class="mt-2 space-y-8 divide-y divide-gray-200 bg-white p-10 shadow">
-          <%= render "shared/error_messages", resource: @dp_task %>
+      <div class="mt-2 space-y-8 divide-y divide-gray-200 bg-white p-10">
+        <%= render "shared/error_messages", resource: @dp_task %>
 
-          <div class="divide-y divide-gray-200 sm:space-y-5">
-            <div class="sm:pt-2 sm:space-y-5">
-              <span class="text-sm italic"><%= I18n.t(".general.mandatory") %></span>
-              <%= render(Form::TextFieldComponent.new(label: I18n.t(".dp_task.form.sequence"), form: form, attribute: :sequence, mandatory: true, autofocus: true, width: "small")) %>
-              <%= render(Form::TextFieldComponent.new(label: I18n.t(".dp_task.form.name"), form: form, attribute: :name, mandatory: true, autofocus: false, width: "medium")) %>
-              <%= render(Form::TextFieldComponent.new(label: I18n.t(".dp_task.form.description"), form: form, attribute: :description, mandatory: false, autofocus: false, width: "large")) %>
-              <%= render(Form::TextFieldComponent.new(label: I18n.t(".dp_task.form.task_key"), form: form, attribute: :task_key, mandatory: true, autofocus: false, width: "medium")) %>
+        <div class="divide-y divide-gray-200 sm:space-y-5">
+          <div class="sm:pt-2 sm:space-y-5">
+            <span class="text-sm italic"><%= I18n.t(".general.mandatory") %></span>
+            <%= render(Form::TextFieldComponent.new(label: I18n.t(".dp_task.form.sequence"), form: form, attribute: :sequence, mandatory: true, autofocus: true, width: "small")) %>
+            <%= render(Form::TextFieldComponent.new(label: I18n.t(".dp_task.form.name"), form: form, attribute: :name, mandatory: true, autofocus: false, width: "large")) %>
+            <%= render(Form::TextFieldComponent.new(label: I18n.t(".dp_task.form.description"), form: form, attribute: :description, mandatory: false, autofocus: false, width: "large")) %>
+            <%= render(Form::TextFieldComponent.new(label: I18n.t(".dp_task.form.task_key"), form: form, attribute: :task_key, mandatory: true, autofocus: false, width: "large")) %>
 
-              <% collection = [['active', I18n.t('.dp_task.states.active')],['inactive', I18n.t('.dp_task.states.inactive')]] %>
-              <%= render(Form::SelectComponent.new(label: I18n.t(".dp_task.form.status"), form: form, attribute: :status, collection: collection, value: nil, mandatory: true)) %>
+            <% collection = [['active', I18n.t('.dp_task.states.active')],['inactive', I18n.t('.dp_task.states.inactive')]] %>
+            <%= render(Form::SelectComponent.new(label: I18n.t(".dp_task.form.status"), form: form, attribute: :status, collection: collection, value: nil, mandatory: true)) %>
 
-              <div class="py-2 mt-0 grid grid-cols-3 gap-4 items-start border-t border-gray-200">
-                <%= form.label I18n.t(".dp_task.form.depends_on"), class: "block text-sm font-medium text-gray-700" %>
-                <%= form.select :depends_on, options_from_collection_for_select(@dp_tasks, 'task_key', 'name', @dp_task.depends_on), {}, { size: 10, multiple: true, class: "mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" } %>
-              </div>
+            <div class="py-2 mt-0 grid grid-cols-3 gap-4 items-start border-t border-gray-200">
+              <%= form.label I18n.t(".dp_task.form.depends_on"), class: "block text-sm font-medium text-gray-700" %>
+              <%= form.select :depends_on, options_from_collection_for_select(@dp_tasks, 'task_key', 'name', @dp_task.depends_on), {}, { size: 10, multiple: true, class: "mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" } %>
+            </div>
 
-              <div class="grid grid-cols-3 gap-4 items-start border-t border-gray-200 pt-5">
-                <div class="col-start-2">
-                  <%= render(View::ButtonComponent.new(title: I18n.t(".general.save"), url: dwh_dp_tasks_path, button_type: "button", size: "medium")) %>
-                </div>
+            <div class="grid grid-cols-3 gap-4 items-start border-t border-gray-200 pt-5">
+              <div class="col-start-2">
+                <%= render(View::ButtonComponent.new(title: I18n.t(".general.save"), url: dwh_dp_tasks_path, button_type: "button", size: "medium")) %>
               </div>
             </div>
           </div>
         </div>
-      <% end %>
+      </div>
+    <% end %>
 
-    </div>
   </div>
 </main>

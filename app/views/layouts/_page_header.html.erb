@@ -40,7 +40,7 @@
   </div>
   <div class="mt-5 md:flex md:items-center md:justify-between">
     <div class="min-w-0 flex-1">
-      <h2 class="flex items-center gap-3 text-2xl/7 font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">
+      <h2 class="flex items-center gap-3 text-2xl/7 font-bold text-gray-700 sm:truncate sm:text-3xl sm:tracking-tight">
         <% if defined?(icon) && icon.present? %>
           <%= render(View::IconComponent.new(icon_type: icon[0], size: icon[1], color: icon[2])) %>
         <% end %>

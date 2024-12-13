@@ -1,8 +1,8 @@
 class Dwh::Tasks::BaseTask < ApplicationJob
-  def wait_on_dependencies(account, run, task)
+  def wait_on_dependencies(account_name, run, task)
     all_dependencies_finished = true
 
-    Dwh::DataPipelineLogger.new.create_log(run.id, "success", "[#{account.name}] Wachten op voorgaande taken gestart voor taak [#{task.task_key}]")
+    Dwh::DataPipelineLogger.new.create_log(run.id, "success", "[#{account_name}] Wachten op voorgaande taken gestart voor taak [#{task.task_key}]")
 
     unless task.depends_on.blank?
       # Check each task if it has finished
@@ -27,7 +27,7 @@ class Dwh::Tasks::BaseTask < ApplicationJob
       end
     end
 
-    Dwh::DataPipelineLogger.new.create_log(run.id, "success", "[#{account.name}] Wachten op voorgaande taken beeindigd voor taak [#{task.task_key}]")
+    Dwh::DataPipelineLogger.new.create_log(run.id, "success", "[#{account_name}] Wachten op voorgaande taken beeindigd voor taak [#{task.task_key}]")
 
     all_dependencies_finished
   end
