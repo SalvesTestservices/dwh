@@ -1,40 +1,48 @@
-<div class="max-w-7xl mx-auto">
-  <%= render "layouts/page_header", title: I18n.t(".user.titles.index"), icon: ["users", "medium", "gray"], breadcrumbs: @breadcrumbs %>
+<%= render "layouts/page_header", 
+  breadcrumbs: @breadcrumbs, 
+  title: I18n.t(".user.titles.index"), 
+  icon: ["users", "medium", "gray"],
+  buttons: nil
+%>
 
-  <div class="mt-8 flex flex-col pt-5">
-    <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
-      <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-        <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-          <table class="min-w-full divide-y divide-gray-300">
-            <thead class="bg-gray-50">
-              <tr>
-                <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-700 sm:pl-6">Email</th>
-                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-700">Status</th>
-                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-700">Invited By</th>
-                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-700">Invited On</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-200 bg-white">
-              <% @users.each do |user| %>
+<main>
+  <div class="mx-auto max-w-8xl py-2 md:py-6">
+
+    <div class="mt-8 flex flex-col pt-5">
+      <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+        <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+          <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+            <table class="min-w-full divide-y divide-gray-300">
+              <thead class="bg-gray-50">
                 <tr>
-                  <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-700 sm:pl-6"><%= user.email %></td>
-                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                    <%= user.invitation_accepted_at? ? 'Active' : 'Pending' %>
-                  </td>
-                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                    <%= User.find_by(id: user.invited_by_id)&.email %>
-                  </td>
-                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                    <%= user.invitation_sent_at&.strftime("%B %d, %Y") %>
-                  </td>
+                  <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-700 sm:pl-6">Email</th>
+                  <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-700">Status</th>
+                  <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-700">Invited By</th>
+                  <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-700">Invited On</th>
                 </tr>
-              <% end %>
-            </tbody>
-          </table>
+              </thead>
+              <tbody class="divide-y divide-gray-200 bg-white">
+                <% @users.each do |user| %>
+                  <tr>
+                    <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-700 sm:pl-6"><%= user.email %></td>
+                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                      <%= user.invitation_accepted_at? ? 'Active' : 'Pending' %>
+                    </td>
+                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                      <%= User.find_by(id: user.invited_by_id)&.email %>
+                    </td>
+                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                      <%= user.invitation_sent_at&.strftime("%B %d, %Y") %>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
+</main>
 
 <%= turbo_frame_tag "modal" %> 
