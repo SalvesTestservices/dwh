@@ -33,7 +33,9 @@ Rails.application.routes.draw do
   namespace :datalab do
     resources :reports do
       member do
+        post :duplicate
         post :generate
+        get :export
       end
     end
     

@@ -47,9 +47,11 @@
         </table>
       </div>
       
-      <div class="px-4 py-3 border-t border-gray-200">
-        <%= paginate @report_data[:records], theme: 'tailwind' %>
-      </div>
+      <% if @pagy.pages > 1 %>
+        <div class="px-4 py-3 border-t border-gray-200">
+          <%== pagy_nav(@pagy) %>
+        </div>
+      <% end %>
     </div>
   <% end %>
 </div>

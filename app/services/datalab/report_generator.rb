@@ -1,91 +1,93 @@
-class Datalab::ReportGenerator
-  def initialize(report, params = {})
-    @report = report
-    @params = params
-    @calculator = Calculator.new(@report.anchor_type)
-    @anchor_service = AnchorRegistry.get_anchor(@report.anchor_type)[:service]
-  end
+module Datalab
+  class ReportGenerator
+    include Pagy::Backend
 
-  def generate
-    Rails.cache.fetch(cache_key, expires_in: 1.hour) do
+    def initialize(report, params = {})
+      @report = report
+      @params = params
+      @calculator = Calculator.new(@report.anchor_type)
+      @anchor_service = AnchorRegistry.get_anchor(@report.anchor_type)[:service]
+    end
+
+    def generate
       records = fetch_records
       records = apply_filters(records)
       records = apply_sorting(records)
-      generate_report_data(records)
+      
+      # Return the records for pagination in the controller
+      [records, {
+        columns: generate_columns,
+        rows: generate_rows(records)
+      }]
     end
-  end
 
-  private
+    private
 
-  def cache_key
-    parts = [
-      'datalab_report',
-      @report.id,
-      @report.updated_at.to_i,
-      Digest::MD5.hexdigest(@params.to_json)
-    ]
-    
-    parts.join('/')
-  end
+    def cache_key
+      parts = [
+        'datalab_report',
+        @report.id,
+        @report.updated_at.to_i,
+        Digest::MD5.hexdigest(@params.to_json)
+      ]
+      
+      parts.join('/')
+    end
 
-  def apply_filters(records)
-    return records unless @params[:filters]
+    def apply_filters(records)
+      return records unless @params[:filters]&.any?
 
-    @params[:filters].each do |field, value|
-      next if value.blank?
-
-      if @anchor_service.filterable_attributes.include?(field.to_sym)
+      @params[:filters].each do |field, value|
+        next if value.blank?
         records = @anchor_service.apply_filter(records, field, value)
       end
-    end
-    
-    records
-  end
 
-  def apply_sorting(records)
-    return records unless @params[:sort_by].present?
-
-    field = @params[:sort_by]
-    direction = @params[:sort_direction] || 'asc'
-
-    if @anchor_service.sortable_attributes.include?(field.to_sym)
-      @anchor_service.apply_sorting(records, field, direction)
-    else
       records
     end
-  end
 
-  def fetch_records
-    records = @anchor_service.fetch_data(@report.column_config['columns'].map { |c| c['id'] })
-    records = records.page(@params[:page]).per(25) if @params[:page]
-    records
-  end
+    def apply_sorting(records)
+      field = @params[:sort_by]
+      direction = @params[:sort_direction] || 'asc'
 
-  def generate_report_data(records)
-    {
-      columns: generate_columns,
-      rows: generate_rows(records)
-    }
-  end
+      return records unless field.present?
 
-  def generate_columns
-    @report.column_config['columns'].map do |column|
-      attribute = @anchor_service.available_attributes[column['id'].to_sym]
+      if @anchor_service.sortable_attributes.include?(field.to_sym)
+        @anchor_service.apply_sorting(records, field, direction)
+      else
+        records
+      end
+    end
+
+    def fetch_records
+      @anchor_service.fetch_data(@report.column_config['columns'].map { |c| c['id'] })
+    end
+
+    def generate_report_data(records)
       {
-        id: column['id'],
-        name: attribute[:name],
-        sequence: column['sequence']
+        columns: generate_columns,
+        rows: generate_rows(records)
       }
     end
-  end
 
-  def generate_rows(records)
-    records.map do |record|
-      row = { id: record.id }
-      @report.column_config['columns'].each do |column|
-        row[column['id']] = @calculator.calculate_for_record(record, column['id'])
+    def generate_columns
+      @report.column_config['columns'].map do |column|
+        attribute = @anchor_service.available_attributes[column['id'].to_sym]
+        {
+          id: column['id'],
+          name: attribute[:name],
+          sequence: column['sequence']
+        }
       end
-      row
+    end
+
+    def generate_rows(records)
+      records.map do |record|
+        row = { id: record.id }
+        @report.column_config['columns'].each do |column|
+          row[column['id']] = @calculator.calculate_for_record(record, column['id'])
+        end
+        row
+      end
     end
   end
 end

@@ -1,0 +1,48 @@
+<div class="flex flex-col">
+  <div class="mb-6 flex justify-between items-center">
+    <h1 class="text-2xl font-semibold text-gray-900">Design Report: <%= @report.name %></h1>
+    <%= button_to "Generate Report", 
+                  generate_datalab_report_path(@report), 
+                  class: "rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500",
+                  data: { turbo: false } %>
+  </div>
+
+  <div class="grid grid-cols-12 gap-4" data-controller="designer" data-update-url="<%= datalab_designer_path(@report) %>">
+    <!-- Available Attributes Panel -->
+    <div class="col-span-3">
+      <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-lg p-4">
+        <h2 class="text-base font-semibold text-gray-900 mb-4">Available Fields</h2>
+        <div data-designer-target="availableAttributes">
+          <% @available_attributes.each do |id, attribute| %>
+            <div class="mb-2 p-2 bg-gray-50 rounded border border-gray-200 cursor-move"
+                 data-designer-target="draggable"
+                 data-attribute-id="<%= id %>"
+                 data-attribute-name="<%= attribute[:name] %>"
+                 data-attribute-description="<%= attribute[:description] %>">
+              <div class="font-medium"><%= attribute[:name] %></div>
+              <div class="text-sm text-gray-500"><%= attribute[:description] %></div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Report Canvas -->
+    <div class="col-span-9">
+      <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-lg p-4">
+        <h2 class="text-base font-semibold text-gray-900 mb-4">Report Columns</h2>
+        <div class="min-h-[400px]" data-designer-target="canvas">
+          <% if @report.column_config&.dig('columns')&.any? %>
+            <% @report.column_config['columns'].each do |column| %>
+              <%= render 'column', column: column %>
+            <% end %>
+          <% else %>
+            <div class="text-center text-gray-500 py-20">
+              Drag fields here to build your report
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
