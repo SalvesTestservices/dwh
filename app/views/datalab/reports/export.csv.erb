@@ -1,0 +1,5 @@
+<%- headers = @report_data[:columns].map { |c| c[:name] } -%>
+<%= CSV.generate_line headers %>
+<%- @report_data[:rows].each do |row| -%>
+<%= CSV.generate_line(@report_data[:columns].map { |c| row[c[:id]] }) %>
+<%- end -%>

@@ -7,13 +7,26 @@ class Datalab::ReportGenerator
   end
 
   def generate
-    records = fetch_records
-    records = apply_filters(records)
-    records = apply_sorting(records)
-    generate_report_data(records)
+    Rails.cache.fetch(cache_key, expires_in: 1.hour) do
+      records = fetch_records
+      records = apply_filters(records)
+      records = apply_sorting(records)
+      generate_report_data(records)
+    end
   end
 
   private
+
+  def cache_key
+    parts = [
+      'datalab_report',
+      @report.id,
+      @report.updated_at.to_i,
+      Digest::MD5.hexdigest(@params.to_json)
+    ]
+    
+    parts.join('/')
+  end
 
   def apply_filters(records)
     return records unless @params[:filters]
@@ -43,8 +56,9 @@ class Datalab::ReportGenerator
   end
 
   def fetch_records
-    column_ids = @report.column_config['columns'].map { |c| c['id'] }
-    @anchor_service.fetch_data(column_ids)
+    records = @anchor_service.fetch_data(@report.column_config['columns'].map { |c| c['id'] })
+    records = records.page(@params[:page]).per(25) if @params[:page]
+    records
   end
 
   def generate_report_data(records)

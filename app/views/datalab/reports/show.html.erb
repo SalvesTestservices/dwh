@@ -6,30 +6,50 @@
                 class: "rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" %>
   </div>
 
-  <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-lg overflow-hidden">
-    <div class="overflow-x-auto">
-      <table class="min-w-full divide-y divide-gray-300">
-        <thead>
-          <tr>
-            <% @report_data[:columns].each do |column| %>
-              <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900">
-                <%= column[:name] %>
-              </th>
-            <% end %>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-gray-200">
-          <% @report_data[:rows].each do |row| %>
+  <%= form_with(url: generate_datalab_report_path(@report), method: :post, data: { controller: 'report', turbo_frame: 'report_data' }) do |form| %>
+    <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-lg p-4 mb-4">
+      <div class="grid grid-cols-4 gap-4">
+        <% @anchor_service.filterable_attributes.each do |attr| %>
+          <div>
+            <%= form.label "filters[#{attr}]", @anchor_service.available_attributes[attr][:name], 
+                class: "block text-sm font-medium text-gray-700" %>
+            <%= form.select "filters[#{attr}]", 
+                filter_options_for_attribute(attr),
+                { include_blank: "All" },
+                class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm",
+                data: { action: "change->report#submit" } %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <%= turbo_frame_tag "report_data" do %>
+    <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-lg overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-300">
+          <thead>
             <tr>
               <% @report_data[:columns].each do |column| %>
-                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                  <%= row[column[:id]] %>
-                </td>
+                <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900">
+                  <% if @anchor_service.sortable_attributes.include?(column[:id].to_sym) %>
+                    <%= sort_link(@report, column[:id], column[:name]) %>
+                  <% else %>
+                    <%= column[:name] %>
+                  <% end %>
+                </th>
               <% end %>
             </tr>
-          <% end %>
-        </tbody>
-      </table>
+          </thead>
+          <tbody class="divide-y divide-gray-200">
+            <%= render "table_rows", report_data: @report_data %>
+          </tbody>
+        </table>
+      </div>
+      
+      <div class="px-4 py-3 border-t border-gray-200">
+        <%= paginate @report_data[:records], theme: 'tailwind' %>
+      </div>
     </div>
-  </div>
+  <% end %>
 </div>

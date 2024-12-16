@@ -1,0 +1,43 @@
+<ul role="list" class="divide-y divide-gray-100">
+  <% reports.each do |report| %>
+    <li class="flex items-center justify-between gap-x-6 px-5 py-5">
+      <div class="min-w-0">
+        <div class="flex items-start gap-x-3">
+          <p class="text-sm font-semibold leading-6 text-gray-900"><%= report.name %></p>
+          <% if report.is_public %>
+            <span class="rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
+              Shared
+            </span>
+          <% end %>
+        </div>
+        <div class="mt-1 flex items-center gap-x-2 text-xs leading-5 text-gray-500">
+          <p class="truncate"><%= report.description %></p>
+          <svg viewBox="0 0 2 2" class="h-0.5 w-0.5 fill-current">
+            <circle cx="1" cy="1" r="1" />
+          </svg>
+          <p>Created by <%= report.user.email %></p>
+        </div>
+      </div>
+      
+      <div class="flex flex-none items-center gap-x-4">
+        <% if show_actions %>
+          <%= link_to 'Edit', edit_datalab_report_path(report), 
+              class: "rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" %>
+          <%= button_to 'Duplicate', duplicate_datalab_report_path(report), method: :post,
+              class: "rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" %>
+        <% end %>
+        <%= link_to datalab_report_path(report), 
+            class: "rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" do %>
+          View
+        <% end %>
+        <%= link_to export_datalab_report_path(report, format: :csv),
+            class: "text-gray-400 hover:text-gray-500" do %>
+          <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M10 3v2H5v10h10V9h2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h5z"/>
+            <path d="M15 3v4h4v2h-6V3h2z"/>
+          </svg>
+        <% end %>
+      </div>
+    </li>
+  <% end %>
+</ul>

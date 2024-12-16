@@ -1,0 +1,9 @@
+<% report_data[:rows].each do |row| %>
+  <tr>
+    <% report_data[:columns].each do |column| %>
+      <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+        <%= row[column[:id]] %>
+      </td>
+    <% end %>
+  </tr>
+<% end %>

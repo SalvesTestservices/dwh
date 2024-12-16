@@ -40,8 +40,16 @@ class Datalab::Anchors::UsersAnchor < BaseAnchor
       billable_hours * rate
     end
 
-    def fetch_data(column_config)
-      User.includes(:activities) # Will expand in next step
+    def fetch_data(column_ids)
+      query = User.all
+
+      # Add necessary includes based on required columns
+      query = query.includes(:activities) if column_ids.include?('turnover')
+      
+      # Add any other necessary includes
+      query = query.includes(:company) if column_ids.include?('company_name')
+      
+      query
     end
 
     def filterable_attributes
@@ -68,10 +76,11 @@ class Datalab::Anchors::UsersAnchor < BaseAnchor
       when :role
         records.order(role: direction)
       when :turnover
-        # Complex sorting example
+        # Optimize complex sorting with subquery
         records.left_joins(:activities)
+              .select('users.*, COALESCE(SUM(activities.hours * activities.rate), 0) as calculated_turnover')
               .group('users.id')
-              .order("SUM(activities.hours * activities.rate) #{direction}")
+              .order("calculated_turnover #{direction}")
       else
         records
       end
