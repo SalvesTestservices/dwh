@@ -3,7 +3,9 @@ nl:
     welcome:        Welkom
     mandatory:      Velden met een (*) zijn verplicht
     save:           Opslaan
+    export:         Exporteren
     select:         Selecteer
+    continue:       Volgende stap
     details:        details
     edit:           Wijzigen
     month:          Maand

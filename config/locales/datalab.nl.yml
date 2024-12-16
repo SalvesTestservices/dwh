@@ -1,0 +1,20 @@
+nl:
+  datalab:
+    report:
+      titles:
+        index:            Datalab rapporten
+        new:              Nieuw rapport
+        edit:             Rapport aanpassen
+        show:             Rapport
+        my_reports:       Mijn rapporten
+        shared_reports:   Gedeelde rapporten
+        generate:         Rapport genereren
+      attributes:
+        created_by:       Aangemaakt door
+        available_fields: Beschikbare velden
+        report_columns:   Rapport kolommen
+        anchor_type:      Data basis
+        is_public:        Voor iedereen zichtbaar
+        name:             Naam rapport
+        description:      Beschrijving
+        

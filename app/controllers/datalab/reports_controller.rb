@@ -7,6 +7,9 @@ module Datalab
     def index
       @reports = DatalabReport.where(user_id: current_user.id)
       @shared_reports = DatalabReport.where(is_public: true).where.not(user_id: current_user.id)
+
+      @breadcrumbs = []
+      @breadcrumbs << [I18n.t('.datalab.report.titles.index')]  
     end
 
     def new
@@ -41,6 +44,10 @@ module Datalab
       @report_data = data.merge(
         rows: data[:rows].select { |row| paginated_records.include?(row[:id]) }
       )
+
+      @breadcrumbs = []
+      @breadcrumbs << [I18n.t('.datalab.report.titles.index'), datalab_reports_path]  
+      @breadcrumbs << [@report.name]
       
       respond_to do |format|
         format.html

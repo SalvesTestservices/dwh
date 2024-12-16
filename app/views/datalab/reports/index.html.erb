@@ -1,25 +1,27 @@
-<div class="flex flex-col">
-  <div class="mb-6 flex justify-between items-center">
-    <h1 class="text-2xl font-semibold text-gray-900">Data Lab Reports</h1>
-    <%= link_to 'New Report', new_datalab_report_path, 
-        class: "rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white hover:bg-blue-500" %>
-  </div>
+<%= render "layouts/page_header", 
+  breadcrumbs: @breadcrumbs, 
+  title: I18n.t('.datalab.report.titles.index'), 
+  icon: ["datalab", "medium", "gray"],
+  buttons: [[I18n.t('.datalab.report.titles.new'), new_datalab_report_path]]
+%>
 
-  <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-lg mb-8">
-    <div class="px-4 py-6 sm:px-6">
-      <h2 class="text-base font-semibold leading-7 text-gray-900">Your Reports</h2>
-    </div>
-    
-    <%= render "report_list", reports: @reports, show_actions: true %>
-  </div>
+<main>
+  <div class="mx-auto max-w-8xl py-6 mt-2">
 
-  <% if @shared_reports.any? %>
-    <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-lg">
-      <div class="px-4 py-6 sm:px-6">
-        <h2 class="text-base font-semibold leading-7 text-gray-900">Shared Reports</h2>
+    <h2 class="my-5 text-xl pb-2 border-b-2 border-gray-400 font-semibold leading-7 text-gray-900"><%= I18n.t('.datalab.report.titles.my_reports') %></h2>
+
+    <% if @reports.any? %>
+      <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-lg mb-8">
+        <%= render "report_list", reports: @reports, show_actions: true %>
       </div>
-      
-      <%= render "report_list", reports: @shared_reports, show_actions: false %>
-    </div>
-  <% end %>
-</div>
+    <% end %>
+
+    <% if @shared_reports.any? %>
+      <h2 class="my-5 text-xl pb-2 border-b-2 border-gray-400 font-semibold leading-7 text-gray-900"><%= I18n.t('.datalab.report.titles.shared_reports') %></h2>
+      <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-lg mb-8">      
+        <%= render "report_list", reports: @shared_reports, show_actions: false %>
+      </div>
+    <% end %>
+
+  </div>
+</main>

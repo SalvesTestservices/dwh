@@ -5,19 +5,19 @@ module Datalab
         def available_attributes
           {
             first_name: {
-              name: 'First Name',
+              name: 'Voornaam',
               calculation_type: 'direct',
-              description: 'User first name'
+              description: nil
             },
             role: {
-              name: 'Role',
+              name: 'Rol',
               calculation_type: 'translation',
-              description: 'User role in the organization'
+              description: 'Rol van de medewerker, bv manager, medewerker, etc.'
             },
-            turnover: {
-              name: 'Turnover',
+            billable_hours: {
+              name: 'Billable uren',
               calculation_type: 'complex',
-              description: 'Total turnover for the user'
+              description: 'Totaal aantal billable uren van de medewerker'
             }
           }
         end

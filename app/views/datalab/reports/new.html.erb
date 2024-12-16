@@ -1,9 +1,16 @@
-<div class="flex flex-col">
-  <div class="mb-6">
-    <h1 class="text-2xl font-semibold text-gray-900">New Data Lab Report</h1>
-  </div>
+<%= render "layouts/page_header", 
+  breadcrumbs: @breadcrumbs, 
+  title: I18n.t('.datalab.report.titles.new'), 
+  icon: ["datalab", "medium", "gray"],
+  buttons: nil
+%>
 
-  <div id="new_report_form">
-    <%= render "form", report: @report, available_anchors: @available_anchors %>
+<main>
+  <div class="mx-auto max-w-8xl py-6 mt-2">
+
+    <div id="new_report_form">
+      <%= render "form", report: @report, available_anchors: @available_anchors %>
+    </div>
+
   </div>
-</div>
+</main>

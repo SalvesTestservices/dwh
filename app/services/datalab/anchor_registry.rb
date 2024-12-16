@@ -4,7 +4,7 @@ module Datalab
       def available_anchors
         {
           users: {
-            name: 'Users',
+            name: 'Medewerkers',
             service: Datalab::Anchors::UsersAnchor
           }
           # Add more anchors as needed:
