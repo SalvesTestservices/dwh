@@ -29,6 +29,21 @@ Rails.application.routes.draw do
     end
   end
 
+  # Datalab
+  namespace :datalab do
+    resources :reports do
+      member do
+        post :generate
+      end
+    end
+    
+    resources :designer, only: [:show, :update] do
+      member do
+        post :preview
+      end
+    end
+  end
+
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "up" => "rails/health#show", as: :rails_health_check
