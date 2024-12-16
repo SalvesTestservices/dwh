@@ -43,5 +43,38 @@ class Datalab::Anchors::UsersAnchor < BaseAnchor
     def fetch_data(column_config)
       User.includes(:activities) # Will expand in next step
     end
+
+    def filterable_attributes
+      [:role]
+    end
+
+    def sortable_attributes
+      [:first_name, :role, :turnover]
+    end
+
+    def apply_filter(records, field, value)
+      case field.to_sym
+      when :role
+        records.where(role: value)
+      else
+        records
+      end
+    end
+
+    def apply_sorting(records, field, direction)
+      case field.to_sym
+      when :first_name
+        records.order(first_name: direction)
+      when :role
+        records.order(role: direction)
+      when :turnover
+        # Complex sorting example
+        records.left_joins(:activities)
+              .group('users.id')
+              .order("SUM(activities.hours * activities.rate) #{direction}")
+      else
+        records
+      end
+    end
   end
 end

@@ -1,0 +1,35 @@
+<div class="flex flex-col">
+  <div class="mb-6 flex justify-between items-center">
+    <h1 class="text-2xl font-semibold text-gray-900"><%= @report.name %></h1>
+    <%= link_to "Edit Layout", 
+                datalab_designer_path(@report), 
+                class: "rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" %>
+  </div>
+
+  <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-lg overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-300">
+        <thead>
+          <tr>
+            <% @report_data[:columns].each do |column| %>
+              <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900">
+                <%= column[:name] %>
+              </th>
+            <% end %>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+          <% @report_data[:rows].each do |row| %>
+            <tr>
+              <% @report_data[:columns].each do |column| %>
+                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                  <%= row[column[:id]] %>
+                </td>
+              <% end %>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
