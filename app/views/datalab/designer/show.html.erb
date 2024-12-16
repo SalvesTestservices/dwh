@@ -13,18 +13,20 @@
         <div>
           <div class="bg-white shadow-sm ring-1 ring-gray-300 sm:rounded-lg p-4">
             <h2 class="text-base font-semibold text-gray-900 mb-4"><%= I18n.t('.datalab.report.attributes.anchor_type') %></h2>
-            <div class="text-sm text-gray-500 mb-4"><%= @datalab_report.anchor_type %></div>
+            <div class="text-sm text-gray-500 mb-6"><%= decorates.anchor_type %></div>
 
             <h2 class="text-base font-semibold text-gray-900 mb-4"><%= I18n.t('.datalab.report.attributes.available_fields') %></h2>
             <div data-designer-target="availableAttributes" class="grid grid-cols-4 gap-4">
               <% @available_attributes.each do |id, attribute| %>
-                <div class="p-2 bg-gray-50 rounded border border-gray-200 cursor-move"
+                <div class="flex flex-row justify-between items-start h-16 p-2 bg-gray-50 rounded border border-gray-200 cursor-move"
                       data-designer-target="draggable"
                       data-attribute-id="<%= id %>"
                       data-attribute-name="<%= attribute[:name] %>"
                       data-attribute-description="<%= attribute[:description] %>">
-                  <div class="font-medium"><%= attribute[:name] %></div>
-                  <div class="text-sm text-gray-500"><%= attribute[:description] %></div>
+                  <div>
+                    <div class="text-sm font-medium"><%= attribute[:name] %></div>
+                    <div class="text-xs text-gray-500"><%= attribute[:description] %></div>
+                  </div>
                 </div>
               <% end %>
             </div>
@@ -36,15 +38,13 @@
           <div class="bg-white shadow-sm ring-1 ring-gray-300 sm:rounded-lg p-4">
             <h2 class="text-base font-semibold text-gray-900 mb-4"><%= I18n.t('.datalab.report.attributes.report_columns') %></h2>
             <div class="min-h-[400px]" data-designer-target="canvas">
-              <% if @datalab_report.column_config&.dig('columns')&.any? %>
-                <% @datalab_report.column_config['columns'].each do |column| %>
-                  <%= render 'column', column: column %>
+              <div class="grid grid-cols-4 gap-4">
+                <% if @datalab_report.column_config&.dig('columns')&.any? %>
+                  <% @datalab_report.column_config['columns'].each do |column| %>
+                    <%= render 'column', column: column %>
+                  <% end %>
                 <% end %>
-              <% else %>
-                <div class="text-center text-gray-500 py-20">
-                  Drag fields here to build your report
-                </div>
-              <% end %>
+              </div>
             </div>
           </div>
         </div>

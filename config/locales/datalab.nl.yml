@@ -17,4 +17,5 @@ nl:
         is_public:        Voor iedereen zichtbaar
         name:             Naam rapport
         description:      Beschrijving
-        
+      anchor_types:
+        users:            Medewerkers

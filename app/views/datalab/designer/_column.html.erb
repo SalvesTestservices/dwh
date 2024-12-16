@@ -1,8 +1,9 @@
-<div class="flex items-center justify-between p-2 bg-gray-50 rounded border border-gray-200 mb-2" 
-     data-column-id="<%= column['id'] %>">
+<div data-column-id="<%= column['id'] %>" 
+     data-designer-target="sortable"
+     class="flex flex-row justify-between items-center h-16 p-2 bg-gray-50 rounded border border-gray-200 cursor-move">
   <div>
-    <div class="font-medium"><%= @available_attributes[column['id'].to_sym][:name] %></div>
-    <div class="text-sm text-gray-500"><%= @available_attributes[column['id'].to_sym][:description] %></div>
+    <div class="text-sm font-medium"><%= @available_attributes[column['id'].to_sym][:name] %></div>
+    <div class="text-xs text-gray-500"><%= @available_attributes[column['id'].to_sym][:description] %></div>
   </div>
   <button type="button" 
           class="text-gray-400 hover:text-gray-500"
