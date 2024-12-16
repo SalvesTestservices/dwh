@@ -14,7 +14,7 @@ nl:
       index:        Gebruikers
   site:
     titles:
-      data_views:   Data views
+      data_lab:     Data lab
       data_checks:  Data checks
   data_target:
     titles:

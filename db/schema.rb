@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_12_13_114505) do
+ActiveRecord::Schema[8.0].define(version: 2024_12_16_064700) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -77,6 +77,20 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_13_114505) do
     t.index ["quarter"], name: "index_data_targets_on_quarter"
     t.index ["role"], name: "index_data_targets_on_role"
     t.index ["year"], name: "index_data_targets_on_year"
+  end
+
+  create_table "datalab_reports", force: :cascade do |t|
+    t.string "name"
+    t.string "description"
+    t.string "anchor_type"
+    t.json "column_config"
+    t.bigint "user_id"
+    t.boolean "is_public", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["anchor_type"], name: "index_datalab_reports_on_anchor_type"
+    t.index ["user_id", "name"], name: "index_datalab_reports_on_user_id_and_name"
+    t.index ["user_id"], name: "index_datalab_reports_on_user_id"
   end
 
   create_table "good_job_batches", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -348,6 +362,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_13_114505) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "chat_histories", "users"
+  add_foreign_key "datalab_reports", "users"
   add_foreign_key "reports", "users"
   add_foreign_key "solid_queue_blocked_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_claimed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
