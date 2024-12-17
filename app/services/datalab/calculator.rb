@@ -7,13 +7,12 @@ module Datalab
 
     def calculate_for_record(record, attribute_id)
       attribute = @anchor_service.available_attributes[attribute_id.to_sym]
-      
-      case attribute[:type]
-      when :direct
+      case attribute[:calculation_type]
+      when "direct"
         record.send(attribute_id)
-      when :method
+      when "translation"
         record.send(attribute[:method])
-      when :computed
+      when "complex"
         instance_exec(record, &attribute[:compute])
       else
         nil

@@ -4,12 +4,16 @@ module Datalab
       class << self
         def available_attributes
           {
-            first_name: {
-              name: 'Voornaam',
+            full_name: {
+              name: 'Naam',
               calculation_type: 'direct',
-              description: nil
-            },
-            role: {
+              description: 'Volledige naam van de medewerker'
+            }
+          }
+        end
+
+=begin
+             role: {
               name: 'Rol',
               calculation_type: 'translation',
               description: 'Rol van de medewerker, bv manager, medewerker, etc.'
@@ -19,8 +23,11 @@ module Datalab
               calculation_type: 'complex',
               description: 'Totaal aantal billable uren van de medewerker'
             }
-          }
-        end
+ 
+
+=end
+
+
 
         def calculate_role(user)
           case user.role
@@ -43,14 +50,14 @@ module Datalab
         end
 
         def fetch_data(column_ids)
-          query = User.all
+          query = Dwh::DimUser.order(:full_name)
 
           # Add necessary includes based on required columns
           query = query.includes(:activities) if column_ids.include?('turnover')
           
           # Add any other necessary includes
           query = query.includes(:company) if column_ids.include?('company_name')
-          
+
           query
         end
 

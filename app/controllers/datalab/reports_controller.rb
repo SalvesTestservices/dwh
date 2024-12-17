@@ -40,9 +40,10 @@ module Datalab
 
     def show
       records, data = ReportGenerator.new(@report, filter_params).generate
-      @pagy, paginated_records = pagy(records, items: 25)
+      @pagy, paginated_records = pagy(records, items: 50)
+      
       @report_data = data.merge(
-        rows: data[:rows].select { |row| paginated_records.include?(row[:id]) }
+        rows: data[:rows].select { |row| paginated_records.pluck(:id).include?(row[:id]) }
       )
 
       @breadcrumbs = []
@@ -57,32 +58,15 @@ module Datalab
 
     def generate
       records, data = ReportGenerator.new(@report, filter_params).generate
-      @pagy, paginated_records = pagy(records, items: 25)
+      @pagy, paginated_records = pagy(records, items: 50)
       @report_data = data.merge(
-        rows: data[:rows].select { |row| paginated_records.include?(row[:id]) }
+        rows: data[:rows].select { |row| paginated_records.pluck(:id).include?(row[:id]) }
       )
       
       respond_to do |format|
         format.html { render :show }
         format.json { render json: @report_data }
         format.turbo_stream
-      end
-    end
-
-    def duplicate
-      original_report = DatalabReport.find(params[:id])
-      @report = DatalabReport.new(
-        name: "#{original_report.name} (Copy)",
-        description: original_report.description,
-        anchor_type: original_report.anchor_type,
-        column_config: original_report.column_config,
-        user: current_user
-      )
-
-      if @report.save
-        redirect_to datalab_designer_path(@report), notice: 'Report duplicated successfully.'
-      else
-        redirect_to datalab_reports_path, alert: 'Could not duplicate report.'
       end
     end
 

@@ -1,0 +1,17 @@
+<%= form_with(url: generate_datalab_report_path(@report), method: :post, data: { controller: 'report', turbo_frame: 'report_data' }) do |form| %>
+  <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-lg p-4 mb-4">
+    <div class="grid grid-cols-4 gap-4">
+      <% @anchor_service.filterable_attributes.each do |attr| %>
+        <div>
+          <%= form.label "filters[#{attr}]", @anchor_service.available_attributes[attr][:name], 
+              class: "block text-sm font-medium text-gray-700" %>
+          <%= form.select "filters[#{attr}]", 
+              filter_options_for_attribute(attr),
+              { include_blank: "All" },
+              class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm",
+              data: { action: "change->report#submit" } %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>
