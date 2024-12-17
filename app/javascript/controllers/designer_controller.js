@@ -96,7 +96,7 @@ export default class extends Controller {
     return `
       <div data-column-id="${data.id}"
            data-designer-target="sortable"
-           class="flex flex-row justify-between items-center h-16 p-2 bg-gray-50 rounded border border-gray-200 cursor-move">
+           class="flex flex-row justify-between items-start h-16 p-2 bg-gray-50 rounded border border-gray-200 cursor-move">
         <div>
           <div class="text-sm font-medium">${data.name}</div>
           <div class="text-xs text-gray-500">${data.description}</div>
