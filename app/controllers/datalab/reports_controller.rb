@@ -58,9 +58,10 @@ module Datalab
 
     def generate
       records, data = ReportGenerator.new(@report, filter_params).generate
-      @pagy, paginated_records = pagy(records, items: 50)
+      records = records.limit(25)
+      
       @report_data = data.merge(
-        rows: data[:rows].select { |row| paginated_records.pluck(:id).include?(row[:id]) }
+        rows: data[:rows].select { |row| records.pluck(:id).include?(row[:id]) }
       )
 
       @breadcrumbs = []
@@ -68,8 +69,7 @@ module Datalab
       @breadcrumbs << [@report.name]
 
       respond_to do |format|
-        format.html { render :show }
-        format.json { render json: @report_data }
+        format.html
         format.turbo_stream
       end
     end

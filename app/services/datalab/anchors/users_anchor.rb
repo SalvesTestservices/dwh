@@ -4,6 +4,20 @@ module Datalab
       class << self
         def available_attributes
           {
+            account_id: {
+              name: 'Label',
+              calculation_type: 'relation_id',
+              description: 'Het label waar de medewerker werkzaam is',
+              related_model: Dwh::DimAccount,
+              display_attribute: :name
+            },
+            company_id: {
+              name: 'Unit',
+              calculation_type: 'relation_id',
+              description: 'De unit waar de medewerker werkzaam is',
+              related_model: Dwh::DimCompany,
+              display_attribute: :name_short
+            },
             full_name: {
               name: 'Naam',
               calculation_type: 'direct',

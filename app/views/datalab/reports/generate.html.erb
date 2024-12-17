@@ -1,0 +1,38 @@
+<%= render "layouts/page_header", 
+  breadcrumbs: @breadcrumbs, 
+  title: I18n.t('.datalab.report.titles.generate'),
+  icon: ["datalab", "medium", "gray"],
+  buttons: nil
+%>
+
+<main>
+  <div class="mx-auto max-w-8xl py-6 mt-2 flex flex-col">
+
+    <div class=>
+
+
+
+[[I18n.t('.general.edit').downcase, datalab_designer_path(@report)]]
+    <%= turbo_frame_tag "report_data" do %>
+      <table class="min-w-full">
+        <thead>
+          <tr>
+            <% @report_data[:columns].each do |column| %>
+              <th scope="col" class="p-1 text-left text-sm font-semibold text-gray-900 border border-gray-400 bg-gray-100">
+                <% if @anchor_service.sortable_attributes.include?(column[:id].to_sym) %>
+                  <%= sort_link(@report, column[:id], column[:name]) %>
+                <% else %>
+                  <%= column[:name] %>
+                <% end %>
+              </th>
+            <% end %>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+          <%= render "table_rows", report_data: @report_data %>
+        </tbody>
+      </table>      
+    <% end %>
+  
+  </div>
+</main>

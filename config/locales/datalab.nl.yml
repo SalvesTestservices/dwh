@@ -6,6 +6,7 @@ nl:
         new:              Nieuw rapport
         edit:             Rapport aanpassen
         show:             Rapport
+        generate:         Rapport voorstel
         my_reports:       Mijn rapporten
         shared_reports:   Gedeelde rapporten
         generate:         Rapport genereren
