@@ -1,112 +1,152 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["availableAttributes", "canvas", "draggable"]
+  static targets = ["draggable", "availableAttributes", "canvas"]
 
   connect() {
-    this.draggableTargets.forEach(draggable => {
-      draggable.setAttribute('draggable', true)
-      draggable.addEventListener('dragstart', this.dragStart.bind(this))
-    })
-
-    this.canvasTarget.addEventListener('dragover', this.dragOver.bind(this))
-    this.canvasTarget.addEventListener('drop', this.drop.bind(this))
+    // Hide items that are already in the canvas from available attributes
+    this.hideCanvasItemsFromAvailable()
+    this.initializeDragAndDrop()
   }
 
-  dragStart(event) {
-    const target = event.target
+  hideCanvasItemsFromAvailable() {
+    // Get all items in the canvas
+    const canvasItems = this.canvasTarget.querySelectorAll('[data-attribute-id]')
+    
+    // Hide each corresponding item in available attributes
+    canvasItems.forEach(item => {
+      const attributeId = item.dataset.attributeId
+      this.hideFromAvailable(attributeId)
+    })
+  }
+
+  initializeDragAndDrop() {
+    // Make items draggable
+    this.draggableTargets.forEach(draggable => {
+      this.initializeDraggable(draggable)
+    })
+
+    // Set up drop zones
+    this.availableAttributesTarget.addEventListener('dragover', this.handleDragOver.bind(this))
+    this.availableAttributesTarget.addEventListener('drop', this.handleDrop.bind(this))
+    this.canvasTarget.addEventListener('dragover', this.handleDragOver.bind(this))
+    this.canvasTarget.addEventListener('drop', this.handleDrop.bind(this))
+  }
+
+  handleDragStart(event) {
+    const container = event.target.closest('[data-designer-target="canvas"], [data-designer-target="availableAttributes"]')
     event.dataTransfer.setData('text/plain', JSON.stringify({
-      id: target.dataset.attributeId,
-      name: target.dataset.attributeName,
-      description: target.dataset.attributeDescription
+      id: event.target.dataset.attributeId,
+      name: event.target.dataset.attributeName,
+      description: event.target.dataset.attributeDescription,
+      sourceZone: container ? container.dataset.designerTarget : null
     }))
   }
 
-  dragOver(event) {
+  handleDragOver(event) {
     event.preventDefault()
     event.dataTransfer.dropEffect = 'move'
   }
 
-  async drop(event) {
+  handleDrop(event) {
     event.preventDefault()
     const data = JSON.parse(event.dataTransfer.getData('text/plain'))
     
-    const columnConfig = {
-      columns: Array.from(this.element.querySelectorAll('[data-column-id]')).map((el, index) => ({
-        id: el.dataset.columnId,
-        sequence: index + 1
-      }))
+    // Find the actual drop zone container, not the draggable element
+    const dropZone = event.target.closest('[data-designer-target="canvas"], [data-designer-target="availableAttributes"]')
+    if (!dropZone) {
+      console.error('No valid drop zone found')
+      return
+    }
+    
+    const targetZone = dropZone.dataset.designerTarget
+    console.log('Drop event:', {
+      sourceZone: data.sourceZone,
+      targetZone: targetZone,
+      data: data
+    })
+    
+    // Don't do anything if dropped in same zone
+    if (data.sourceZone === targetZone) {
+      console.log('Same zone, ignoring drop')
+      return
     }
 
-    // Add new column
-    columnConfig.columns.push({
-      id: data.id,
-      sequence: columnConfig.columns.length + 1
-    })
-
-    // Save to server
-    const response = await fetch(this.element.dataset.updateUrl, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRF-Token': document.querySelector('[name="csrf-token"]').content
-      },
-      body: JSON.stringify({
-        datalab_report: {
-          column_config: columnConfig
-        }
-      })
-    })
-
-    if (response.ok) {
-      const gridContainer = this.canvasTarget.querySelector('.grid')
-      gridContainer.insertAdjacentHTML('beforeend', this.columnTemplate(data))
+    if (targetZone === 'canvas') {
+      console.log('Adding to canvas')
+      this.addToCanvas(data)
+      this.hideFromAvailable(data.id)
+    } else if (targetZone === 'availableAttributes') {
+      console.log('Moving back to available')
+      this.removeFromCanvas(data.id)
+      this.showInAvailable(data.id)
     }
-  }
 
-  removeColumn(event) {
-    const column = event.target.closest('[data-column-id]')
-    column.remove()
     this.updateColumnConfig()
   }
 
-  async updateColumnConfig() {
-    const columnConfig = {
-      columns: Array.from(this.element.querySelectorAll('[data-column-id]')).map((el, index) => ({
-        id: el.dataset.columnId,
-        sequence: index + 1
-      }))
-    }
-
-    await fetch(this.element.dataset.updateUrl, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRF-Token': document.querySelector('[name="csrf-token"]').content
-      },
-      body: JSON.stringify({
-        datalab_report: {
-          column_config: columnConfig
-        }
-      })
-    })
+  hideFromAvailable(attributeId) {
+    const element = this.availableAttributesTarget.querySelector(`[data-attribute-id="${attributeId}"]`)
+    if (element) element.classList.add('hidden')
   }
 
-  columnTemplate(data) {
+  showInAvailable(attributeId) {
+    const element = this.availableAttributesTarget.querySelector(`[data-attribute-id="${attributeId}"]`)
+    if (element) element.classList.remove('hidden')
+  }
+
+  addToCanvas(data) {
+    const columnHtml = this.buildColumnHtml(data)
+    this.canvasTarget.querySelector('.grid').insertAdjacentHTML('beforeend', columnHtml)
+    
+    // Initialize drag for the newly added element
+    const newElement = this.canvasTarget.querySelector(`[data-attribute-id="${data.id}"]`)
+    this.initializeDraggable(newElement)
+  }
+
+  initializeDraggable(element) {
+    element.setAttribute('draggable', true)
+    element.addEventListener('dragstart', this.handleDragStart.bind(this))
+  }
+
+  removeFromCanvas(attributeId) {
+    const element = this.canvasTarget.querySelector(`[data-attribute-id="${attributeId}"]`)
+    if (element) element.remove()
+  }
+
+  buildColumnHtml(data) {
     return `
-      <div data-column-id="${data.id}"
-           data-designer-target="sortable"
-           class="flex flex-row justify-between items-start h-16 p-2 bg-sky-100 rounded border border-sky-500 cursor-move">
+      <div class="flex flex-row justify-between items-start h-16 p-2 bg-sky-100 rounded border border-sky-500 cursor-move"
+           data-designer-target="draggable"
+           data-attribute-id="${data.id}"
+           data-attribute-name="${data.name}"
+           data-attribute-description="${data.description}">
         <div>
           <div class="text-sm font-medium">${data.name}</div>
           <div class="text-xs text-gray-600">${data.description}</div>
         </div>
-        <button type="button" class="text-gray-400 hover:text-gray-500 self-start" data-action="click->designer#removeColumn">
-          <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
-          </svg>
-        </button>
       </div>
     `
+  }
+
+  async updateColumnConfig() {
+    const columns = Array.from(this.canvasTarget.querySelectorAll('[data-attribute-id]')).map(el => ({
+      id: el.dataset.attributeId,
+      name: el.dataset.attributeName,
+      description: el.dataset.attributeDescription
+    }))
+
+    try {
+      await fetch(this.element.dataset.updateUrl, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
+        },
+        body: JSON.stringify({ column_config: { columns } })
+      })
+    } catch (error) {
+      console.error('Failed to update column configuration:', error)
+    }
   }
 }

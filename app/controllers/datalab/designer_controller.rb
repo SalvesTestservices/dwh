@@ -13,11 +13,8 @@ module Datalab
     end
 
     def update
-      if @datalab_report.update(designer_params)
-        head :ok
-      else
-        head :unprocessable_entity
-      end
+      @datalab_report.update!(column_config: params.require(:column_config))
+      head :ok
     end
 
     private def set_datalab_report

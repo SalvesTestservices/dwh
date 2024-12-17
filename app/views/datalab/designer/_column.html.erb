@@ -1,11 +1,10 @@
-<div data-column-id="<%= column['id'] %>" data-designer-target="sortable" class="flex flex-row justify-between items-start h-16 p-2 bg-sky-100 rounded border border-sky-500 cursor-move">
+<div data-designer-target="draggable" 
+     data-attribute-id="<%= column['id'] %>"
+     data-attribute-name="<%= @available_attributes[column['id'].to_sym][:name] %>"
+     data-attribute-description="<%= @available_attributes[column['id'].to_sym][:description] %>"
+     class="flex flex-row justify-between items-start h-16 p-2 bg-sky-100 rounded border border-sky-500 cursor-move">
   <div>
     <div class="text-sm font-medium"><%= @available_attributes[column['id'].to_sym][:name] %></div>
     <div class="text-xs text-gray-600"><%= @available_attributes[column['id'].to_sym][:description] %></div>
   </div>
-  <button type="button" class="text-gray-400 hover:text-gray-500 self-start" data-action="click->designer#removeColumn">
-    <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-      <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
-    </svg>
-  </button>
 </div>
