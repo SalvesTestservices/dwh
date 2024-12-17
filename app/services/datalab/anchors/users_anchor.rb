@@ -23,6 +23,41 @@ module Datalab
               calculation_type: 'direct',
               description: 'Volledige naam van de medewerker'
             },
+            email: {
+              name: 'Email',
+              calculation_type: 'direct',
+              description: 'Email van de medewerker'
+            },
+            contract: {
+              name: 'Contract type',
+              calculation_type: 'direct',
+              description: 'Contract type van de medewerker'
+            },
+            contract_hours: {
+              name: 'Contract uren',
+              calculation_type: 'direct',
+              description: 'Contract uren van de medewerker'
+            },
+            salary: {
+              name: 'Salaris',
+              calculation_type: 'direct',
+              description: 'Salaris van de medewerker o.b.v. fulltime contract'
+            },
+            address: {
+              name: 'Adres',
+              calculation_type: 'direct',
+              description: 'Adres van de medewerker'
+            },
+            city: {
+              name: 'Woonplaats',
+              calculation_type: 'direct',
+              description: 'Woonplaats van de medewerker'
+            },
+            country: {
+              name: 'Land',
+              calculation_type: 'direct',
+              description: 'Land van de medewerker'
+            },
             role: {
               name: 'Rol',
               calculation_type: 'direct',

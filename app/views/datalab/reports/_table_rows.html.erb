@@ -1,7 +1,7 @@
 <% report_data[:rows].each do |row| %>
-  <tr>
+  <tr class="whitespace-nowrap">
     <% report_data[:columns].each do |column| %>
-      <td class="p-1 text-left text-sm text-gray-900 border border-gray-400 bg-white">
+      <td class="p-1 text-left text-xs text-gray-900 border border-gray-400 bg-white max-w-64 overflow-hidden text-ellipsis">
         <%= row[column[:id]] %>
       </td>
     <% end %>

@@ -84,6 +84,7 @@ module Datalab
         row = { id: record.id }
         @report.column_config['columns'].each do |column|
           attribute = @anchor_service.available_attributes[column['id'].to_sym]
+
           case attribute[:calculation_type]
           when "direct"
             row[column['id']] = record.send(column['id'])
