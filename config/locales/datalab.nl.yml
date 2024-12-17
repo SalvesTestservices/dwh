@@ -7,6 +7,9 @@ nl:
         edit:             Rapport aanpassen
         show:             Rapport
         generate:         Rapport voorstel
+        show_final:       toon rapport
+        generate_explanation1: "Onderstaand voorbeeld is een voorstel van het rapport zoals het zal worden gepresenteerd."
+        generate_explanation2: "Je kunt het rapport aanpassen of definitief weergeven."
         my_reports:       Mijn rapporten
         shared_reports:   Gedeelde rapporten
         generate:         Rapport genereren
