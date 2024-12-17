@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+rm -rf log/dev.log
+touch log/dev.log
+tail -f log/dev.log
