@@ -1,8 +1,14 @@
+<% if @report.user_id == current_user.id %>
+  <% buttons = [[I18n.t('.general.edit').downcase, datalab_designer_path(@report)], [I18n.t('.general.export').downcase, export_datalab_report_path(@report, format: :csv)]] %>
+<% else %>
+  <% buttons = [[I18n.t('.general.export').downcase, export_datalab_report_path(@report, format: :csv)]] %>
+<% end %>
+
 <%= render "layouts/page_header", 
   breadcrumbs: @breadcrumbs, 
   title: "#{I18n.t('.datalab.report.titles.show')}: #{@report.name}", 
   icon: ["datalab", "medium", "gray"],
-  buttons: [[I18n.t('.general.edit').downcase, datalab_designer_path(@report)], [I18n.t('.general.export').downcase, export_datalab_report_path(@report, format: :csv)]]
+  buttons: buttons
 %>
 
 <main>
