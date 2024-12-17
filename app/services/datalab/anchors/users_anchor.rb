@@ -74,20 +74,18 @@ module Datalab
               calculation_type: 'calculation',
               description: 'Datum waarop de medewerker uit dienst is gegaan',
               calculation: ->(record) { Calculators::UserCalculator.calculate_leave_date(record) }
+            },
+            cost_price: {
+              name: 'Kostprijs',
+              calculation_type: 'calculation',
+              description: 'Kostprijs van de medewerker in de meest recente maand',
+              calculation: ->(record) { Calculators::UserCalculator.calculate_cost_price(record) }
             }
           }
         end
 
         def fetch_data(column_ids)
-          query = Dwh::DimUser.order(:full_name)
-
-          # Add necessary includes based on required columns
-          query = query.includes(:activities) if column_ids.include?('turnover')
-          
-          # Add any other necessary includes
-          query = query.includes(:company) if column_ids.include?('company_name')
-
-          query
+          Dwh::DimUser.order(:full_name)
         end
 
         def filterable_attributes
