@@ -62,7 +62,11 @@ module Datalab
       @report_data = data.merge(
         rows: data[:rows].select { |row| paginated_records.pluck(:id).include?(row[:id]) }
       )
-      
+
+      @breadcrumbs = []
+      @breadcrumbs << [I18n.t('.datalab.report.titles.index'), datalab_reports_path]  
+      @breadcrumbs << [@report.name]
+
       respond_to do |format|
         format.html { render :show }
         format.json { render json: @report_data }

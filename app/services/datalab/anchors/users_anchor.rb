@@ -8,45 +8,25 @@ module Datalab
               name: 'Naam',
               calculation_type: 'direct',
               description: 'Volledige naam van de medewerker'
-            }
-          }
-        end
-
-=begin
-             role: {
+            },
+            role: {
               name: 'Rol',
-              calculation_type: 'translation',
+              calculation_type: 'direct',
               description: 'Rol van de medewerker, bv manager, medewerker, etc.'
             },
-            billable_hours: {
-              name: 'Billable uren',
-              calculation_type: 'complex',
-              description: 'Totaal aantal billable uren van de medewerker'
+            start_date: {
+              name: 'Datum in dienst',
+              calculation_type: 'calculation',
+              description: 'Datum waarop de medewerker in dienst is gekomen',
+              calculation: ->(record) { Calculators::UserCalculator.calculate_start_date(record) }
+            },
+            leave_date: {
+              name: 'Datum uit dienst',
+              calculation_type: 'calculation',
+              description: 'Datum waarop de medewerker uit dienst is gegaan',
+              calculation: ->(record) { Calculators::UserCalculator.calculate_leave_date(record) }
             }
- 
-
-=end
-
-
-
-        def calculate_role(user)
-          case user.role
-          when "employee"
-            I18n.t('users.roles.employee')
-          when "trainee"
-            I18n.t('users.roles.trainee')
-          when "subco"
-            I18n.t('users.roles.subco')
-          else
-            user.role
-          end
-        end
-
-        def calculate_turnover(user)
-          # Example complex calculation
-          billable_hours = user.activities.billable.sum(:hours)
-          rate = user.current_rate || 0
-          billable_hours * rate
+          }
         end
 
         def fetch_data(column_ids)

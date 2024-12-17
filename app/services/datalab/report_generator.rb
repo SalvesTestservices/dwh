@@ -5,7 +5,6 @@ module Datalab
     def initialize(report, params = {})
       @report = report
       @params = params
-      @calculator = Calculator.new(@report.anchor_type)
       @anchor_service = AnchorRegistry.get_anchor(@report.anchor_type)[:service]
     end
 
@@ -84,7 +83,15 @@ module Datalab
       records.map do |record|
         row = { id: record.id }
         @report.column_config['columns'].each do |column|
-          row[column['id']] = @calculator.calculate_for_record(record, column['id'])
+          attribute = @anchor_service.available_attributes[column['id'].to_sym]
+          case attribute[:calculation_type]
+          when "direct"
+            row[column['id']] = record.send(column['id'])
+          when "translation"
+            row[column['id']] = record.send(attribute[:method])
+          when "calculation"
+            row[column['id']] = instance_exec(record, &attribute[:calculation])
+          end
         end
         row
       end

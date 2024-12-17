@@ -96,10 +96,10 @@ export default class extends Controller {
     return `
       <div data-column-id="${data.id}"
            data-designer-target="sortable"
-           class="flex flex-row justify-between items-start h-16 p-2 bg-gray-50 rounded border border-gray-200 cursor-move">
+           class="flex flex-row justify-between items-start h-16 p-2 bg-sky-100 rounded border border-sky-500 cursor-move">
         <div>
           <div class="text-sm font-medium">${data.name}</div>
-          <div class="text-xs text-gray-500">${data.description}</div>
+          <div class="text-xs text-gray-600">${data.description}</div>
         </div>
         <button type="button" class="text-gray-400 hover:text-gray-500 self-start" data-action="click->designer#removeColumn">
           <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
