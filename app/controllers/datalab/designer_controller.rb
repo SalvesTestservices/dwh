@@ -5,6 +5,11 @@ module Datalab
     def show
       anchor = Datalab::AnchorRegistry.get_anchor(@datalab_report.anchor_type)
       @available_attributes = anchor[:service].available_attributes
+
+      @breadcrumbs = []
+      @breadcrumbs << [I18n.t('.datalab.report.titles.index'), datalab_reports_path]  
+      @breadcrumbs << [@datalab_report.name, datalab_report_path(@datalab_report)]
+      @breadcrumbs << [I18n.t('.datalab.report.titles.edit')]
     end
 
     def update

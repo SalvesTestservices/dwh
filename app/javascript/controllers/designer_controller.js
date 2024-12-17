@@ -59,9 +59,8 @@ export default class extends Controller {
     })
 
     if (response.ok) {
-      const column = document.createElement('div')
-      column.innerHTML = this.columnTemplate(data)
-      this.canvasTarget.appendChild(column)
+      const gridContainer = this.canvasTarget.querySelector('.grid')
+      gridContainer.insertAdjacentHTML('beforeend', this.columnTemplate(data))
     }
   }
 
@@ -95,16 +94,15 @@ export default class extends Controller {
 
   columnTemplate(data) {
     return `
-      <div class="flex items-center justify-between p-2 bg-gray-50 rounded border border-gray-200 mb-2" 
-           data-column-id="${data.id}">
+      <div data-column-id="${data.id}"
+           data-designer-target="sortable"
+           class="flex flex-row justify-between items-center h-16 p-2 bg-gray-50 rounded border border-gray-200 cursor-move">
         <div>
-          <div class="font-medium">${data.name}</div>
-          <div class="text-sm text-gray-500">${data.description}</div>
+          <div class="text-sm font-medium">${data.name}</div>
+          <div class="text-xs text-gray-500">${data.description}</div>
         </div>
-        <button type="button" 
-                class="text-gray-400 hover:text-gray-500"
-                data-action="click->designer#removeColumn">
-          <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+        <button type="button" class="text-gray-400 hover:text-gray-500 self-start" data-action="click->designer#removeColumn">
+          <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
           </svg>
         </button>
