@@ -15,7 +15,7 @@ gem "thruster", require: false
 gem "pg", "~> 1.1"
 gem "puma", ">= 5.0"
 gem "jbuilder"
-gem "view_component", "~> 3.20.0"
+gem "view_component", "~> 3.21.0"
 gem "acts_as_list"
 gem "devise"
 gem "devise_invitable"
