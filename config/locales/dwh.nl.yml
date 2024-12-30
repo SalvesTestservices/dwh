@@ -37,6 +37,9 @@ nl:
       service:              Dienst
       training:             Training
       total:                Totaal
+    frequencies:
+      hourly:               Elk uur
+      daily:                Dagelijks
   dp_run:
     titles:
       index:            Runs

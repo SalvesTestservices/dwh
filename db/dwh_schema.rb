@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_10_03_080000) do
+ActiveRecord::Schema[8.0].define(version: 2024_12_30_064328) do
   create_schema "test"
 
   # These are extensions that must be enabled in order to support this database
@@ -197,7 +197,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_03_080000) do
     t.string "name"
     t.string "status", default: "inactive"
     t.datetime "last_executed_at"
-    t.integer "frequency", default: 24
+    t.string "frequency", default: "24"
     t.string "load_method", default: "incremental"
     t.integer "dp_tasks_count", default: 0
     t.integer "dp_runs_count", default: 0

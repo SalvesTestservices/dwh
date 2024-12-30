@@ -82,4 +82,8 @@ class Dwh::DpPipelineDecorator < BaseDecorator
       I18n.t('.dp_pipeline.groups.total')
     end
   end
+
+  def frequency
+    I18n.t(".dp_pipeline.frequencies.#{dp_pipeline.frequency}")
+  end
 end
