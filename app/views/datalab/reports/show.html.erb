@@ -28,8 +28,8 @@
         <div class="w-full flex flex-row justify-center space-x-4">
           <% @summary.each do |key, value| %>
             <div class="bg-gray-100 shadow-sm ring-1 ring-gray-900/5 sm:rounded-lg px-6 py-4 mb-4 border border-gray-100 flex flex-col">
-              <span class="text-2xl font bold text-center"><%= value[0] %></span>
               <span class="text-base text-center"><%= value[1] %></span>
+              <span class="text-2xl font bold text-center mt-2"><%= value[0] %></span>
             </div>
           <% end %>
         </div>
