@@ -37,3 +37,7 @@ group :development do
   gem "rails_live_reload"
   gem 'foreman'
 end
+
+platforms :ruby, :mswin, :mingw, :x64_mingw do
+  gem 'ffi'
+end
