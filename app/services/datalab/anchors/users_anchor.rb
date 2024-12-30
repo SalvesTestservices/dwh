@@ -16,7 +16,7 @@ module Datalab
               calculation_type: 'relation_id',
               description: 'De unit waar de medewerker werkzaam is',
               related_model: Dwh::DimCompany,
-              display_attribute: :name_short
+              display_attribute: :name
             },
             full_name: {
               name: 'Naam',
@@ -89,7 +89,7 @@ module Datalab
         end
 
         def filterable_attributes
-          [:role]
+          [:account_id, :company_id, :contract, :role]
         end
 
         def sortable_attributes
@@ -98,6 +98,12 @@ module Datalab
 
         def apply_filter(records, field, value)
           case field.to_sym
+          when :account_id
+            records.where(account_id: value)
+          when :company_id
+            records.where(company_id: value)
+          when :contract
+            records.where(contract: value)
           when :role
             records.where(role: value)
           else

@@ -39,9 +39,10 @@ module Datalab
     end
 
     def show
-      records, data = ReportGenerator.new(@report, filter_params).generate
+      dump "FILTERS #{filter_params}"
+      @records, data = ReportGenerator.new(@report, filter_params).generate
       
-      @pagy, paginated_records = pagy(records, 
+      @pagy, paginated_records = pagy(@records, 
         items: 50, 
         limit: 50,
         overflow: :last_page,

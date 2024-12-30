@@ -27,8 +27,14 @@ module Datalab
 
     def filter_options_for_attribute(attr)
       case attr
+      when :account_id
+        Dwh::DimAccount.all.map { |account| [account.name, account.id] }
+      when :company_id
+        Dwh::DimCompany.all.map { |company| [company.name, company.id] }
       when :role
-        [['Medewerker', 'Medewerker'], ['Trainee', 'Trainee'], ['Subco', 'Subco']]
+        Dwh::DimUser.distinct.pluck(:role).map { |role| [role, role] }
+      when :contract
+        Dwh::DimUser.distinct.pluck(:contract).map { |contract| [contract, contract] }
       else
         []
       end

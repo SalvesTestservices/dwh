@@ -11,7 +11,7 @@ module Datalab
     def generate
       records = fetch_records
       records = apply_filters(records)
-      records = apply_sorting(records)
+      #records = apply_sorting(records)
       
       # Return the records for pagination in the controller
       [records, {
