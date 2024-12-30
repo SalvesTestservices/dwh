@@ -10,9 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_12_30_064328) do
-  create_schema "test"
-
+ActiveRecord::Schema[8.0].define(version: 2024_10_03_080000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -197,7 +195,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_30_064328) do
     t.string "name"
     t.string "status", default: "inactive"
     t.datetime "last_executed_at"
-    t.string "frequency", default: "24"
+    t.string "run_frequency", default: "daily"
     t.string "load_method", default: "incremental"
     t.integer "dp_tasks_count", default: 0
     t.integer "dp_runs_count", default: 0
@@ -212,13 +210,13 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_30_064328) do
     t.index ["account_id"], name: "index_dp_pipelines_on_account_id"
     t.index ["dp_runs_count"], name: "index_dp_pipelines_on_dp_runs_count"
     t.index ["dp_tasks_count"], name: "index_dp_pipelines_on_dp_tasks_count"
-    t.index ["frequency"], name: "index_dp_pipelines_on_frequency"
     t.index ["last_executed_at"], name: "index_dp_pipelines_on_last_executed_at"
     t.index ["load_method"], name: "index_dp_pipelines_on_load_method"
     t.index ["month"], name: "index_dp_pipelines_on_month"
     t.index ["name"], name: "index_dp_pipelines_on_name"
     t.index ["pipeline_key"], name: "index_dp_pipelines_on_pipeline_key", unique: true
     t.index ["position"], name: "index_dp_pipelines_on_position"
+    t.index ["run_frequency"], name: "index_dp_pipelines_on_run_frequency"
     t.index ["scoped_user_id"], name: "index_dp_pipelines_on_scoped_user_id"
     t.index ["status"], name: "index_dp_pipelines_on_status"
     t.index ["year"], name: "index_dp_pipelines_on_year"

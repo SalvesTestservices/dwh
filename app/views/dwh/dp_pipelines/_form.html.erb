@@ -11,7 +11,7 @@
         <%= render(Form::TextFieldComponent.new(label: I18n.t(".dp_pipeline.form.pipeline_key"), form: form, attribute: :pipeline_key, mandatory: true, autofocus: false, width: "medium")) %>
 
         <% collection = [['hourly', I18n.t('.dp_pipeline.frequencies.hourly')],['daily', I18n.t('.dp_pipeline.frequencies.daily')]] %>
-        <%= render(Form::SelectComponent.new(label: I18n.t(".dp_pipeline.form.frequency"), form: form, attribute: :frequency, collection: collection, value: nil, mandatory: true)) %>
+        <%= render(Form::SelectComponent.new(label: I18n.t(".dp_pipeline.form.run_frequency"), form: form, attribute: :run_frequency, collection: collection, value: nil, mandatory: true)) %>
 
         <% collection = [['active', I18n.t('.dp_pipeline.states.active')],['inactive', I18n.t('.dp_pipeline.states.inactive')]] %>
         <%= render(Form::SelectComponent.new(label: I18n.t(".dp_pipeline.form.status"), form: form, attribute: :status, collection: collection, value: nil, mandatory: true)) %>

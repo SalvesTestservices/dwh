@@ -83,7 +83,7 @@ class Dwh::DpPipelineDecorator < BaseDecorator
     end
   end
 
-  def frequency
-    I18n.t(".dp_pipeline.frequencies.#{dp_pipeline.frequency}")
+  def run_frequency
+    I18n.t(".dp_pipeline.frequencies.#{dp_pipeline.run_frequency}")
   end
 end
