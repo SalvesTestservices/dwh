@@ -71,7 +71,7 @@ nl:
           name: Naam
           name_short: Afkorting
       dim_users:
-        name: Medewerker/Consultant
+        name: Medewerker
         attributes:
           account_id: Bedrijf/Label
           full_name: Volledige naam

@@ -85,15 +85,11 @@ module Datalab
         end
 
         def fetch_data(column_ids)
-          Dwh::DimUser.order(:full_name)
+          Dwh::DimUser.all
         end
 
         def filterable_attributes
           [:account_id, :company_id, :contract, :role]
-        end
-
-        def sortable_attributes
-          [:account_id, :company_id, :first_name, :last_name, :role, :contract, :salary, :cost_price]
         end
 
         def apply_filter(records, field, value)
@@ -111,21 +107,10 @@ module Datalab
           end
         end
 
-        def apply_sorting(records, field, direction)
-          case field.to_sym
-          when :first_name
-            records.order(first_name: direction)
-          when :role
-            records.order(role: direction)
-          when :turnover
-            # Optimize complex sorting with subquery
-            records.left_joins(:activities)
-                  .select('users.*, COALESCE(SUM(activities.hours * activities.rate), 0) as calculated_turnover')
-                  .group('users.id')
-                  .order("calculated_turnover #{direction}")
-          else
-            records
-          end
+        def apply_sorting(records)
+          records.joins('LEFT JOIN dim_accounts ON dim_accounts.id = dim_users.account_id')
+                .joins('LEFT JOIN dim_companies ON dim_companies.id = dim_users.company_id')
+                .order('dim_accounts.name', 'dim_companies.name', 'dim_users.full_name')
         end
       end
     end

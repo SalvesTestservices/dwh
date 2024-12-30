@@ -11,7 +11,7 @@ module Datalab
     def generate
       records = fetch_records
       records = apply_filters(records)
-      #records = apply_sorting(records)
+      records = apply_sorting(records)
       
       # Return the records for pagination in the controller
       [records, {
@@ -46,14 +46,7 @@ module Datalab
     end
 
     def apply_sorting(records)
-      field = @params[:sort_by] || default_sort_field
-      direction = @params[:sort_direction] || 'asc'
-
-      if @anchor_service.sortable_attributes.include?(field.to_sym)
-        @anchor_service.apply_sorting(records, field, direction)
-      else
-        records
-      end
+      @anchor_service.apply_sorting(records)
     end
 
     def fetch_records
@@ -98,11 +91,6 @@ module Datalab
         end
         row
       end
-    end
-
-    def default_sort_field
-      # Use the first sortable attribute as default, or fallback to 'id'
-      @anchor_service.sortable_attributes.first&.to_s || 'id'
     end
   end
 end

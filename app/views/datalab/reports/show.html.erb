@@ -17,15 +17,27 @@
     <%= render "filter", anchor_service: @anchor_service %>
 
     <%= turbo_frame_tag "report_data" do %>
+
       <% if @pagy.pages > 1 %>
         <div class="px-4 py-3 border-t border-gray-200">
           <%== pagy_nav(@pagy) %>
         </div>
       <% end %>
 
+      <% unless @summary.blank? %>
+        <div class="w-full flex flex-row justify-center space-x-4">
+          <% @summary.each do |key, value| %>
+            <div class="bg-gray-100 shadow-sm ring-1 ring-gray-900/5 sm:rounded-lg px-6 py-4 mb-4 border border-gray-100 flex flex-col">
+              <span class="text-2xl font bold text-center"><%= value[0] %></span>
+              <span class="text-base text-center"><%= value[1] %></span>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+
       <div class="overflow-x-auto">
         <table class="min-w-full">
-          <%= render "table_header", report_data: @report_data, anchor_service: @anchor_service, report: @report %>
+          <%= render "table_header", report_data: @report_data, anchor_service: @anchor_service, report: @report, records: @records %>
           <tbody class="divide-y divide-gray-200">
             <%= render "table_rows", report_data: @report_data %>
           </tbody>
