@@ -1,15 +1,22 @@
-<%= form_with(url: generate_datalab_report_path(@report), method: :post, data: { controller: 'report', turbo_frame: 'report_data' }) do |form| %>
-  <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-lg p-4 mb-4">
+<%= form_with(url: datalab_report_path(@report), method: :get, data: { controller: 'report', turbo_frame: 'report_data' }) do |form| %>
+  <div class="bg-gray-50 shadow-sm ring-1 ring-gray-900/5 sm:rounded-lg p-4 mb-4 border border-gray-100">
     <div class="grid grid-cols-4 gap-4">
-      <% @anchor_service.filterable_attributes.each do |attr| %>
+      <% anchor_service.filterable_attributes.each do |attr| %>
         <div>
           <%= form.label "filters[#{attr}]", @anchor_service.available_attributes[attr][:name], 
-              class: "block text-sm font-medium text-gray-700" %>
-          <%= form.select "filters[#{attr}]", 
-              filter_options_for_attribute(attr),
-              { include_blank: "All" },
-              class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm",
-              data: { action: "change->report#submit" } %>
+              class: "block text-sm font-bold underline underline-offset-2 text-gray-700" %>
+          <div class="mt-1 space-y-2">
+            <% filter_options_for_attribute(attr).each do |label, value| %>
+              <div class="flex items-center">
+                <%= form.check_box "filters[#{attr}][]", 
+                    { class: "h-4 w-4 rounded border-gray-300 text-gray-600 focus:ring-blue-500",
+                      data: { action: "change->report#submit" } }, 
+                    value, 
+                    nil %>
+                <label class="ml-2 text-sm text-gray-700"><%= label %></label>
+              </div>
+            <% end %>
+          </div>
         </div>
       <% end %>
     </div>

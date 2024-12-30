@@ -10,13 +10,21 @@
 
     <h2 class="my-5 text-xl pb-2 border-b-2 border-gray-400 font-semibold leading-7 text-gray-900"><%= I18n.t('.datalab.report.titles.my_reports') %></h2>
 
-    <% if @reports.any? %>
+    <% if @reports.blank? %>
+      <div class="bg-gray-50 py-2 shadow-sm ring-1 ring-gray-900/5 sm:rounded-lg my-8 py-8 text-center border border-gray-100">
+        <%= I18n.t('.datalab.report.titles.no_reports') %>
+      </div>
+    <% else %>
       <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-lg mb-8">
         <%= render "report_list", reports: @reports, show_actions: true %>
       </div>
     <% end %>
 
-    <% if @shared_reports.any? %>
+    <% if @shared_reports.blank? %>
+      <div class="bg-gray-50 py-2 shadow-sm ring-1 ring-gray-900/5 sm:rounded-lg my-8 py-8 text-center border border-gray-100">
+        <%= I18n.t('.datalab.report.titles.no_shared_reports') %>
+      </div>
+    <% else %>
       <h2 class="my-5 text-xl pb-2 border-b-2 border-gray-400 font-semibold leading-7 text-gray-900"><%= I18n.t('.datalab.report.titles.shared_reports') %></h2>
       <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-lg mb-8">      
         <%= render "report_list", reports: @shared_reports, show_actions: false %>

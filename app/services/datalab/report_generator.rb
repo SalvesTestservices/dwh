@@ -34,9 +34,10 @@ module Datalab
     end
 
     def apply_filters(records)
-      return records unless @params[:filters]&.any?
+      filters = @params[:filters]
+      return records if filters.blank?
 
-      @params[:filters].each do |field, value|
+      filters.to_unsafe_h.each do |field, value|
         next if value.blank?
         records = @anchor_service.apply_filter(records, field, value)
       end
@@ -45,10 +46,8 @@ module Datalab
     end
 
     def apply_sorting(records)
-      field = @params[:sort_by]
+      field = @params[:sort_by] || default_sort_field
       direction = @params[:sort_direction] || 'asc'
-
-      return records unless field.present?
 
       if @anchor_service.sortable_attributes.include?(field.to_sym)
         @anchor_service.apply_sorting(records, field, direction)
@@ -99,6 +98,11 @@ module Datalab
         end
         row
       end
+    end
+
+    def default_sort_field
+      # Use the first sortable attribute as default, or fallback to 'id'
+      @anchor_service.sortable_attributes.first&.to_s || 'id'
     end
   end
 end

@@ -93,7 +93,7 @@ module Datalab
         end
 
         def sortable_attributes
-          [:first_name, :role, :turnover]
+          [:account_id, :company_id, :first_name, :last_name, :role, :contract, :salary, :cost_price]
         end
 
         def apply_filter(records, field, value)

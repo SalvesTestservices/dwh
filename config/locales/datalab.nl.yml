@@ -13,6 +13,9 @@ nl:
         my_reports:       Mijn rapporten
         shared_reports:   Gedeelde rapporten
         generate:         Rapport genereren
+        no_reports:       Geen rapporten gevonden
+      messages:
+        destroyed:        Rapport is verwijderd
       attributes:
         created_by:       Aangemaakt door
         available_fields: Beschikbare velden

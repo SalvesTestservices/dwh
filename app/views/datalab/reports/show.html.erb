@@ -1,5 +1,5 @@
 <% if @report.user_id == current_user.id %>
-  <% buttons = [[I18n.t('.general.edit').downcase, datalab_designer_path(@report)], [I18n.t('.general.export').downcase, export_datalab_report_path(@report, format: :csv)]] %>
+  <% buttons = [[I18n.t('.general.delete').downcase, datalab_report_path(@report), "delete"], [I18n.t('.general.edit').downcase, datalab_designer_path(@report)], [I18n.t('.general.export').downcase, export_datalab_report_path(@report, format: :csv)]] %>
 <% else %>
   <% buttons = [[I18n.t('.general.export').downcase, export_datalab_report_path(@report, format: :csv)]] %>
 <% end %>
@@ -14,9 +14,15 @@
 <main>
   <div class="mx-auto max-w-8xl py-6 mt-2 flex flex-col">
 
-    <%# render "filter" %>
+    <%= render "filter", anchor_service: @anchor_service %>
 
     <%= turbo_frame_tag "report_data" do %>
+      <% if @pagy.pages > 1 %>
+        <div class="px-4 py-3 border-t border-gray-200">
+          <%== pagy_nav(@pagy) %>
+        </div>
+      <% end %>
+
       <div class="overflow-x-auto">
         <table class="min-w-full">
           <%= render "table_header", report_data: @report_data, anchor_service: @anchor_service, report: @report %>

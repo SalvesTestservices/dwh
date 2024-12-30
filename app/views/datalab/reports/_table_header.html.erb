@@ -2,11 +2,7 @@
   <tr class="whitespace-nowrap">
     <% report_data[:columns].each do |column| %>
       <th scope="col" class="p-1 text-left text-xs font-semibold text-gray-900 border border-gray-400 bg-gray-100 max-w-64 overflow-hidden text-ellipsis">
-        <% if anchor_service.sortable_attributes.include?(column[:id].to_sym) %>
-          <%= sort_link(report, column[:id], column[:name]) %>
-        <% else %>
-          <%= column[:name] %>
-        <% end %>
+        <%= column[:name] %>
       </th>
     <% end %>
   </tr>

@@ -28,7 +28,7 @@ module Datalab
     def filter_options_for_attribute(attr)
       case attr
       when :role
-        [['Employee', 'employee'], ['Trainee', 'trainee'], ['Subco', 'subco']]
+        [['Medewerker', 'Medewerker'], ['Trainee', 'Trainee'], ['Subco', 'Subco']]
       else
         []
       end
