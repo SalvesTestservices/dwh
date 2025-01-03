@@ -1,14 +1,8 @@
-<% if @report.user_id == current_user.id %>
-  <% buttons = [[I18n.t('.general.delete').downcase, datalab_report_path(@report), "delete"], [I18n.t('.general.edit').downcase, datalab_designer_path(@report)], [I18n.t('.general.export').downcase, export_datalab_report_path(@report, format: :csv)]] %>
-<% else %>
-  <% buttons = [[I18n.t('.general.export').downcase, export_datalab_report_path(@report, format: :csv)]] %>
-<% end %>
-
 <%= render "layouts/page_header", 
   breadcrumbs: @breadcrumbs, 
   title: "#{I18n.t('.datalab.report.titles.show')}: #{@report.name}", 
   icon: ["datalab", "medium", "gray"],
-  buttons: buttons
+  buttons: nil
 %>
 
 <main>
@@ -18,22 +12,29 @@
 
     <%= turbo_frame_tag "report_data" do %>
 
-      <% if @pagy.pages > 1 %>
-        <div class="px-4 py-3 border-t border-gray-200">
-          <%== pagy_nav(@pagy) %>
-        </div>
-      <% end %>
-
-      <% unless @summary.blank? %>
-        <div class="w-full flex flex-row justify-center space-x-4">
-          <% @summary.each do |key, value| %>
-            <div class="bg-gray-100 shadow-sm ring-1 ring-gray-900/5 sm:rounded-lg px-6 py-4 mb-4 border border-gray-100 flex flex-col">
-              <span class="text-base text-center"><%= value[1] %></span>
-              <span class="text-2xl font bold text-center mt-2"><%= value[0] %></span>
+      <div class="flex flex-row justify-between">
+        <div class="w-2/3 flex flex-row justify-end">
+          <% if @pagy.pages > 1 %>
+            <div class="px-4 py-3">
+              <%== pagy_nav(@pagy) %>
             </div>
           <% end %>
         </div>
-      <% end %>
+        <div class="w-1/3 flex flex-row justify-end pt-1.5 space-x-2">
+          <% if @report.user_id == current_user.id %>
+            <%= button_to datalab_report_path(@report), method: :delete, data: { turbo_prefetch: false } do %>
+              <%= render(View::IconComponent.new(icon_type: "delete", size: "medium", color: "red")) %>
+            <% end %>
+            <%= link_to datalab_designer_path(@report), data: { turbo: false, turbo_prefetch: false } do %>
+              <%= render(View::IconComponent.new(icon_type: "edit", size: "medium", color: "gray")) %>
+            <% end %>
+          <% end %>
+
+          <%= link_to export_datalab_report_path(@report, format: :csv), data: { turbo_prefetch: false } do %>
+            <%= render(View::IconComponent.new(icon_type: "download", size: "medium", color: "gray")) %>
+          <% end %>
+        </div>
+      </div>
 
       <div class="overflow-x-auto">
         <table class="min-w-full">
@@ -45,7 +46,7 @@
       </div>
       
       <% if @pagy.pages > 1 %>
-        <div class="px-4 py-3 border-t border-gray-200">
+        <div class="px-4 py-3">
           <%== pagy_nav(@pagy) %>
         </div>
       <% end %>

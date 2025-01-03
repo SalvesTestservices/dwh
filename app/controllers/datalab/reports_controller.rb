@@ -52,13 +52,6 @@ module Datalab
         rows: data[:rows].select { |row| paginated_records.pluck(:id).include?(row[:id]) }
       )
 
-      unless @records.blank?
-        @summary = {
-          total_records: [@records.count, I18n.t('.data_attributes.tables.dim_users.name').pluralize.downcase],
-          avg_salary: [4534.78, I18n.t('.data_attributes.tables.dim_users.attributes.salary').downcase]
-        }
-      end
-      
       @breadcrumbs = []
       @breadcrumbs << [I18n.t('.datalab.report.titles.index'), datalab_reports_path]  
       @breadcrumbs << [@report.name]
