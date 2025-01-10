@@ -45,6 +45,38 @@ Rails.application.routes.draw do
     end
   end
 
+  # API
+  namespace :api, defaults: {format: 'json'} do
+    namespace :v2 do
+      # Power BI views
+      get  :view_fact_rates, to: "dwh#view_fact_rates"
+      get  :view_fact_targets_individual, to: "dwh#view_fact_targets_individual"
+      get  :view_fact_activities, to: "dwh#view_fact_activities"
+      get  :view_contracts, to: "dwh#view_contracts"
+      get  :view_dim_projects, to: "dwh#view_dim_projects"
+      get  :view_dim_companies, to: "dwh#view_dim_companies"
+      get  :view_dim_customers, to: "dwh#view_dim_customers"
+      get  :view_dim_users, to: "dwh#view_dim_users"
+
+      # Power BI dimension tables
+      get  :dim_accounts, to: "dwh#dim_accounts"
+      get  :dim_companies, to: "dwh#dim_companies"
+      get  :dim_users, to: "dwh#dim_users"
+      get  :dim_customers, to: "dwh#dim_customers"
+      get  :dim_unbillables, to: "dwh#dim_unbillables"
+      get  :dim_projects, to: "dwh#dim_projects"
+      get  :dim_dates, to: "dwh#dim_dates"
+      get  :dim_roles, to: "dwh#dim_roles"
+
+      # Power BI fact tables
+      get  :fact_rates, to: "dwh#fact_rates"
+      get  :fact_activities, to: "dwh#fact_activities"
+      get  :fact_invoices, to: "dwh#fact_invoices"
+      get  :fact_targets, to: "dwh#fact_targets"
+      get  :fact_projectusers, to: "dwh#fact_projectusers"
+    end
+  end
+
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "up" => "rails/health#show", as: :rails_health_check
