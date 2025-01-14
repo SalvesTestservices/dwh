@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-  devise :invitable, :database_authenticatable, :recoverable, :validatable,invite_for: 2.weeks
+  devise :invitable, :database_authenticatable, :recoverable,invite_for: 2.weeks
 
   has_many :chat_histories, dependent: :destroy
 
