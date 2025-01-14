@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <%= render "shared/mailer/styling" %>
+  </head>
+  <body>
+    <table class="email-wrapper" width="100%" cellpadding="0" cellspacing="0" role="presentation">
+      <tr>
+        <td align="center">
+          <table class="email-content" width="100%" cellpadding="0" cellspacing="0" role="presentation">
+            <tr>
+              <td class="email-body" width="570" cellpadding="0" cellspacing="0">
+                <table class="email-body_inner" align="center" width="570" cellpadding="0" cellspacing="0" role="presentation">
+                  <tr>
+                    <td class="content-cell">
+                      <div class="f-fallback">
+                        <h1>Welkom <%= @user.full_name %></h1>
+                        <p>Je hebt toegang gekregen tot de DWH applicatie en kunt inloggen met je Microsoft account.</p>
+                        <%= link_to "Inloggen", new_user_session_url, class: "button" %>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <%= render "shared/mailer/footer" %>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html> 

@@ -1,22 +1,13 @@
 nl:
   activerecord:
     models:
-      user:                       Gebruiker
+      user:                     Gebruiker
     attributes:
       user:
         first_name:             Voornaam
         last_name:              Achternaam
         email:                  E-mail
-        password:               Wachtwoord
-        password_confirmation:  Wachtwoordbevestiging
-        password_challenge:     Huidig wachtwoord
-        password_new:           Nieuw wachtwoord
-        created_at:             Gebruiker aangemaakt op
-        invitation_status:      Uitnodigingsstatus
-        invitation_created_at:  Uitnodiging aangemaakt
-        invitation_sent_at:     Uitnodiging verzonden
-        invitation_accepted_at: Uitnodiging geaccepteerd
-        invited_by_id:          Uitgenodigd door
+        role:                   Rol
     errors:
       models:
         user:
@@ -28,9 +19,5 @@ nl:
             email:
               blank:              E-mail mag niet leeg zijn
               invalid:            E-mail is ongeldig
-            password:
-              blank:              Wachtwoord mag niet leeg zijn
-              too_short:          Wachtwoord is te kort (minimaal 6 tekens)
-            password_confirmation:
-              blank:              Wachtwoordbevestiging mag niet leeg zijn
-              too_short:          Wachtwoordbevestiging is te kort (minimaal 10 tekens)
+            role:
+              blank:              Rol mag niet leeg zijn

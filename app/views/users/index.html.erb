@@ -15,26 +15,22 @@
             <table class="min-w-full divide-y divide-gray-300">
               <thead class="bg-gray-50">
                 <tr>
-                  <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-700 sm:pl-6">Email</th>
-                  <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-700">Status</th>
-                  <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-700">Invited By</th>
-                  <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-700">Invited On</th>
+                  <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-700 sm:pl-6"><%= I18n.t(".activerecord.attributes.user.first_name") %></th>
+                  <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-700"><%= I18n.t(".activerecord.attributes.user.last_name") %></th>
+                  <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-700"><%= I18n.t(".activerecord.attributes.user.role") %></th>
+                  <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-700"><%= I18n.t(".activerecord.attributes.user.email") %></th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-gray-200 bg-white">
                 <% @users.each do |user| %>
-                  <tr>
-                    <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-700 sm:pl-6"><%= user.email %></td>
-                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                      <%= user.invitation_accepted_at? ? 'Active' : 'Pending' %>
-                    </td>
-                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                      <%= User.find_by(id: user.invited_by_id)&.email %>
-                    </td>
-                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                      <%= user.invitation_sent_at&.strftime("%B %d, %Y") %>
-                    </td>
-                  </tr>
+                  <% decorate user do |decorates| %>
+                    <tr>
+                      <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-700 sm:pl-6"><%= decorates.data_field(user.first_name) %></td>
+                      <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= decorates.data_field(user.last_name) %></td>
+                      <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= decorates.role %></td>
+                      <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= decorates.data_field(user.email) %></td>
+                    </tr>
+                  <% end %>
                 <% end %>
               </tbody>
             </table>
@@ -44,5 +40,3 @@
     </div>
   </div>
 </main>
-
-<%= turbo_frame_tag "modal" %> 

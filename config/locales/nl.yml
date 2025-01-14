@@ -15,6 +15,10 @@ nl:
   user:
     titles:
       index:        Gebruikers
+    roles:
+      admin:        Admin
+      member:       Member
+      viewer:       Viewer
   site:
     titles:
       data_lab:     Data lab

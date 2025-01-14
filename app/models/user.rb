@@ -1,6 +1,6 @@
 class User < ApplicationRecord
-  devise :invitable, :database_authenticatable, :recoverable, :omniauthable, 
-      omniauth_providers: [:microsoft_graph], invite_for: 2.weeks
+  devise :database_authenticatable, :recoverable, :omniauthable, 
+      omniauth_providers: [:microsoft_graph]
 
   has_many :chat_histories, dependent: :destroy
 
