@@ -8,17 +8,23 @@ nl:
     continue:       Volgende stap
     details:        details
     edit:           Wijzigen
-    delete:         Verwijderen
+    destroy:         Verwijderen
     month:          Maand
     year:           Jaar
     cancel:         Annuleren
   user:
     titles:
       index:        Gebruikers
+      new:          Toevoegen gebruiker
+      edit:         Wijzigen gebruiker
     roles:
       admin:        Admin
       member:       Member
       viewer:       Viewer
+    messages:
+      created:      Gebruiker is aangemaakt
+      updated:      Gebruiker is gewijzigd
+      destroyed:    Gebruiker is verwijderd
   site:
     titles:
       data_lab:     Data lab

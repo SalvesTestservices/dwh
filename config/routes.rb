@@ -3,9 +3,7 @@ Rails.application.routes.draw do
 
   devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }
   
-  resources :users do
-    post :invite, on: :collection
-  end
+  resources :users
   resources :data_targets, only: [:index] do
     get :quarter_targets, on: :collection
   end

@@ -2,12 +2,11 @@
   breadcrumbs: @breadcrumbs, 
   title: I18n.t(".user.titles.index"), 
   icon: ["users", "medium", "gray"],
-  buttons: nil
+  buttons: [[I18n.t(".user.titles.new"), new_user_path]]
 %>
 
 <main>
   <div class="mx-auto max-w-8xl py-2 md:py-6">
-
     <div class="mt-8 flex flex-col pt-5">
       <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
@@ -19,6 +18,7 @@
                   <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-700"><%= I18n.t(".activerecord.attributes.user.last_name") %></th>
                   <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-700"><%= I18n.t(".activerecord.attributes.user.role") %></th>
                   <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-700"><%= I18n.t(".activerecord.attributes.user.email") %></th>
+                  <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-700"></th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-gray-200 bg-white">
@@ -29,6 +29,10 @@
                       <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= decorates.data_field(user.last_name) %></td>
                       <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= decorates.role %></td>
                       <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= decorates.data_field(user.email) %></td>
+                      <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 flex flex-row justify-center">
+                        <%= render(View::ButtonComponent.new(title: I18n.t(".general.edit").downcase, url: edit_user_path(user), button_type: "link", size: "small")) %>
+                        <%= render(View::ButtonComponent.new(title: I18n.t(".general.destroy").downcase, url: user_path(user), button_type: "delete_button", size: "small")) %>
+                      </td>
                     </tr>
                   <% end %>
                 <% end %>

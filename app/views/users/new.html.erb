@@ -1,0 +1,10 @@
+<%= render "layouts/page_header", 
+  breadcrumbs: @breadcrumbs, 
+  title: I18n.t(".user.titles.new"), 
+  icon: ["users", "medium", "gray"],
+  buttons: nil
+%>
+
+<div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+  <%= render "form", user: @user %>
+</div> 

@@ -1,32 +1,50 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <%= render "shared/mailer/styling" %>
   </head>
-  <body>
-    <table class="email-wrapper" width="100%" cellpadding="0" cellspacing="0" role="presentation">
-      <tr>
-        <td align="center">
-          <table class="email-content" width="100%" cellpadding="0" cellspacing="0" role="presentation">
-            <tr>
-              <td class="email-body" width="570" cellpadding="0" cellspacing="0">
-                <table class="email-body_inner" align="center" width="570" cellpadding="0" cellspacing="0" role="presentation">
-                  <tr>
-                    <td class="content-cell">
-                      <div class="f-fallback">
-                        <h1>Welkom <%= @user.full_name %></h1>
-                        <p>Je hebt toegang gekregen tot de DWH applicatie en kunt inloggen met je Microsoft account.</p>
-                        <%= link_to "Inloggen", new_user_session_url, class: "button" %>
-                      </div>
-                    </td>
-                  </tr>
-                </table>
-              </td>
-            </tr>
-            <%= render "shared/mailer/footer" %>
-          </table>
-        </td>
-      </tr>
-    </table>
+  <body style="background-color: #f4f4f5;">
+    <div class="mx-auto" style="max-width: 600px; margin: 0 auto;">
+      <!-- Container -->
+      <table class="w-full" cellpadding="0" cellspacing="0" role="presentation">
+        <tr>
+          <td class="px-4 py-8">
+            <!-- Main Content -->
+            <table class="w-full bg-white rounded-lg shadow-sm" cellpadding="0" cellspacing="0" role="presentation">
+              <!-- Logo Section -->
+              <tr>
+                <td class="px-8 pt-6">
+                  <%= image_tag("logo.png", alt: "Logo", class: "h-8 w-auto") if defined?(logo_path) %>
+                </td>
+              </tr>
+              <!-- Content Section -->
+              <tr>
+                <td class="px-8 py-6">
+                  <h1 style="margin-bottom: 16px; font-size: 24px; font-weight: 600; color: #111827;">
+                    Welkom <%= @user.full_name %>
+                  </h1>
+                  <p style="margin-bottom: 24px; color: #4b5563; font-size: 16px; line-height: 24px;">
+                    Je hebt toegang gekregen tot de DWH applicatie en kunt inloggen met je Microsoft account.
+                  </p>
+                  <%= link_to "Inloggen", new_user_session_url, 
+                      class: "inline-block px-6 py-3 text-base font-medium text-center text-white bg-blue-600 rounded-md hover:bg-blue-700",
+                      style: "display: inline-block; padding: 12px 24px; background-color: #2563eb; color: white; text-decoration: none; border-radius: 6px;" %>
+                </td>
+              </tr>
+            </table>
+            <!-- Footer -->
+            <table class="w-full mt-8" cellpadding="0" cellspacing="0" role="presentation">
+              <tr>
+                <td class="px-8 text-center text-gray-500 text-sm">
+                  <%= render "shared/mailer/footer" %>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </div>
   </body>
 </html> 

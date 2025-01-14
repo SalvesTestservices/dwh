@@ -5,7 +5,5 @@
 <% elsif @button_type == "button" %>
   <%= button_to @title, @url, method: :post, class: "#{@color} #{@size} mr-1 border border-gray-300 shadow-sm font-medium rounded", data: { turbo_prefetch: false } %>
 <% elsif @button_type == "delete_button" %>
-  <%= button_to @title, @url, method: :delete , data: { turbo: "false" }, class: "#{@color} #{@size} mr-1 border border-gray-300 shadow-sm font-medium rounded", data: { turbo_prefetch: false } %>
-<% elsif @button_type == "delete_button_turbo" %>
-  <%= button_to @title, @url, method: :delete, class: "#{@color} #{@size} mr-1 border border-gray-300 shadow-sm font-medium rounded" %>
+  <%= button_to @title, @url, method: :delete, data: { turbo: "false", turbo_prefetch: false, turbo_confirm: "Weet je zeker dat je dit wilt verwijderen?" }, class: "#{@color} #{@size} mr-1 border border-gray-300 shadow-sm font-medium rounded" %>
 <% end %>

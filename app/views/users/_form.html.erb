@@ -1,0 +1,24 @@
+<%= form_with(model: user, class: "space-y-8 divide-y divide-gray-200") do |form| %>
+  <div class="mt-2 space-y-8 divide-y divide-gray-200 bg-white p-10">
+    <%= render "shared/error_messages", resource: user %>
+
+    <div class="divide-y divide-gray-200 sm:space-y-5">
+      <div class="sm:pt-2 sm:space-y-5">
+        <span class="text-sm italic"><%= I18n.t(".general.mandatory") %></span>
+
+        <%= render(Form::TextFieldComponent.new(label: I18n.t(".activerecord.attributes.user.first_name"), form: form, attribute: :first_name, mandatory: true, autofocus: true, width: "medium")) %>
+        <%= render(Form::TextFieldComponent.new(label: I18n.t(".activerecord.attributes.user.last_name"), form: form, attribute: :last_name, mandatory: true, autofocus: false, width: "medium")) %>
+        <%= render(Form::TextFieldComponent.new(label: I18n.t(".activerecord.attributes.user.email"), form: form, attribute: :email, mandatory: true, autofocus: false, width: "medium")) %>
+
+        <% role_collection = [["admin", I18n.t(".user.roles.admin")], ["member", I18n.t(".user.roles.member")], ["viewer", I18n.t(".user.roles.viewer")]] %>
+        <%= render(Form::SelectComponent.new(label: I18n.t(".activerecord.attributes.user.role"), form: form, attribute: :role, collection: role_collection, value: nil, mandatory: true)) %>
+
+        <div class="grid grid-cols-3 gap-4 items-start border-t border-gray-200 pt-5">
+          <div class="col-start-2">
+            <%= render(View::ButtonComponent.new(title: t(".general.save"), url: users_path, button_type: "button", size: "medium")) %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %> 
