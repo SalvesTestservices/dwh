@@ -21,6 +21,7 @@ nl:
       admin:        Admin
       member:       Member
       viewer:       Viewer
+      api:          API
     messages:
       created:      Gebruiker is aangemaakt
       updated:      Gebruiker is gewijzigd

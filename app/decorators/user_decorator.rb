@@ -9,6 +9,8 @@ class UserDecorator < BaseDecorator
       I18n.t(".user.roles.member")
     when "viewer"
       I18n.t(".user.roles.viewer")
+    when "api"
+      I18n.t(".user.roles.api")
     end
   end
 end

@@ -10,7 +10,7 @@
         <%= render(Form::TextFieldComponent.new(label: I18n.t(".activerecord.attributes.user.last_name"), form: form, attribute: :last_name, mandatory: true, autofocus: false, width: "medium")) %>
         <%= render(Form::TextFieldComponent.new(label: I18n.t(".activerecord.attributes.user.email"), form: form, attribute: :email, mandatory: true, autofocus: false, width: "medium")) %>
 
-        <% role_collection = [["admin", I18n.t(".user.roles.admin")], ["member", I18n.t(".user.roles.member")], ["viewer", I18n.t(".user.roles.viewer")]] %>
+        <% role_collection = [["admin", I18n.t(".user.roles.admin")], ["member", I18n.t(".user.roles.member")], ["viewer", I18n.t(".user.roles.viewer")], ["api", I18n.t(".user.roles.api")]] %>
         <%= render(Form::SelectComponent.new(label: I18n.t(".activerecord.attributes.user.role"), form: form, attribute: :role, collection: role_collection, value: nil, mandatory: true)) %>
 
         <div class="grid grid-cols-3 gap-4 items-start border-t border-gray-200 pt-5">

@@ -8,7 +8,7 @@ class Api::V2::BaseController < ApplicationController
 
   private def authenticate_user
     user = User.find_by(email: params[:email])
-    if user.present? and user.valid_password?(params[:password])
+    if user.present? and user.auth_token == params[:auth_token]
       @current_user = user
     else
       render json: { errors: ["Invalid email or password"] }
