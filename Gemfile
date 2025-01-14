@@ -25,6 +25,8 @@ gem "chartkick"
 gem "good_job"
 gem "httparty"
 gem "roo"
+gem "omniauth-microsoft_graph"
+gem "omniauth-rails_csrf_protection"
 
 group :development, :test do
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
