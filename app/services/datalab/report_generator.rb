@@ -84,7 +84,7 @@ module Datalab
             row[column['id']] = record.send(attribute[:method])
           when "calculation"
             row[column['id']] = instance_exec(record, &attribute[:calculation])
-          when "relation_id"
+          when "relation"
             related_model = attribute[:related_model].find_by(id: record.send(column['id']))
             row[column['id']] = related_model&.send(attribute[:display_attribute])
           end

@@ -6,14 +6,14 @@ module Datalab
           {
             account_id: {
               name: 'Label',
-              calculation_type: 'relation_id',
+              calculation_type: 'relation',
               description: 'Het label waar de medewerker werkzaam is',
               related_model: Dwh::DimAccount,
               display_attribute: :name
             },
             company_id: {
               name: 'Unit',
-              calculation_type: 'relation_id',
+              calculation_type: 'relation',
               description: 'De unit waar de medewerker werkzaam is',
               related_model: Dwh::DimCompany,
               display_attribute: :name
@@ -85,7 +85,9 @@ module Datalab
         end
 
         def fetch_data(column_ids)
-          Dwh::DimUser.all
+          Dwh::DimUser
+            .joins('LEFT JOIN dim_dates ON dim_dates.id = dim_users.leave_date')
+            .where('leave_date IS NULL OR dim_dates.original_date > ?', Date.current)
         end
 
         def filterable_attributes
