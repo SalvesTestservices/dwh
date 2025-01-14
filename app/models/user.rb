@@ -10,6 +10,18 @@ class User < ApplicationRecord
     "#{first_name} #{last_name}"
   end
 
+  def admin?
+    role == "admin"
+  end
+
+  def member?
+    role == "member"
+  end
+
+  def viewer?
+    role == "viewer"
+  end
+
   def self.from_omniauth(auth)
     # First try to find by provider/uid
     user = where(provider: auth.provider, uid: auth.uid).first
