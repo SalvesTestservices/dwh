@@ -14,6 +14,7 @@ nl:
         shared_reports:   Gedeelde rapporten
         generate:         Rapport genereren
         no_reports:       Geen rapporten gevonden
+        no_shared_reports: Geen gedeelde rapporten gevonden
       messages:
         destroyed:        Rapport is verwijderd
       attributes:
