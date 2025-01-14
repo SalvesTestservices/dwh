@@ -21,11 +21,15 @@ class AddDeviseToUsers < ActiveRecord::Migration[8.0]
       ## Omniauthable
       t.string :provider
       t.string :uid
+
+      ## API
+      t.string :auth_token
     end
 
     add_index :users, :email,                unique: true
     add_index :users, :role
     add_index :users, :reset_password_token, unique: true
     add_index :users, [:provider, :uid]
+    add_index :users, :auth_token
   end
 end
