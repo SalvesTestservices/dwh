@@ -81,12 +81,12 @@ module Datalab
     end
 
     def export
-      @report_data = ReportGenerator.new(@report, filter_params).generate
+      records, data = ReportGenerator.new(@report, filter_params).generate
 
-      respond_to do |format|
-        format.csv do
-          headers['Content-Disposition'] = "attachment; filename=\"#{@report.name.parameterize}-#{Date.current}.csv\""
-          headers['Content-Type'] ||= 'text/csv'
+      respond_to do |format|       
+        format.xlsx do
+          @report_data = data
+          response.headers['Content-Disposition'] = "attachment; filename=\"#{@report.name.parameterize}-#{Date.current.strftime('%d%m%Y')}.xlsx\""
         end
       end
     end

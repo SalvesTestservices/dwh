@@ -1,0 +1,40 @@
+wb = xlsx_package.workbook
+
+styles = wb.styles
+header_style = styles.add_style(
+  b: true,
+  bg_color: "004586",
+  fg_color: "FFFFFF",
+  alignment: { horizontal: :center }
+)
+
+wb.add_worksheet(name: @report.name.truncate(31)) do |sheet|
+  # Add filter information
+  if params[:filters].present?
+    sheet.add_row ["Applied Filters:"], style: header_style
+    params[:filters].each do |attr, values|
+      next if values.blank?
+      attribute_name = @anchor_service.available_attributes[attr.to_sym][:name]
+      sheet.add_row ["#{attribute_name}:", values.join(", ")]
+    end
+    sheet.add_row [] # Empty row for spacing
+  end
+
+  # Add headers
+  sheet.add_row @report_data[:columns].map { |col| col[:label] }, style: header_style
+
+  # Add data rows
+  @report_data[:rows].each do |row|
+    sheet.add_row @report_data[:columns].map { |col| 
+      next "" if col[:field].nil?
+      field = col[:field].to_sym
+      # Handle nil values and convert to string
+      row[field].nil? ? "" : row[field].to_s
+    }
+  end
+
+  # Auto-fit columns
+  filter_offset = params[:filters].present? ? params[:filters].size + 3 : 1
+  sheet.auto_filter = "A#{filter_offset}:#{('A'..'Z').to_a[@report_data[:columns].length-1]}#{filter_offset}"
+  sheet.auto_filter.apply
+end 

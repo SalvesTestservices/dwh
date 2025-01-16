@@ -33,7 +33,7 @@
             <% end %>
           <% end %>
 
-          <%= link_to export_datalab_report_path(@report, format: :csv), data: { turbo_prefetch: false } do %>
+          <%= link_to export_datalab_report_path(@report, format: :xlsx), data: { turbo_prefetch: false }, class: "button" do %>
             <%= render(View::IconComponent.new(icon_type: "download", size: "medium", color: "gray")) %>
           <% end %>
         </div>
