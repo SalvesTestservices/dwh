@@ -30,23 +30,27 @@ namespace :dwh do
                 role = "trainee"
               when "subco"
                 role = "subco"
+              else
+                role = nil
               end
 
-              # Set values
-              month               = row[2].value.to_i
-              fte                 = row[3].value.to_f.round(1)
-              billable_hours      = row[4].value.to_f.round(0)
-              bruto_margin        = (row[5].value.to_s.gsub("%","").to_f*100).round(2)
-              cost_price          = row[6].value.to_f.round(2)
-              employee_attrition  = 4.0
-              employee_absence    = 4.0
+              unless role.blank?
+                # Set values
+                month               = row[2].value.to_i
+                fte                 = row[3].value.to_f.round(1)
+                billable_hours      = row[4].value.to_f.round(0)
+                bruto_margin        = (row[5].value.to_s.gsub("%","").to_f*100).round(2)
+                cost_price          = row[6].value.to_f.round(2)
+                employee_attrition  = 4.0
+                employee_absence    = 4.0
 
-              (1..4).each do |quarter|
-                target = DataTarget.find_by(account_id: account.id, company_id: company.id, year: year, month: month, quarter: quarter, role: role)
-                if target.blank?
-                  DataTarget.create!(account_id: account.id, company_id: company.id, quarter: quarter, year: year, month: month, role: role, fte: fte, billable_hours: billable_hours, bruto_margin: bruto_margin, cost_price: cost_price, employee_attrition: employee_attrition, employee_absence: employee_absence)
-                else
-                  target.update!(fte: fte, billable_hours: billable_hours, bruto_margin: bruto_margin, cost_price: cost_price, employee_attrition: employee_attrition, employee_absence: employee_absence)
+                (1..4).each do |quarter|
+                  target = DataTarget.find_by(account_id: account.id, company_id: company.id, year: year, month: month, quarter: quarter, role: role)
+                  if target.blank?
+                    DataTarget.create!(account_id: account.id, company_id: company.id, quarter: quarter, year: year, month: month, role: role, fte: fte, billable_hours: billable_hours, bruto_margin: bruto_margin, cost_price: cost_price, employee_attrition: employee_attrition, employee_absence: employee_absence)
+                  else
+                    target.update!(fte: fte, billable_hours: billable_hours, bruto_margin: bruto_margin, cost_price: cost_price, employee_attrition: employee_attrition, employee_absence: employee_absence)
+                  end
                 end
               end
             end
