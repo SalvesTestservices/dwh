@@ -14,6 +14,10 @@ class Dwh::Tasks::EtlBaseDatesTask < Dwh::Tasks::BaseTask
       year        = run.dp_pipeline.year.blank? ? Date.current.year : run.dp_pipeline.year.to_i
       month       = run.dp_pipeline.month.blank? ? Date.current.month : run.dp_pipeline.month.to_i
 
+      # Fetch holidays for both countries at the start
+      nl_holidays = fetch_holidays(year, 'NL').map { |h| Date.parse(h['date']) }
+      be_holidays = fetch_holidays(year, 'BE').map { |h| Date.parse(h['date']) }
+
       existing_dates = Dwh::DimDate.find_by(year: year, month: month)
       if existing_dates.blank?
         # Extract dates
@@ -32,12 +36,12 @@ class Dwh::Tasks::EtlBaseDatesTask < Dwh::Tasks::BaseTask
           day_hash[:yearmonth]        = date.strftime("%Y%m").to_i
           day_hash[:iso_year]         = date.strftime("%G").to_i
           day_hash[:iso_week]         = date.strftime("%V").to_i
-          day_hash[:month_name]       = I18n.t("date.month_names")[month]
-          day_hash[:month_name_short] = I18n.t("date.abbr_month_names")[month]
+          day_hash[:month_name]       = I18n.t(".data_target.date.month_names")[month]
+          day_hash[:month_name_short] = I18n.t(".data_target.date.abbr_month_names")[month]
           day_hash[:day]              = day
           day_hash[:day_of_week]      = datetime.wday
-          day_hash[:day_name]         = I18n.t("date.day_names")[datetime.wday]
-          day_hash[:day_name_short]   = I18n.t("date.abbr_day_names")[datetime.wday]
+          day_hash[:day_name]         = I18n.t(".data_target.date.day_names")[datetime.wday]
+          day_hash[:day_name_short]   = I18n.t(".data_target.date.abbr_day_names")[datetime.wday]
           day_hash[:quarter]          = (date.month - 1) / 3 + 1
           day_hash[:week_nr]          = date.cweek
     
@@ -46,9 +50,8 @@ class Dwh::Tasks::EtlBaseDatesTask < Dwh::Tasks::BaseTask
           else
             day_hash[:is_workday] = true
           end
-    
-          day_hash[:is_holiday_nl] = false #account.holidays.find_by(holiday_date: date, country: "NL").blank? ? false : true
-          day_hash[:is_holiday_be] = false #account.holidays.find_by(holiday_date: date, country: "BE").blank? ? false : true
+          day_hash[:is_holiday_nl] = nl_holidays.include?(date)
+          day_hash[:is_holiday_be] = be_holidays.include?(date)
     
           Dwh::EtlStorage.create(account_id: task_account_id, identifier: "dates", etl: "extract", data: day_hash)
         end
@@ -93,4 +96,26 @@ class Dwh::Tasks::EtlBaseDatesTask < Dwh::Tasks::BaseTask
       Dwh::DataPipelineLogger.new.create_log(run.id, "alert", "[#{task_account_name}] Finished task [#{task.task_key}] with error: #{e.message}")
     end
   end
+
+  private def fetch_holidays(year, country_code)
+    cache_key = "holidays/#{country_code}/#{year}"
+    
+    Rails.cache.fetch(cache_key, expires_in: 1.week) do
+      response = HTTParty.get("https://date.nager.at/api/v3/PublicHolidays/#{year}/#{country_code}")
+      
+      unless response.success?
+        Rails.logger.error("Failed to fetch holidays for #{country_code}: #{response.body}")
+        return []
+      end
+      
+      response.parsed_response
+    rescue HTTParty::Error => e
+      Rails.logger.error("HTTParty error fetching holidays: #{e.message}")
+      []
+    rescue StandardError => e
+      Rails.logger.error("Error fetching holidays: #{e.message}")
+      []
+    end
+  end
+
 end
