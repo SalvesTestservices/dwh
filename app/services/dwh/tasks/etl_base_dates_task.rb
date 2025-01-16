@@ -36,12 +36,12 @@ class Dwh::Tasks::EtlBaseDatesTask < Dwh::Tasks::BaseTask
           day_hash[:yearmonth]        = date.strftime("%Y%m").to_i
           day_hash[:iso_year]         = date.strftime("%G").to_i
           day_hash[:iso_week]         = date.strftime("%V").to_i
-          day_hash[:month_name]       = I18n.t(".data_target.date.month_names")[month]
-          day_hash[:month_name_short] = I18n.t(".data_target.date.abbr_month_names")[month]
+          day_hash[:month_name]       = I18n.t(".date.month_names")[month]
+          day_hash[:month_name_short] = I18n.t(".date.abbr_month_names")[month]
           day_hash[:day]              = day
           day_hash[:day_of_week]      = datetime.wday
-          day_hash[:day_name]         = I18n.t(".data_target.date.day_names")[datetime.wday]
-          day_hash[:day_name_short]   = I18n.t(".data_target.date.abbr_day_names")[datetime.wday]
+          day_hash[:day_name]         = I18n.t(".date.day_names")[datetime.wday]
+          day_hash[:day_name_short]   = I18n.t(".date.abbr_day_names")[datetime.wday]
           day_hash[:quarter]          = (date.month - 1) / 3 + 1
           day_hash[:week_nr]          = date.cweek
     
