@@ -4,10 +4,32 @@ Rails.application.routes.draw do
   devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }
   
   resources :users
+
+  # Data targets
   resources :data_targets, only: [:index] do
     get :quarter_targets, on: :collection
   end
 
+  # Data overviews
+  get :bonus_overview, to: "data_overviews#bonus_overview"
+  get :holiday_overview, to: "data_overviews#holiday_overview"
+
+  # Datalab
+  namespace :datalab do
+    resources :reports do
+      member do
+        post :generate
+        get :export
+      end
+    end
+    
+    resources :designer, only: [:show, :update] do
+      member do
+        post :preview
+      end
+    end
+  end
+  
   # DWH
   namespace :dwh do
     resources :dp_pipelines do
@@ -24,22 +46,6 @@ Rails.application.routes.draw do
     end
     resources :dp_runs, only: [:show, :create, :destroy] do
       get :quality_checks
-    end
-  end
-
-  # Datalab
-  namespace :datalab do
-    resources :reports do
-      member do
-        post :generate
-        get :export
-      end
-    end
-    
-    resources :designer, only: [:show, :update] do
-      member do
-        post :preview
-      end
     end
   end
 

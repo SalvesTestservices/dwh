@@ -1,0 +1,111 @@
+<%= render "data_overviews/header", current_overview: "holiday_overview" %>
+
+<main>
+  <div class="mx-auto max-w-8xl py-6 flex flex-col">
+
+    <div class="flex flex-row justify-center w-full mt-5">
+      <div class="flex flex-row w-3/4">
+        <div class="w-4/12 bg-red-600 h-20 rounded-l-lg text-center flex items-center justify-center text-white">
+          <div class="flex flex-col">
+            <div class="text-2xl text-center">72</div>
+            <div class="text-sm text-center">uren</div>
+          </div>
+        </div>
+        <div class="w-1/12 bg-sky-600 h-20 flex items-center justify-center text-white">
+          <div class="flex flex-col">
+            <div class="text-2xl text-center">18</div>
+            <div class="text-sm text-center">uren</div>
+          </div>
+        </div>
+        <div class="w-7/12 bg-green-600 h-20 rounded-r-lg flex items-center justify-center text-white">
+          <div class="flex flex-col">
+            <div class="text-2xl text-center">126</div>
+            <div class="text-sm text-center">uren</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex flex-row justify-center w-full mt-2">
+      <div class="flex flex-row justify-between w-3/4">
+        <div class="text-sm text-gray-600">0</div>
+        <div class="text-sm text-gray-600">216</div>
+      </div>
+    </div>
+    <div class="flex flex-row justify-center w-full">
+      <div class="flex flex-row justify-center w-3/4 h-1 bg-gray-400"></div>
+    </div>
+
+    <div class="flex flex-row justify-center w-full pt-5 mb-10">
+      <div class="flex flex-row justify-center space-x-4 w-3/4">
+        <div class="flex flex-row jsutify-start">
+          <div class="bg-red-600 w-5 h-5 rounded-full mr-2"></div>
+          <div class="text-sm">opgenomen</div>
+        </div>
+        <div class="flex flex-row jsutify-start">
+          <div class="bg-sky-600 w-5 h-5 rounded-full mr-2"></div>
+          <div class="text-sm">gepland</div>
+        </div>
+        <div class="flex flex-row jsutify-start">
+          <div class="bg-green-600 w-5 h-5 rounded-full mr-2"></div>
+          <div class="text-sm">beschikbaar</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex flex-row justify-center w-full mt-5">
+    <div class="flex flex-row justify-center w-3/4">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead>
+          <tr class="bg-gray-800 text-white text-sm">
+            <th class="px-4 py-2 text-center">DATUM</th>
+            <th class="px-4 py-2 text-center">UREN</th>
+            <th class="px-4 py-2 text-center">TOTAAL</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+          <tr class="bg-gray-200">
+            <td class="px-4 py-2 text-sm" colspan="3">Januari</td>
+          </tr>
+          <tr class="bg-gray-50">
+            <td class="px-4 py-2 text-sm text-center">12-01-2025</td>
+            <td class="px-4 py-2 text-sm text-center">8.0</td>
+            <td class="px-4 py-2 text-sm text-center"></td>
+          </tr>
+          <tr class="bg-gray-50">
+            <td class="px-4 py-2 text-sm text-center">31-01-2025</td>
+            <td class="px-4 py-2 text-sm text-center">8.0</td>
+            <td class="px-4 py-2 text-sm text-center"></td>
+          </tr>
+          <tr class="bg-gray-100">
+            <td class="px-4 py-2 text-sm"></td>
+            <td class="px-4 py-2 text-sm"></td>
+            <td class="px-4 py-2 text-sm text-center">16.0</td>
+          </tr>
+          <tr class="bg-gray-200">
+            <td class="px-4 py-2 text-sm" colspan="3">Februari</td>
+          </tr>
+          <tr class="bg-gray-50">
+            <td class="px-4 py-2 text-sm text-center">14-02-2025</td>
+            <td class="px-4 py-2 text-sm text-center">4.0</td>
+            <td class="px-4 py-2 text-sm text-center"></td>
+          </tr>
+          <tr class="bg-gray-100">
+            <td class="px-4 py-2 text-sm"></td>
+            <td class="px-4 py-2 text-sm"></td>
+            <td class="px-4 py-2 text-sm text-center">4.0</td>
+          </tr>
+        </tbody>
+        <thead>
+          <tr class="bg-gray-800 text-white text-sm">
+            <th class="px-4 py-2 text-center"></th>
+            <th class="px-4 py-2 text-center"></th>
+            <th class="px-4 py-2 text-center">20.0</th>
+          </tr>
+        </thead>
+      </table>
+    </div>
+  </div>
+</main>
+

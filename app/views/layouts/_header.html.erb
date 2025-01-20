@@ -1,10 +1,15 @@
-<div class="w-full pt-5 pb-16 flex flex-row justify-end">
-  <div class="w-1/2">
+<div class="w-full pt-3 pb-16 flex flex-row justify-end">
+  <div class="w-1/2 pt-1">
     <%= link_to image_tag("logo.svg", alt: "Logo"), root_path %>
   </div>
-  <div class="w-1/2 flex flex-row justify-end pt-2">
+  <div class="w-1/2 flex flex-row justify-end">
     <% if current_user %>
-      <%= link_to I18n.t(".devise.sessions.signout"), destroy_user_session_path, data: { turbo_method: :delete }, class: "text-gray-800 hover:underline pr-5" %>
+      <div class="flex flex-col bg-gray-50 rounded-md p-2 border border-gray-700">
+        <span class="text-gray-800 text-center text-sm">
+          <%= current_user.full_name %>
+        </span>
+        <%= link_to I18n.t(".devise.sessions.signout"), destroy_user_session_path, data: { turbo_method: :delete }, class: "text-gray-800 text-sm underline text-center" %>
+      </div>
     <% end %>
   </div>
 </div>

@@ -30,6 +30,10 @@ nl:
     titles:
       data_lab:     Data lab
       data_checks:  Data checks
+  data_overview:
+    titles:
+      bonus_overview:     Bonus uren
+      holiday_overview:   Verlof uren
   data_target:
     titles:
       index:        Data targets
