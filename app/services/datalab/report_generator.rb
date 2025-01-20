@@ -5,6 +5,7 @@ module Datalab
     def initialize(report, params = {})
       @report = report
       @params = params
+      dump "PARAMS #{@params}"
       @anchor_service = AnchorRegistry.get_anchor(@report.anchor_type)[:service]
     end
 

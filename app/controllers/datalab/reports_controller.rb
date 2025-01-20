@@ -82,7 +82,7 @@ module Datalab
 
     def export
       records, data = ReportGenerator.new(@report, filter_params).generate
-
+dump "HUH2 #{data.count}"
       respond_to do |format|       
         format.xlsx do
           @report_data = data
