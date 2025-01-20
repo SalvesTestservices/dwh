@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-  devise :database_authenticatable, :recoverable, :omniauthable, 
+  devise :database_authenticatable, :recoverable, :omniauthable, :timeoutable,
       omniauth_providers: [:microsoft_graph]
 
   validates :email, presence: true, uniqueness: true

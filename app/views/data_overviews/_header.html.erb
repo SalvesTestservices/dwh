@@ -1,4 +1,4 @@
-<div class="w-full flex flex-row justify-start space-x-8 mb-10">
+<div class="w-full flex flex-row justify-center space-x-8 mb-10">
   <%= link_to bonus_overview_path do %>
     <div class="w-48 flex flex-col items-center p-4 rounded-lg border-gray-700 <%= current_overview == "bonus_overview" ? 'bg-gray-300 border-2' : 'bg-gray-50 border' %>">
       <%= render(View::IconComponent.new(icon_type: "bonus", size: "medium", color: "gray")) %>
