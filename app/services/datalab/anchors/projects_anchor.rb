@@ -26,8 +26,8 @@ module Datalab
           }
         end
 
-        def fetch_data(column_ids)
-          Dwh::DimProject.joins('LEFT JOIN dim_dates ON dim_dates.id = dim_projects.start_date')
+        def fetch_data(limit, column_ids)
+          Dwh::DimProject.joins('LEFT JOIN dim_dates ON dim_dates.id = dim_projects.start_date').limit(limit)
         end
 
         def filterable_attributes

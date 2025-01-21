@@ -84,10 +84,11 @@ module Datalab
           }
         end
 
-        def fetch_data(column_ids)
+        def fetch_data(limit, column_ids)
           Dwh::DimUser
             .joins('LEFT JOIN dim_dates ON dim_dates.id = dim_users.leave_date')
             .where('leave_date IS NULL OR dim_dates.original_date > ?', Date.current)
+            .limit(limit)
         end
 
         def filterable_attributes

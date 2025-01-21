@@ -2,9 +2,10 @@ module Datalab
   class ReportGenerator
     include Pagy::Backend
 
-    def initialize(report, params = {})
+    def initialize(report, params = {}, limit)
       @report = report
       @params = params
+      @limit = limit
       @anchor_service = AnchorRegistry.get_anchor(@report.anchor_type)[:service]
     end
 
@@ -55,7 +56,7 @@ module Datalab
     end
 
     def fetch_records
-      @anchor_service.fetch_data(@report.column_config['columns'].map { |c| c['id'] })
+      @anchor_service.fetch_data(@limit, @report.column_config['columns'].map { |c| c['id'] })
     end
 
     def generate_report_data(records)

@@ -51,7 +51,7 @@ module Datalab
     end
 
     def show
-      @records, data = ReportGenerator.new(@report, filter_params).generate
+      @records, data = ReportGenerator.new(@report, filter_params, nil).generate
 
       @pagy, paginated_records = pagy(@records, 
         items: 50, 
@@ -75,8 +75,7 @@ module Datalab
     end
 
     def generate
-      records, data = ReportGenerator.new(@report, filter_params).generate
-      records = records.limit(25)
+      records, data = ReportGenerator.new(@report, filter_params, 25).generate
       
       @report_data = data.merge(
         rows: data[:rows].select { |row| records.pluck(:id).include?(row[:id]) }
@@ -93,7 +92,7 @@ module Datalab
     end
 
     def export
-      records, data = ReportGenerator.new(@report, filter_params).generate
+      records, data = ReportGenerator.new(@report, filter_params, nil).generate
 
       respond_to do |format|       
         format.xlsx do
