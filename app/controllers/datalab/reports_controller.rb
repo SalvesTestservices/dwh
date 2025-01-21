@@ -3,6 +3,7 @@ module Datalab
     include Pagy::Backend
     before_action :set_report, only: [:show, :generate, :export, :destroy]
     before_action :set_anchor_service, only: [:show, :generate, :export]
+    before_action :authenticate_user!
 
     def index
       @reports = DatalabReport.where(user_id: current_user.id)
