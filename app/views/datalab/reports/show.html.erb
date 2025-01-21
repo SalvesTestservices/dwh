@@ -11,19 +11,24 @@
       <div class="bg-gray-50 shadow-sm ring-1 ring-gray-900/5 sm:rounded-lg p-4 mb-4 border border-gray-100">
         <div class="flex flex-row gap-4">
           <% @anchor_service.filterable_attributes.each do |attr| %>
-            <div class="px-4">
+            <div class="px-2">
               <%= form.label "filters[#{attr}]", @anchor_service.available_attributes[attr][:name], class: "block text-sm font-bold underline underline-offset-2 text-gray-700" %>
               <div class="mt-1">
-                <% filter_options_for_attribute(attr).each do |label, value| %>
-                  <div class="flex items-center p-1">
-                    <%= form.check_box "filters[#{attr}][]", 
-                        { multiple: true, 
-                          class: "h-4 w-4 rounded border-gray-300 text-gray-600 focus:ring-gray-600",
-                          checked: params.dig(:filters, attr)&.include?(value.to_s)
-                        }, value, nil %>
-                    <%= form.label "filters[#{attr}][]", label, class: "ml-2 text-sm text-gray-600" %>
-                  </div>
-                <% end %>
+                <%= form.select "filters[#{attr}][]",
+                    options_for_select(
+                      filter_options_for_attribute(attr),
+                      params.dig(:filters, attr)
+                    ),
+                    {},
+                    {
+                      multiple: true,
+                      class: select_width_for_attribute(attr) + " h-44 border border-gray-300 text-sm",
+                      data: {
+                        controller: "tom-select",
+                        tom_select_placeholder_value: "Select #{@anchor_service.available_attributes[attr][:name]}"
+                      }
+                    }
+                %>
               </div>
             </div>
           <% end %>

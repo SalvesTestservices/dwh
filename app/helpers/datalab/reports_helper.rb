@@ -45,5 +45,24 @@ module Datalab
         []
       end
     end
+
+    def select_width_for_attribute(attr)
+      case attr
+      when :account_id
+        'w-32'
+      when :company_id
+        'w-64'
+      when :role
+        'w-48'
+      when :contract
+        'w-40'
+      when :customer_id
+        'w-64'
+      when :calculation_type
+        'w-40'
+      else
+        'w-52'
+      end
+    end
   end
 end
