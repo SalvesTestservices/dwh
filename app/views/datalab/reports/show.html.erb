@@ -10,41 +10,58 @@
 
     <%= form_with(url: datalab_report_path(@report), method: :get, data: { controller: 'report', turbo_frame: 'report_data' }) do |form| %>
       <div class="bg-gray-50 shadow-sm ring-1 ring-gray-900/5 sm:rounded-lg p-4 mb-4 border border-gray-100">
-        <div class="flex flex-row gap-4 justify-start">
+        <div class="flex flex-row gap-4">
           <% @anchor_service.filterable_attributes.each do |attr| %>
-            <div class="px-4">
-              <%= form.label "filters[#{attr}]", @anchor_service.available_attributes[attr][:name], 
-                  class: "block text-sm font-bold underline underline-offset-2 text-gray-700" %>
-              <div class="mt-1">
-                <div class="">
-                  <% if attr.in?([:account_id, :contract, :role]) %>
-                    <% filter_options_for_attribute(attr).each do |label, value| %>
-                      <div class="flex items-center p-1">
-                        <%= form.check_box "filters[#{attr}][]", 
-                            { multiple: true, 
-                              class: "h-4 w-4 rounded border-gray-300 text-gray-600 focus:ring-gray-600",
-                              checked: params.dig(:filters, attr)&.include?(value.to_s)
-                            }, value, nil %>
-                        <%= form.label "filters[#{attr}][]", label, class: "ml-2 text-sm text-gray-600" %>
-                      </div>
-                    <% end %>
-                  <% elsif attr.in?([:company_id]) %>
-                    <% filter_options_for_attribute(attr).each do |label, value| %>
-                      <div class="flex items-center p-1">
-                        <%= form.check_box "filters[#{attr}][]", 
-                            { multiple: true, 
-                              class: "h-4 w-4 rounded border-gray-300 text-gray-600 focus:ring-gray-600",
-                              checked: params.dig(:filters, attr)&.include?(value.to_s)
-                            }, value, nil %>
-                        <%= form.label "filters[#{attr}][]", label, class: "ml-2 text-sm text-gray-600" %>
-                      </div>
-                    <% end %>
+            <% if attr.in?([:account_id, :contract, :role]) %>
+              <div class="px-4">
+                <%= form.label "filters[#{attr}]", @anchor_service.available_attributes[attr][:name], class: "block text-sm font-bold underline underline-offset-2 text-gray-700" %>
+                <div class="mt-1">
+                  <% filter_options_for_attribute(attr).each do |label, value| %>
+                    <div class="flex items-center p-1">
+                      <%= form.check_box "filters[#{attr}][]", 
+                          { multiple: true, 
+                            class: "h-4 w-4 rounded border-gray-300 text-gray-600 focus:ring-gray-600",
+                            checked: params.dig(:filters, attr)&.include?(value.to_s)
+                          }, value, nil %>
+                      <%= form.label "filters[#{attr}][]", label, class: "ml-2 text-sm text-gray-600" %>
+                    </div>
                   <% end %>
                 </div>
               </div>
-            </div>
+            <% end %>
           <% end %>
         </div>
+      </div>
+
+      <div class="flex flex-row justify-center space-x-4 w-full my-8">
+        <%= form.button type: :submit, class: "flex flex-row items-center px-4 py-2 text-sm text-gray-700 bg-gray-100 hover:bg-gray-50 mr-1 border border-gray-300 shadow-sm font-medium rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500" do %>
+          <%= render(View::IconComponent.new(icon_type: "filter", size: "small", color: "gray")) %>
+          <span class="ml-2"><%= I18n.t('.datalab.report.titles.filter') %></span>
+        <% end %>
+        <%= form.button formaction: export_datalab_report_path(@report, format: :xlsx),
+                       formmethod: "get",
+                       data: { turbo: false },
+                       class: "flex flex-row items-center px-4 py-2 text-sm text-gray-700 bg-gray-100 hover:bg-gray-50 mr-1 border border-gray-300 shadow-sm font-medium rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500" do %>
+          <%= render(View::IconComponent.new(icon_type: "download", size: "small", color: "gray")) %>
+          <span class="ml-2"><%= I18n.t('.datalab.report.titles.download') %></span>
+        <% end %>
+
+        <% if @report.user_id == current_user.id %>
+          <%= link_to datalab_designer_path(@report), data: { turbo: false, turbo_prefetch: false }, class: "flex flex-row items-center px-4 py-2 text-sm text-gray-700 bg-gray-100 hover:bg-gray-50 mr-1 border border-gray-300 shadow-sm font-medium rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500" do %>
+            <%= render(View::IconComponent.new(icon_type: "edit", size: "small", color: "gray")) %>
+            <span class="ml-2"><%= I18n.t('.datalab.report.titles.edit') %></span>
+          <% end %>
+          <%= button_to datalab_report_path(@report), 
+              method: :delete, 
+              data: { 
+                turbo_prefetch: false,
+                confirm: t('.datalab.report.messages.confirmation')
+              }, 
+              class: "flex flex-row items-center px-4 py-2 text-sm text-gray-700 bg-gray-100 hover:bg-gray-50 mr-1 border border-gray-300 shadow-sm font-medium rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500" do %>
+            <%= render(View::IconComponent.new(icon_type: "delete", size: "small", color: "red")) %>
+            <span class="ml-2"><%= I18n.t('.datalab.report.titles.delete') %></span>
+          <% end %>
+        <% end %>
       </div>
     <% end %>
 
@@ -59,20 +76,6 @@
             <div class="px-4 py-3">
               <%== pagy_nav(@pagy) %>
             </div>
-          <% end %>
-        </div>
-        <div class="w-1/3 flex flex-row justify-end pt-1.5 space-x-2">
-          <% if @report.user_id == current_user.id %>
-            <%= button_to datalab_report_path(@report), method: :delete, data: { turbo_prefetch: false } do %>
-              <%= render(View::IconComponent.new(icon_type: "delete", size: "medium", color: "red")) %>
-            <% end %>
-            <%= link_to datalab_designer_path(@report), data: { turbo: false, turbo_prefetch: false } do %>
-              <%= render(View::IconComponent.new(icon_type: "edit", size: "medium", color: "gray")) %>
-            <% end %>
-          <% end %>
-
-          <%= link_to export_datalab_report_path(@report, format: :xlsx), data: { turbo_prefetch: false }, class: "button" do %>
-            <%= render(View::IconComponent.new(icon_type: "download", size: "medium", color: "gray")) %>
           <% end %>
         </div>
       </div>

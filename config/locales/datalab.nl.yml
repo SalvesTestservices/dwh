@@ -4,7 +4,10 @@ nl:
       titles:
         index:            Datalab rapporten
         new:              Nieuw rapport
-        edit:             Rapport aanpassen
+        edit:             Wijzigen rapport
+        delete:           Verwijderen rapport
+        filter:           Filteren data
+        download:         Downloaden rapport (Excel)
         show:             Rapport
         generate:         Rapport voorstel
         show_final:       toon rapport
@@ -17,6 +20,7 @@ nl:
         no_shared_reports: Geen gedeelde rapporten gevonden
       messages:
         destroyed:        Rapport is verwijderd
+        confirmation:     Weet je zeker dat je dit rapport wilt verwijderen?
       attributes:
         created_by:       Aangemaakt door
         available_fields: Beschikbare velden
