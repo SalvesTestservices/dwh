@@ -10,9 +10,9 @@
             </span>
           <% end %>
         </div>
-        <div class="mt-1 flex flex-col gap-x-2 text-sm leading-5 text-gray-500">
-          <p><%= report.description %></p>
-          <p><%= I18n.t('.datalab.report.attributes.created_by') %> <%= report.user.full_name %></p>
+        <div class="mt-1 flex flex-col gap-x-2 text-sm leading-5">
+          <p class="italic text-gray-500"><%= report.description %></p>
+          <p class="pt-3 text-gray-700"><%= I18n.t('.datalab.report.attributes.created_by') %> <%= report.user.full_name %> <%= I18n.t('.datalab.report.attributes.created_at') %> <%= report.created_at.strftime("%d-%m-%Y") %></p>
         </div>
       </div>
       

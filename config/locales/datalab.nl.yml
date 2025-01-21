@@ -25,6 +25,7 @@ nl:
         confirmation:     Weet je zeker dat je dit rapport wilt verwijderen?
       attributes:
         created_by:       Aangemaakt door
+        created_at:       op
         available_fields: Beschikbare velden
         report_columns:   Rapport kolommen
         anchor_type:      Data basis
