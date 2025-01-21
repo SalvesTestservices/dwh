@@ -5,7 +5,6 @@ module Datalab
     def initialize(report, params = {})
       @report = report
       @params = params
-      dump "PARAMS #{@params}"
       @anchor_service = AnchorRegistry.get_anchor(@report.anchor_type)[:service]
     end
 
@@ -38,9 +37,14 @@ module Datalab
       filters = @params[:filters]
       return records if filters.blank?
 
-      filters.to_unsafe_h.each do |field, value|
-        next if value.blank?
-        records = @anchor_service.apply_filter(records, field, value)
+      filters.to_unsafe_h.each do |field, values|
+        next if values.blank?
+        
+        # Handle array of arrays from params (e.g., [["5"], ["2"]])
+        values = values.flatten.reject(&:blank?)
+        next if values.empty?
+        
+        records = @anchor_service.apply_filter(records, field, values)
       end
 
       records

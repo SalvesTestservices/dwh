@@ -5,7 +5,7 @@ header_style = styles.add_style(
   b: true,
   bg_color: "d1d5db",
   fg_color: "000000",
-  alignment: { horizontal: :center },
+  alignment: { horizontal: :left },
   border: {
     style: :thin,
     color: "000000",
@@ -14,7 +14,7 @@ header_style = styles.add_style(
 )
 
 data_style = styles.add_style(
-  alignment: { horizontal: :center },
+  alignment: { horizontal: :left },
   border: {
     style: :thin,
     color: "000000",

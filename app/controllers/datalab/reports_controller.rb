@@ -40,6 +40,8 @@ module Datalab
     end
 
     def show
+      dump "PARAMS: #{params.inspect}"
+
       @records, data = ReportGenerator.new(@report, filter_params).generate
 
       @pagy, paginated_records = pagy(@records, 
@@ -83,7 +85,7 @@ module Datalab
 
     def export
       records, data = ReportGenerator.new(@report, filter_params).generate
-dump "HUH2 #{data.count}"
+
       respond_to do |format|       
         format.xlsx do
           @report_data = data
