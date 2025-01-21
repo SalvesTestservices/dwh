@@ -63,7 +63,7 @@ module Datalab
         end
 
         def filterable_attributes
-          [:account_id, :company_id]
+          [:account_id, :company_id, :customer_id, :calculation_type]
         end
 
         def apply_filter(records, field, value)
@@ -72,6 +72,10 @@ module Datalab
             records.where(account_id: value)
           when :company_id
             records.where(company_id: value)
+          when :customer_id
+            records.where(customer_id: value)
+          when :calculation_type
+            records.where(calculation_type: value)
           else
             records
           end

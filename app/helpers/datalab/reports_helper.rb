@@ -35,6 +35,12 @@ module Datalab
         Dwh::DimUser.distinct.pluck(:role).sort.map { |role| [role, role] }
       when :contract
         Dwh::DimUser.distinct.pluck(:contract).sort.map { |contract| [contract, contract] }
+      when :customer_id
+        Dwh::DimCustomer.where(status: "active").order(:name).map { |customer| [customer.name, customer.id] }
+      when :calculation_type
+        Dwh::DimProject.distinct.pluck(:calculation_type).sort.map do |calculation_type|
+          [I18n.t(calculation_type, scope: 'datalab.project.calculation_types', default: calculation_type), calculation_type]
+        end
       else
         []
       end
