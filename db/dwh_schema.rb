@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_10_03_080000) do
+ActiveRecord::Schema[8.0].define(version: 2024_12_23_092310) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -113,8 +113,10 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_03_080000) do
     t.integer "customer_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "broker"
     t.index ["account_id", "original_id", "start_date", "end_date"], name: "index_dim_projects_on_acc_id_orig_id_start_end", unique: true
     t.index ["account_id"], name: "index_dim_projects_on_account_id"
+    t.index ["broker"], name: "index_dim_projects_on_broker"
     t.index ["calculation_type"], name: "index_dim_projects_on_calculation_type"
     t.index ["company_id"], name: "index_dim_projects_on_company_id"
     t.index ["customer_id"], name: "index_dim_projects_on_customer_id"

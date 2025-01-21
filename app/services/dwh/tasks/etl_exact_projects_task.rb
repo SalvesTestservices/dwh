@@ -74,6 +74,7 @@ class Dwh::Tasks::EtlExactProjectsTask < Dwh::Tasks::BaseExactTask
                   project_hash[:start_date]         = start_date
                   project_hash[:end_date]           = end_date
                   project_hash[:expected_end_date]  = expected_end_date
+                  project_hash[:broker]             = nil
                   project_hash[:customer_id]        = dim_customer_id
                   project_hash[:updated_at]         = project["ModifiedDate"].to_date.strftime("%d%m%Y").to_i
 

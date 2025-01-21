@@ -14,12 +14,28 @@ class Dwh::Loaders::ProjectsLoader
         dim_company_id  = dim_company.blank? ? nil : dim_company.id
         dim_customer_id = dim_customer.blank? ? nil : dim_customer.id
         
-        Dwh::DimProject.upsert({ account_id: dim_account.id, original_id: project.data['original_id'], name: project.data['name'], status: project.data['status'], 
-          company_id: dim_company_id, calculation_type: project.data['calculation_type'], start_date: project.data['start_date'], end_date: project.data['end_date'], 
-          expected_end_date: project.data['expected_end_date'], customer_id: dim_customer_id }, unique_by: [:account_id, :original_id, :start_date, :end_date])
-
+        Dwh::DimProject.upsert(
+          {
+            account_id: dim_account.id, 
+            original_id: project.data['original_id'], 
+            name: project.data['name'], 
+            status: project.data['status'],
+            company_id: dim_company_id, 
+            calculation_type: project.data['calculation_type'], 
+            start_date: project.data['start_date'], 
+            end_date: project.data['end_date'],
+            expected_end_date: project.data['expected_end_date'],
+            broker: project.data['broker'],
+            customer_id: dim_customer_id
+          }, 
+          unique_by: [:account_id, :original_id]
+        )
+  
         project.destroy
       end
     end
   end
 end
+
+
+broker: project.data['broker'],
