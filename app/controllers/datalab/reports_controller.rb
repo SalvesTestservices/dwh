@@ -1,7 +1,7 @@
 module Datalab
   class ReportsController < ApplicationController
     include Pagy::Backend
-    before_action :set_report, only: [:show, :generate, :export, :destroy]
+    before_action :set_report, only: [:show, :update, :generate, :export, :destroy]
     before_action :set_anchor_service, only: [:show, :generate, :export]
     before_action :authenticate_user!
 
@@ -39,9 +39,18 @@ module Datalab
       end
     end
 
-    def show
-      dump "PARAMS: #{params.inspect}"
+    def update
+      if @report.update(report_params)
+        respond_to do |format|
+          format.turbo_stream
+          format.html { redirect_to datalab_report_path(@report) }
+        end
+      else
+        render :show, status: :unprocessable_entity
+      end
+    end
 
+    def show
       @records, data = ReportGenerator.new(@report, filter_params).generate
 
       @pagy, paginated_records = pagy(@records, 

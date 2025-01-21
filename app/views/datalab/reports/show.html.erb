@@ -1,32 +1,12 @@
-<%= render "layouts/page_header", 
+<%= render "page_header",
+  report: @report,
   breadcrumbs: @breadcrumbs, 
-  title: "#{I18n.t('.datalab.report.titles.show')}: #{@report.name}", 
-  icon: ["datalab", "medium", "gray"],
-  buttons: nil
+  title: @report.name, 
+  icon: ["datalab", "medium", "gray"]
 %>
 
 <main>
   <div class="mx-auto max-w-8xl py-6 mt-2 flex flex-col">
-    <% if @report.user_id == current_user.id %>
-      <div class="flex flex-row justify-end w-full mb-5 space-x-2">
-        <%= link_to datalab_designer_path(@report), data: { turbo: false, turbo_prefetch: false }, class: "flex flex-row items-center px-4 py-2 text-sm text-gray-700 bg-gray-100 hover:bg-gray-50 mr-1 border border-gray-300 shadow-sm font-medium rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500" do %>
-          <%= render(View::IconComponent.new(icon_type: "edit", size: "small", color: "gray")) %>
-          <span class="ml-2"><%= I18n.t('.datalab.report.titles.edit') %></span>
-        <% end %>
-
-        <%= button_to datalab_report_path(@report), 
-            method: :delete, 
-            data: { 
-              turbo_prefetch: false,
-              turbo_confirm: I18n.t('.datalab.report.messages.confirmation')
-            }, 
-            class: "flex flex-row items-center px-4 py-2 text-sm text-gray-700 bg-gray-100 hover:bg-gray-50 mr-1 border border-gray-300 shadow-sm font-medium rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500" do %>
-          <%= render(View::IconComponent.new(icon_type: "delete", size: "small", color: "red")) %>
-          <span class="ml-2"><%= I18n.t('.datalab.report.titles.delete') %></span>
-        <% end %>
-      </div>
-    <% end%>
-
     <%= form_with(url: datalab_report_path(@report), method: :get, data: { controller: 'report', turbo_frame: 'report_data' }) do |form| %>
       <div class="bg-gray-50 shadow-sm ring-1 ring-gray-900/5 sm:rounded-lg p-4 mb-4 border border-gray-100">
         <div class="flex flex-row gap-4">
