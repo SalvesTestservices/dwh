@@ -18,11 +18,43 @@ module Datalab
               related_model: Dwh::DimCompany,
               display_attribute: :name
             },
+            customer_id: {
+              name: 'Klant',
+              calculation_type: 'relation',
+              description: 'De klant waar het project toe behoort',
+              related_model: Dwh::DimCustomer,
+              display_attribute: :name
+            },
             name: {
               name: 'Project naam',
               calculation_type: 'direct',
               description: 'De naam van het project'
-            }
+            },
+            calculation_type: {
+              name: 'Type project',
+              calculation_type: 'translation',
+              description: 'Het type/afrekenmethode van het project',
+              method: :calculation_type,
+              translation_scope: 'datalab.project.calculation_types'
+            },
+            start_date: {
+              name: 'Startdatum',
+              calculation_type: 'calculation',
+              description: 'De startdatum van het project',
+              calculation: ->(record) { Calculators::ProjectCalculator.calculate_start_date(record) }
+            },
+            end_date: {
+              name: 'Einddatum',
+              calculation_type: 'calculation',
+              description: 'De einddatum van het project',
+              calculation: ->(record) { Calculators::ProjectCalculator.calculate_end_date(record) }
+            },
+            expected_end_date: {
+              name: 'Verwachte einddatum',
+              calculation_type: 'calculation',
+              description: 'De verwachte einddatum van het project',
+              calculation: ->(record) { Calculators::ProjectCalculator.calculate_expected_end_date(record) }
+            },
           }
         end
 

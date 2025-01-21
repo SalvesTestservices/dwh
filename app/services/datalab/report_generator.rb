@@ -87,7 +87,8 @@ module Datalab
           when "direct"
             row[column['id']] = record.send(column['id'])
           when "translation"
-            row[column['id']] = record.send(attribute[:method])
+            value = record.send(attribute[:method])
+            row[column['id']] = I18n.t(value, scope: attribute[:translation_scope], default: value)
           when "calculation"
             row[column['id']] = instance_exec(record, &attribute[:calculation])
           when "relation"

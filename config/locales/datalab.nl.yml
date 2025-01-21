@@ -35,3 +35,9 @@ nl:
       anchor_types:
         users:            Medewerkers
         projects:         Klanten & Projecten
+    project:
+      calculation_types:
+        hour_based:       Time & Material
+        fixed_price:      Fixed price
+        service:          Abonnement
+        training:         Training
