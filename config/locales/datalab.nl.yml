@@ -6,7 +6,7 @@ nl:
         new:              Nieuw rapport
         edit:             Wijzigen rapport
         delete:           Verwijderen rapport
-        filter:           Filteren data
+        filter:           Filters toepassen
         reset_filters:    Filters verwijderen
         download:         Downloaden rapport (Excel)
         show:             Rapport
