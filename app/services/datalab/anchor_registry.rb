@@ -3,15 +3,14 @@ module Datalab
     class << self
       def available_anchors
         {
+          projects: {
+            name: 'Klanten & Projecten',
+            service: Datalab::Anchors::ProjectsAnchor
+          },
           users: {
             name: 'Medewerkers',
             service: Datalab::Anchors::UsersAnchor
           }
-          # Add more anchors as needed:
-          # customers: {
-          #   name: 'Customers',
-          #   service: Datalab::Anchors::CustomersAnchor
-          # }
         }
       end
 

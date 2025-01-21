@@ -34,3 +34,4 @@ nl:
         description:      Beschrijving
       anchor_types:
         users:            Medewerkers
+        projects:         Klanten & Projecten
