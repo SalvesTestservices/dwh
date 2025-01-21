@@ -55,6 +55,8 @@
                       generate_datalab_report_path(@datalab_report), 
                       class: "sm:h-10 mt-1 px-1 sm:px-4 py-2 text-sm text-gray-700 bg-gray-100 hover:bg-gray-50 mr-1 border border-gray-300 shadow-sm font-medium rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500",
                       data: { turbo: false } %>
+
+        <%= link_to I18n.t(".general.cancel"), datalab_report_path(@datalab_report), class: "ml-2 text-sm hover:underline hover:underline-offset-2 text-gray-700 pt-1", data: { turbo: false } %>
       </div>
     <% end %>
   

@@ -20,6 +20,8 @@ nl:
         no_shared_reports: Geen gedeelde rapporten gevonden
       messages:
         destroyed:        Rapport is verwijderd
+        created:          Rapport is aangemaakt
+        updated:          Rapport is aangepast
         confirmation:     Weet je zeker dat je dit rapport wilt verwijderen?
       attributes:
         created_by:       Aangemaakt door
