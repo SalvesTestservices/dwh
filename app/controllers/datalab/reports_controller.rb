@@ -18,6 +18,11 @@ module Datalab
       @available_anchors = AnchorRegistry.available_anchors.map { |key, anchor| 
         [anchor[:name], key]
       }
+
+    
+      @breadcrumbs = []
+      @breadcrumbs << [I18n.t('.datalab.report.titles.index'), datalab_reports_path]  
+      @breadcrumbs << [I18n.t('.datalab.report.titles.new')]
     end
 
     def create

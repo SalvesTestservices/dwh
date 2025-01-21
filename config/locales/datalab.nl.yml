@@ -29,12 +29,12 @@ nl:
         available_fields: Beschikbare velden
         report_columns:   Rapport kolommen
         anchor_type:      Data basis
-        is_public:        Voor iedereen zichtbaar
+        is_public:        Gedeeld
         name:             Naam rapport
         description:      Beschrijving
       anchor_types:
         users:            Medewerkers
-        projects:         Klanten & Projecten
+        projects:         Klanten & Projecten      
     project:
       calculation_types:
         hour_based:       Time & Material

@@ -1,24 +1,24 @@
 <ul role="list" class="divide-y divide-gray-300 bg-gray-50 py-2 shadow-sm ring-1 ring-gray-900/5 sm:mx-0 sm:rounded-lg sm:px-8 sm:pb-4 my-3 border border-gray-100">
   <% reports.each do |report| %>
-    <li class="flex items-center justify-between gap-x-6 px-5 py-5">
-      <div class="min-w-0">
-        <div class="flex items-start gap-x-3">
-          <p class="text-base font-semibold leading-6 text-gray-900"><%= report.name %></p>
-          <% if report.is_public %>
-            <span class="rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
-              gedeeld
-            </span>
-          <% end %>
+    <% decorate report do |decorates| %>
+      <li class="flex items-center justify-between gap-x-6 px-5 py-5">
+        <div class="min-w-0">
+          <div class="flex items-start gap-x-3">
+            <p class="text-base font-semibold leading-6 text-gray-900"><%= decorates.data_field(report.name) %></p>
+          </div>
+          <div class="flex flex-row justify-start mt-2">
+            <%= decorates.anchor_type("full") %>
+            <%= decorates.is_public %>
+          </div>
+          <div class="flex flex-col gap-x-2 leading-5 mt-3">
+            <p class="text-gray-700 text-xs"><%= decorates.created %></p>
+          </div>
         </div>
-        <div class="mt-1 flex flex-col gap-x-2 text-sm leading-5">
-          <p class="italic text-gray-500"><%= report.description %></p>
-          <p class="pt-3 text-gray-700"><%= I18n.t('.datalab.report.attributes.created_by') %> <%= report.user.full_name %> <%= I18n.t('.datalab.report.attributes.created_at') %> <%= report.created_at.strftime("%d-%m-%Y") %></p>
+        
+        <div class="flex flex-none items-center gap-x-4">
+          <%= render(View::ButtonComponent.new(title: I18n.t(".general.details"), url: datalab_report_path(report), button_type: "link", size: "small")) %>
         </div>
-      </div>
-      
-      <div class="flex flex-none items-center gap-x-4">
-        <%= render(View::ButtonComponent.new(title: I18n.t(".general.details"), url: datalab_report_path(report), button_type: "link", size: "small")) %>
-      </div>
-    </li>
+      </li>
+    <% end %>
   <% end %>
 </ul>

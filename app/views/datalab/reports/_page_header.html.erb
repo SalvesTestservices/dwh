@@ -38,8 +38,8 @@
       </nav>
     <% end %>
   </div>
-  <div class="mt-5 md:flex md:items-center md:justify-between">
-    <div class="min-w-0 flex-1">
+  <div class="mt-5 flex items-start justify-between">
+    <div class="w-2/3 flex flex-col">
       <h2 class="flex items-center gap-3 text-2xl/7 font-bold text-gray-700 sm:truncate sm:text-3xl sm:tracking-tight">
         <% if defined?(icon) && icon.present? %>
           <%= render(View::IconComponent.new(icon_type: icon[0], size: icon[1], color: icon[2])) %>
@@ -47,10 +47,21 @@
         <%= I18n.t('.datalab.report.titles.show') %>:
         <%= render 'datalab/reports/editable_name', report: report %>
       </h2>
+
+      <% decorate report do |decorates| %>
+        <div class="flex flex-col pl-11 pt-4">
+          <div class="flex flex-row gap-x-2 mb-2">
+            <%= decorates.anchor_type("full") %>
+            <%= decorates.is_public %>
+          </div>
+          <p class="text-gray-500 text-sm mb-1"><%= report.description %></p>
+          <p class="text-gray-500 text-sm"><%= decorates.created %></p>
+        </div>
+      <% end %>
     </div>
 
     <% if report.user_id == current_user.id %>
-      <div class="w-full md:w-1/3 flex justify-center sm:justify-end mt-2 sm:mt-2 md:mt-0">
+      <div class="w-1/3 flex justify-end items-start mt-2">
         <%= link_to datalab_designer_path(report), data: { turbo: false, turbo_prefetch: false }, class: "flex flex-row items-center px-4 py-2 text-sm text-gray-700 bg-gray-100 hover:bg-gray-50 mr-1 border border-gray-300 shadow-sm font-medium rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500" do %>
           <%= render(View::IconComponent.new(icon_type: "edit", size: "small", color: "gray")) %>
           <span class="ml-2"><%= I18n.t('.datalab.report.titles.edit') %></span>
