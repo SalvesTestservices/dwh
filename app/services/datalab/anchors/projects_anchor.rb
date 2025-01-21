@@ -55,6 +55,12 @@ module Datalab
               description: 'De verwachte einddatum van het project',
               calculation: ->(record) { Calculators::ProjectCalculator.calculate_expected_end_date(record) }
             },
+            nr_active_projectusers: {
+              name: 'Actieve inzetten',
+              calculation_type: 'calculation',
+              description: 'Het aantal medewerkers dat actief is ingezet in het project',
+              calculation: ->(record) { Calculators::ProjectCalculator.calculate_nr_active_projectusers(record) }
+            }
           }
         end
 

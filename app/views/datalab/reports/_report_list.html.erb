@@ -15,8 +15,9 @@
           </div>
         </div>
         
-        <div class="flex flex-none items-center gap-x-4">
+        <div class="flex flex-none items-center gap-x-1">
           <%= render(View::ButtonComponent.new(title: I18n.t(".general.details"), url: datalab_report_path(report), button_type: "link", size: "small")) %>
+          <%= render(View::ButtonComponent.new(title: I18n.t(".general.edit").downcase, url: datalab_designer_path(report), button_type: "link", size: "small")) %>
         </div>
       </li>
     <% end %>
