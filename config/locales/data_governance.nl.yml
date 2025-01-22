@@ -1,0 +1,8 @@
+nl:
+  data_governance:
+    titles:
+      index:            Data governance
+      data_quality:     Data quality
+      data_security:    Data security
+      data_logging:     Data logging
+      data_catalog:     Data catalog

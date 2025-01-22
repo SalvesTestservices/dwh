@@ -29,6 +29,9 @@ Rails.application.routes.draw do
       end
     end
   end
+
+  # Data governance
+  resources :data_governance, only: [:index]
   
   # DWH
   namespace :dwh do
