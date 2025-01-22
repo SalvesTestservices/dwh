@@ -2,7 +2,7 @@ nl:
   datalab:
     report:
       titles:
-        index:            Datalab rapporten
+        index:            Data lab
         new:              Nieuw rapport
         edit:             Wijzigen rapport
         delete:           Verwijderen rapport
