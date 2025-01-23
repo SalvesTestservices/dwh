@@ -11,6 +11,10 @@
            "-------------------"
          ) %>
     <% end %>
+
+    <div class="w-full flex flex-row justify-center">
+      <%= image_tag("logo.svg", alt: "Logo", class: "mb-24 w-64") %>
+    </div>
     
     <%= button_to user_microsoft_graph_omniauth_authorize_path, 
         method: :post, 
