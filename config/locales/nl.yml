@@ -29,7 +29,7 @@ nl:
   site:
     titles:
       data_lab:     Data lab
-      data_checks:  Data checks
+      data_api:     Data API
   data_overview:
     titles:
       bonus_overview:     Bonus uren
