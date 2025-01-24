@@ -3,7 +3,7 @@
     
     <%= link_to datalab_reports_path do %>
       <div class="overflow-hidden rounded-lg bg-gray-100 border border-gray-200 shadow-sm hover:bg-gray-200">
-        <div class="px-4 py-5 sm:p-6 h-80 flex flex-col justify-center items-center">
+        <div class="px-4 py-5 sm:p-6 h-60 flex flex-col justify-center items-center">
           <%= render(View::IconComponent.new(icon_type: "datalab", size: "large", color: "gray")) %>
           <div class="text-gray-800 text-2xl text-center mt-10"><%= I18n.t(".site.titles.data_lab").downcase %></div>
         </div>
@@ -12,7 +12,7 @@
     
     <%= link_to dwh_dp_pipelines_path do %>
       <div class="overflow-hidden rounded-lg bg-gray-100 border border-gray-200 shadow-sm hover:bg-gray-200">
-        <div class="px-4 py-5 sm:p-6 h-80 flex flex-col justify-center items-center">
+        <div class="px-4 py-5 sm:p-6 h-60 flex flex-col justify-center items-center">
           <%= render(View::IconComponent.new(icon_type: "pipeline", size: "large", color: "gray")) %>
           <div class="text-gray-800 text-2xl text-center mt-10"><%= I18n.t(".dp_pipeline.titles.index").downcase %></div>
         </div>
@@ -21,7 +21,7 @@
 
     <%= link_to data_targets_path do %>
       <div class="overflow-hidden rounded-lg bg-gray-100 border border-gray-200 shadow-sm hover:bg-gray-200">
-        <div class="px-4 py-5 sm:p-6 h-80 flex flex-col justify-center items-center">
+        <div class="px-4 py-5 sm:p-6 h-60 flex flex-col justify-center items-center">
           <%= render(View::IconComponent.new(icon_type: "target", size: "large", color: "gray")) %>
           <div class="text-gray-800 text-2xl text-center mt-10"><%= I18n.t(".data_target.titles.index").downcase %></div>
         </div>
@@ -30,23 +30,25 @@
 
     <%= link_to data_governance_index_path do %>
       <div class="overflow-hidden rounded-lg bg-gray-100 border border-gray-200 shadow-sm hover:bg-gray-200">
-        <div class="px-4 py-5 sm:p-6 h-80 flex flex-col justify-center items-center">
+        <div class="px-4 py-5 sm:p-6 h-60 flex flex-col justify-center items-center">
           <%= render(View::IconComponent.new(icon_type: "certificate", size: "large", color: "gray")) %>
           <div class="text-gray-800 text-2xl text-center mt-10"><%= I18n.t(".data_governance.titles.index").downcase %></div>
         </div>
       </div>
     <% end %>
 
-    <div class="overflow-hidden rounded-lg bg-gray-100 border border-gray-200 shadow-sm hover:bg-gray-200">
-      <div class="px-4 py-5 sm:p-6 h-80 flex flex-col justify-center items-center">
-        <%= render(View::IconComponent.new(icon_type: "api", size: "large", color: "gray")) %>
-        <div class="text-gray-800 text-2xl text-center mt-10"><%= I18n.t(".site.titles.data_api").downcase %></div>
+    <%= link_to api_docs_path do %>
+      <div class="overflow-hidden rounded-lg bg-gray-100 border border-gray-200 shadow-sm hover:bg-gray-200">
+        <div class="px-4 py-5 sm:p-6 h-60 flex flex-col justify-center items-center">
+          <%= render(View::IconComponent.new(icon_type: "api", size: "large", color: "gray")) %>
+          <div class="text-gray-800 text-2xl text-center mt-10"><%= I18n.t(".site.titles.data_api").downcase %></div>
+        </div>
       </div>
-    </div>
+    <% end %>
 
     <%= link_to users_path do %>
       <div class="overflow-hidden rounded-lg bg-gray-100 border border-gray-200 shadow-sm hover:bg-gray-200">
-        <div class="px-4 py-5 sm:p-6 h-80 flex flex-col justify-center items-center">
+        <div class="px-4 py-5 sm:p-6 h-60 flex flex-col justify-center items-center">
           <%= render(View::IconComponent.new(icon_type: "users", size: "large", color: "gray")) %>
           <div class="text-gray-800 text-2xl text-center mt-10"><%= I18n.t(".user.titles.index").downcase %></div>
         </div>

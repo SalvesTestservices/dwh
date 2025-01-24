@@ -1,0 +1,108 @@
+<%= render "layouts/page_header", 
+  breadcrumbs: @breadcrumbs, 
+  title: I18n.t(".site.titles.data_api"), 
+  icon: ["api", "medium", "gray"],
+  buttons: []
+%>
+
+<main>
+  <div class="min-h-screen bg-gray-50 mt-12">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+
+      <!-- Table of Contents -->
+      <div class="mb-8 bg-white shadow-sm ring-1 ring-gray-900/5 rounded-lg p-6">
+        <h2 class="text-xl font-semibold text-gray-900 mb-4">Table of Contents</h2>
+        <ul class="space-y-4 px-4">
+          <% @api_docs.each do |section_key, section| %>
+            <li>
+              <a href="#<%= section_key %>" class="text-sky-600 hover:text-sky-700 font-medium hover:underline">
+                <%= section[:title] %>
+              </a>
+              <ul class="ml-6 mt-2 space-y-1">
+                <% section[:endpoints].each do |endpoint_key, endpoint| %>
+                  <li>
+                    <a href="#<%= endpoint_key %>" class="text-sky-600 hover:text-sky-700 text-sm hover:underline">
+                      <%= endpoint[:method] %> <%= endpoint[:path] %>
+                    </a>
+                  </li>
+                <% end %>
+              </ul>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+
+      <div class="bg-white shadow-sm ring-1 ring-gray-900/5 rounded-lg">
+        <!-- Authentication Section -->
+        <div class="px-6 py-6 border-b border-gray-200">
+          <h2 class="text-xl font-semibold text-gray-900">Authentication</h2>
+          <p class="mt-2 text-gray-600">
+            Include your API key in the request headers:
+          </p>
+          <div class="mt-4 bg-gray-50 p-4 rounded-md">
+            <code class="text-sm text-gray-800">
+              Authorization: Bearer your-api-key-here
+            </code>
+          </div>
+        </div>
+
+        <!-- API Sections -->
+        <% @api_docs.each do |section_key, section| %>
+          <div id="<%= section_key %>" class="px-6 py-6 border-b border-gray-200">
+            <h2 class="text-xl font-semibold text-gray-900"><%= section[:title] %></h2>
+            <p class="mt-2 text-gray-600"><%= section[:description] %></p>
+            
+            <div class="mt-6 space-y-6">
+              <% section[:endpoints].each do |endpoint_key, endpoint| %>
+                <div id="<%= endpoint_key %>" class="bg-gray-50 rounded-lg p-4">
+                  <!-- Endpoint Header -->
+                  <div class="flex items-center gap-3">
+                    <span class="px-2 py-1 text-sm font-medium rounded-md bg-green-100 text-green-700">
+                      <%= endpoint[:method] %>
+                    </span>
+                    <code class="text-sm text-gray-800"><%= endpoint[:path] %></code>
+                  </div>
+                  
+                  <!-- Description -->
+                  <p class="mt-2 text-sm text-gray-600">
+                    <%= endpoint[:description] %>
+                  </p>
+
+                  <!-- Response Format -->
+                  <% if endpoint[:response_format].present? %>
+                    <div class="mt-4">
+                      <h4 class="text-sm font-medium text-gray-900">Response Format</h4>
+                      <div class="mt-2 bg-white rounded-md border border-gray-200">
+                        <div class="px-4 py-3">
+                          <div class="grid grid-cols-3 gap-4">
+                            <div class="text-xs font-medium text-gray-500 underline underline-offset-4">FIELD</div>
+                            <div class="text-xs font-medium text-gray-500 underline underline-offset-4">EXAMPLE</div>
+                            <div class="text-xs font-medium text-gray-500 underline underline-offset-4">DESCRIPTION</div>
+                            
+                            <% if endpoint[:response_format].is_a?(Hash) %>
+                              <% endpoint[:response_format].each do |field, field_details| %>
+                                <div class="text-sm text-gray-800 font-mono"><%= field %></div>
+                                <div class="text-sm text-gray-600">
+                                  <code class="text-xs bg-gray-100 px-2 py-1 rounded">
+                                    <%= field_details.is_a?(Hash) ? field_details[:example].to_json : field_details.to_json %>
+                                  </code>
+                                </div>
+                                <div class="text-sm text-gray-600">
+                                  <%= field_details.is_a?(Hash) ? field_details[:description] : "No description available" %>
+                                </div>
+                              <% end %>
+                            <% end %>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</main>

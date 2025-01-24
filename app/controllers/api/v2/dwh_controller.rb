@@ -1,6 +1,127 @@
 class Api::V2::DwhController < Api::V2::BaseController
   before_action :authenticate_user
 
+  # Class method to provide API documentation
+  def self.api_documentation
+    {
+      fact_tables: {
+        title: "Fact Tables",
+        description: "Raw fact tables containing core business data",
+        endpoints: {
+          fact_rates: {
+            method: "GET",
+            path: "/api/v2/fact_rates",
+            description: "Get all fact rates data",
+            response_format: {
+              id: {
+                description: "Primary key",
+                example: 1
+              },
+              bcr: {
+                description: "Cost per billable hour",
+                example: 85.50
+              },
+              contract_hours: {
+                description: "Contract hours",
+                example: 160.0
+              }
+            }
+          },
+          fact_activities: {
+            method: "GET",
+            path: "/api/v2/fact_activities",
+            description: "Get all fact activities data",
+            response_format: {
+              id: {
+                description: "Primary key",
+                example: 1
+              },
+              hours: {
+                description: "Activity hours",
+                example: 8.0
+              },
+              activity_date: {
+                description: "Date of activity",
+                example: "2024-02-27"
+              }
+            }
+          },
+          # Add other fact endpoints...
+        }
+      },
+      dimension_tables: {
+        title: "Dimension Tables",
+        description: "Reference tables providing context for fact tables",
+        endpoints: {
+          dim_accounts: {
+            method: "GET",
+            path: "/api/v2/dim_accounts",
+            description: "Get all dimension accounts data",
+            response_format: {
+              id: {
+                description: "Primary key",
+                example: 1
+              },
+              account_id: {
+                description: "Associated account identifier",
+                example: 5
+              },
+              original_id: {
+                description: "Original system identifier",
+                example: "47"
+              },
+              name: {
+                description: "Full account name",
+                example: "Cerios BV"
+              },
+              name_short: {
+                description: "Account short name or abbreviation",
+                example: "CER"
+              },
+              created_at: {
+                description: "Timestamp of creation",
+                example: "2024-02-27T13:26:24.226+01:00"
+              },
+              updated_at: {
+                description: "Timestamp of last update",
+                example: "2024-02-27T13:26:24.226+01:00"
+              }
+            }
+          },
+          dim_companies: {
+            method: "GET",
+            path: "/api/v2/dim_companies",
+            description: "Get all dimension companies data",
+            response_format: {
+              id: "Integer - Primary key",
+              name: "String - Company name",
+              name_shorter: "String - Shortened company name"
+            }
+          },
+          # Add other dimension endpoints...
+        }
+      },
+      view_tables: {
+        title: "View Tables",
+        description: "Optimized views combining multiple tables for reporting",
+        endpoints: {
+          view_fact_rates: {
+            method: "GET",
+            path: "/api/v2/view_fact_rates",
+            description: "Get fact rates with additional computed columns including contract hours and project status",
+            response_format: nil
+          },
+          view_fact_activities: {
+            method: "GET",
+            path: "/api/v2/view_fact_activities",
+            description: "Get activities with computed columns for hours categorization",
+            response_format: nil
+          }
+        }
+      }
+    }
+  end
+
   ### VIEW TABLES ###
 
   def view_fact_rates    
