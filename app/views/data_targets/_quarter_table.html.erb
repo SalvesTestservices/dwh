@@ -34,6 +34,7 @@
       </div>
     <% else %>
       <% targets.each do |data_target| %>
+        <% dump "HUH #{data_target.turnover}" %>
         <%= render "data_target", data_target: data_target %>
 
         <% decorate data_target do |decorates| %>
@@ -72,13 +73,13 @@
           <span id="<%= role %>_productivity"><%= "#{decorates.avg(@total_productivity, @nr_months_filled)}%" %></span>
         </div>
         <div class="table-cell align-top px-2 py-3 text-center text-xs font-medium text-gray-700 uppercase tracking-wider">
-          <span id="<%= role %>_hour_rate"><%= number_to_currency(decorates.avg(@total_hour_rate, @nr_months_filled), precision: 2, separator: ',') %></span>
+          <span id="<%= role %>_hour_rate"><%= decorates.avg(@total_hour_rate, @nr_months_filled) %></span>
         </div>
         <div class="table-cell align-top px-2 py-3 text-center text-xs font-medium text-gray-700 uppercase tracking-wider">
           <span id="<%= role %>_fte_delta"><%= decorates.sum(@total_fte_delta) %></span>
         </div>
         <div class="table-cell align-top px-2 py-3 text-center text-xs font-medium text-gray-700 uppercase tracking-wider">
-          <span id="<%= role %>_turnover"><%= number_to_currency(decorates.sum(@total_turnover), precision: 2, separator: ',') %></span>
+          <span id="<%= role %>_turnover"><%= decorates.sum(@total_turnover) %></span>
         </div>
       </div>
     <% end %>

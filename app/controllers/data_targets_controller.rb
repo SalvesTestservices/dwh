@@ -2,10 +2,8 @@ class DataTargetsController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    dump "COMPANY ID: #{params[:company_id]}"
     if params[:company_id].present?
       company_targets = DataTarget.where(company_id: params[:company_id])
-dump "NR OF TARGETS: #{company_targets.count}"
       @company = Dwh::DimCompany.find(params[:company_id])
       @year = params[:year].blank? ? Date.current.year : params[:year].to_i
       @current_quarter = Date.current.quarter

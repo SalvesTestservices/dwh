@@ -16,9 +16,7 @@ class DataTarget < ApplicationRecord
   end
 
   def hour_rate(show_euro_sign = true)
-    hour_rate = (cost_price.to_f / (100 - bruto_margin))*100
-    hour_rate = number_to_currency(hour_rate, precision: 2, separator: ',') if show_euro_sign == true
-    hour_rate
+    ((cost_price.to_f / (100 - bruto_margin))*100).round(2)
   end
 
   def fte_delta
@@ -35,9 +33,7 @@ class DataTarget < ApplicationRecord
   end
 
   def turnover(show_euro_sign = true)
-    turnover = fte * hour_rate(false).to_f * billable_hours
-    turnover = number_to_currency(turnover, precision: 2, separator: ',') if show_euro_sign == true
-    turnover
+    (fte * hour_rate(false).to_f * billable_hours).round(2)
   end
 
   private def update_remaining_quarters
