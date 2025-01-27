@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_12_23_092310) do
+ActiveRecord::Schema[8.0].define(version: 2025_01_27_083627) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -22,6 +22,13 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_23_092310) do
     t.datetime "updated_at", null: false
     t.index ["is_holding"], name: "index_dim_accounts_on_is_holding"
     t.index ["original_id"], name: "index_dim_accounts_on_original_id", unique: true
+  end
+
+  create_table "dim_brokers", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_dim_brokers_on_name", unique: true
   end
 
   create_table "dim_companies", force: :cascade do |t|
@@ -113,10 +120,10 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_23_092310) do
     t.integer "customer_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "broker"
+    t.integer "broker_id"
     t.index ["account_id", "original_id", "start_date", "end_date"], name: "index_dim_projects_on_acc_id_orig_id_start_end", unique: true
     t.index ["account_id"], name: "index_dim_projects_on_account_id"
-    t.index ["broker"], name: "index_dim_projects_on_broker"
+    t.index ["broker_id"], name: "index_dim_projects_on_broker_id"
     t.index ["calculation_type"], name: "index_dim_projects_on_calculation_type"
     t.index ["company_id"], name: "index_dim_projects_on_company_id"
     t.index ["customer_id"], name: "index_dim_projects_on_customer_id"

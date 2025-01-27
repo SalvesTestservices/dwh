@@ -74,7 +74,7 @@ class Dwh::Tasks::EtlExactProjectsTask < Dwh::Tasks::BaseExactTask
                   project_hash[:start_date]         = start_date
                   project_hash[:end_date]           = end_date
                   project_hash[:expected_end_date]  = expected_end_date
-                  project_hash[:broker]             = nil
+                  project_hash[:broker_id]          = nil
                   project_hash[:customer_id]        = dim_customer_id
                   project_hash[:updated_at]         = project["ModifiedDate"].to_date.strftime("%d%m%Y").to_i
 
@@ -97,5 +97,33 @@ class Dwh::Tasks::EtlExactProjectsTask < Dwh::Tasks::BaseExactTask
       result.update(finished_at: DateTime.now, status: "failed", error: e.message)
       Dwh::DataPipelineLogger.new.create_log(run.id, "alert", "[#{task_account_name}] Finished task [#{task.task_key}] with error: #{e.message}")
     end
+  end
+
+  private def get_broker_id(project)
+    broker_id = nil
+
+    unless project.blank? or project.broker_name.blank?
+      broker_id = create_or_find_broker(project.broker_name)
+    end
+
+    broker_id
+  end
+
+  private def create_or_find_broker(name)
+    normalized_name = normalize_broker_name(name)
+    broker = Dw::DimBroker.all.find { |b| normalize_broker_name(b.name) == normalized_name }
+    if broker.blank?
+      broker = Dw::DimBroker.create(name: name)  # Preserves original spacing and capitals
+    end
+    broker.id
+  end
+
+  private def normalize_broker_name(name)
+    name
+      .gsub(/\s*[bB]\.?[vV]\.?\s*$/, '')  # Remove B.V. or BV at the end
+      .gsub(/\s*nederland\s*$/i, '')       # Remove Nederland at the end (case insensitive)
+      .gsub(/\s+/, '')                     # Remove ALL spaces
+      .downcase                            # Convert to lowercase
+      .strip
   end
 end

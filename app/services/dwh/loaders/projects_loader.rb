@@ -25,7 +25,7 @@ class Dwh::Loaders::ProjectsLoader
             start_date: project.data['start_date'], 
             end_date: project.data['end_date'],
             expected_end_date: project.data['expected_end_date'],
-            broker: project.data['broker'],
+            broker_id: project.data['broker_id'],
             customer_id: dim_customer_id
           }, 
           unique_by: [:account_id, :original_id]
