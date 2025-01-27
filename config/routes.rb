@@ -74,6 +74,7 @@ Rails.application.routes.draw do
       get  :dim_projects, to: "dwh#dim_projects"
       get  :dim_dates, to: "dwh#dim_dates"
       get  :dim_roles, to: "dwh#dim_roles"
+      get  :dim_brokers, to: "dwh#dim_brokers"
 
       # Power BI fact tables
       get  :fact_rates, to: "dwh#fact_rates"

@@ -234,6 +234,12 @@ class Api::V2::DwhController < Api::V2::BaseController
     render json: json, status: :created  
   end
 
+  def dim_brokers
+    dim_brokers = Dwh::DimBroker.all
+    json = dim_brokers.as_json
+    render json: json, status: :created  
+  end
+
   def dim_users
     dim_users = Dwh::DimUser.all
     json = dim_users.as_json
