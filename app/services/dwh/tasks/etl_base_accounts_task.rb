@@ -11,11 +11,36 @@ class Dwh::Tasks::EtlBaseAccountsTask < Dwh::Tasks::BaseTask
     end
 
     begin
-      # Extract and load accounts
-      accounts = Account.all
-      accounts.each do |account|
-        Dwh::DimAccount.upsert({ original_id: account.id, name: account.name, is_holding: account.is_holding }, unique_by: [:original_id])
+      # Set accounts
+      accounts = [
+        { id: 1, name: 'QDat', is_holding: false },
+        { id: 2, name: 'Salves', is_holding: false },
+        { id: 3, name: 'Test Crew IT', is_holding: false },
+        { id: 4, name: 'Valori', is_holding: false },
+        { id: 5, name: 'Cerios', is_holding: true },
+        { id: 6, name: 'TestArchitecten', is_holding: true },
+        { id: 7, name: 'JOSF', is_holding: true },
+        { id: 8, name: 'Omnext', is_holding: true },
+        { id: 9, name: 'Testmanagement', is_holding: true },
+        { id: 10, name: 'Supportbook', is_holding: true }
+      ]
+
+      # Transform data for upsert_all
+      accounts_data = accounts.map do |account|
+        {
+          original_id: account[:id],
+          name: account[:name],
+          is_holding: account[:is_holding]
+        }
       end
+
+      # Create or update accounts
+      Dwh::DimAccount.upsert_all(
+        accounts_data,
+        unique_by: :original_id,
+        update_only: [:name, :is_holding],
+        returning: false
+      )
         
       # Update result
       result.update(finished_at: DateTime.now, status: "finished")
