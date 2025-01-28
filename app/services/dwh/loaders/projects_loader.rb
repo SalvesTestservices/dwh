@@ -36,6 +36,3 @@ class Dwh::Loaders::ProjectsLoader
     end
   end
 end
-
-
-broker: project.data['broker'],

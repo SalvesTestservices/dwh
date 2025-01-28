@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_27_083627) do
+ActiveRecord::Schema[8.0].define(version: 2025_01_28_110000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -121,7 +121,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_27_083627) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "broker_id"
-    t.index ["account_id", "original_id", "start_date", "end_date"], name: "index_dim_projects_on_acc_id_orig_id_start_end", unique: true
+    t.index ["account_id", "original_id"], name: "index_dim_projects_on_account_id_and_original_id", unique: true
     t.index ["account_id"], name: "index_dim_projects_on_account_id"
     t.index ["broker_id"], name: "index_dim_projects_on_broker_id"
     t.index ["calculation_type"], name: "index_dim_projects_on_calculation_type"
