@@ -1,5 +1,5 @@
 module Dwh
-  class DimBroker < DwRecord
+  class DimBroker < DwhRecord
     validates :name, presence: true
   end
 end

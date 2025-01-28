@@ -12,89 +12,87 @@ class Dwh::Tasks::EtlExactRatesTask < Dwh::Tasks::BaseExactTask
 
     begin
       # Extract rates
-      ActsAsTenant.without_tenant do
-        account = Account.find(task_account_id)
-        dim_account = Dwh::DimAccount.find_by(original_id: account.id)
-        dp_pipeline = run.dp_pipeline
-        year    = dp_pipeline.year.blank? ? Date.current.year : dp_pipeline.year.to_i
-        month   = dp_pipeline.month.blank? ? Date.current.month : dp_pipeline.month.to_i
+      account = Account.find(task_account_id)
+      dim_account = Dwh::DimAccount.find_by(original_id: account.id)
+      dp_pipeline = run.dp_pipeline
+      year    = dp_pipeline.year.blank? ? Date.current.year : dp_pipeline.year.to_i
+      month   = dp_pipeline.month.blank? ? Date.current.month : dp_pipeline.month.to_i
 
-        api_url, api_key, administration = get_api_keys("synergy")
+      api_url, api_key, administration = get_api_keys("synergy")
 
-        # Cancel the task if the API keys are not valid
-        if api_url.blank? or api_key.blank? or administration.blank?
-          Dwh::DataPipelineLogger.new.create_log(run.id, "alert", "[#{task_account_name}] Invalid API keys")
-          result.update(finished_at: DateTime.now, status: "error")
-          return  
-        end
+      # Cancel the task if the API keys are not valid
+      if api_url.blank? or api_key.blank? or administration.blank?
+        Dwh::DataPipelineLogger.new.create_log(run.id, "alert", "[#{task_account_name}] Invalid API keys")
+        result.update(finished_at: DateTime.now, status: "error")
+        return  
+      end
 
-        # Scope users 
-        if dp_pipeline.scoped_user_id.blank?
-          dim_users = Dwh::DimUser.where(account_id: dim_account.id)
-        else
-          dim_users = Dwh::DimUser.where(account_id: dim_account.id, original_id: dp_pipeline.scoped_user_id.to_i)
-        end
+      # Scope users 
+      if dp_pipeline.scoped_user_id.blank?
+        dim_users = Dwh::DimUser.where(account_id: dim_account.id)
+      else
+        dim_users = Dwh::DimUser.where(account_id: dim_account.id, original_id: dp_pipeline.scoped_user_id.to_i)
+      end
 
-        # Iterate the users
-        unless dim_users.blank?
-          dim_users.each do |dim_user|
-            # Check if the user is employed in the given month
-            employed = true
+      # Iterate the users
+      unless dim_users.blank?
+        dim_users.each do |dim_user|
+          # Check if the user is employed in the given month
+          employed = true
 
-            if dim_user.leave_date.present?
-              leave_date = dim_user.leave_date.to_s.length == 7 ? "0#{dim_user.leave_date}" : dim_user.leave_date.to_s
-              leave_date_as_date = Date.strptime(leave_date, '%d%m%Y')
-              check_date = Date.new(year, month, 1)
-              employed = leave_date_as_date >= check_date ? true : false
-            end
-    
-            if employed == true
-              start_date = dim_user.start_date.to_s.rjust(8, '0')
-              unless start_date.blank? or start_date == "00000000"
-                start_date_as_date = Date.strptime(start_date, '%d%m%Y')
+          if dim_user.leave_date.present?
+            leave_date = dim_user.leave_date.to_s.length == 7 ? "0#{dim_user.leave_date}" : dim_user.leave_date.to_s
+            leave_date_as_date = Date.strptime(leave_date, '%d%m%Y')
+            check_date = Date.new(year, month, 1)
+            employed = leave_date_as_date >= check_date ? true : false
+          end
+  
+          if employed == true
+            start_date = dim_user.start_date.to_s.rjust(8, '0')
+            unless start_date.blank? or start_date == "00000000"
+              start_date_as_date = Date.strptime(start_date, '%d%m%Y')
 
-                valid_hr_data = get_valid_hr_data(api_url, api_key, administration, dim_user.original_id, month, year)
-                if valid_hr_data.blank? || start_date_as_date > Date.current
-                  # Send email to notify of missing hr data
-                  UserMailer.dwh_email("Geen HR data aanwezig voor: #{dim_user.full_name} (ID: #{dim_user.original_id})").deliver_later
-                else
-                  # Get company
-                  dim_company = Dwh::DimCompany.find_by(id: dim_user.company_id)
-                  unless dim_company.blank?
-                    # Get all hours and average rate for the user for the month
-                    avg_rate, hours = calculate_avg_rate_and_hours(api_url, api_key, administration, dim_user.original_id, month, year)
+              valid_hr_data = get_valid_hr_data(api_url, api_key, administration, dim_user.original_id, month, year)
+              if valid_hr_data.blank? || start_date_as_date > Date.current
+                # Send email to notify of missing hr data
+                UserMailer.dwh_email("Geen HR data aanwezig voor: #{dim_user.full_name} (ID: #{dim_user.original_id})").deliver_later
+              else
+                # Get company
+                dim_company = Dwh::DimCompany.find_by(id: dim_user.company_id)
+                unless dim_company.blank?
+                  # Get all hours and average rate for the user for the month
+                  avg_rate, hours = calculate_avg_rate_and_hours(api_url, api_key, administration, dim_user.original_id, month, year)
 
-                    # Set BCR
-                    bcr = calculate_bcr(api_url, api_key, administration, dim_user.original_id, valid_hr_data["TextFreeField3"],valid_hr_data["TextFreeField8"], month, year)
+                  # Set BCR
+                  bcr = calculate_bcr(api_url, api_key, administration, dim_user.original_id, valid_hr_data["TextFreeField3"],valid_hr_data["TextFreeField8"], month, year)
 
-                    # Set contract and contract hours
-                    contract = valid_hr_data["TextFreeField2"] == "Onbepaalde tijd" ? "fixed" : "temporary"
+                  # Set contract and contract hours
+                  contract = valid_hr_data["TextFreeField2"] == "Onbepaalde tijd" ? "fixed" : "temporary"
 
-                    if user_employed_in_month(dim_user, month, year)
-                      contract_hours = valid_hr_data["TextFreeField4"].blank? ? 40 : ((valid_hr_data["TextFreeField4"].to_f / 100.0 ) * 40).round(1)
-                    else
-                      contract_hours = 0
-                    end
+                  if user_employed_in_month(dim_user, month, year)
+                    contract_hours = valid_hr_data["TextFreeField4"].blank? ? 40 : ((valid_hr_data["TextFreeField4"].to_f / 100.0 ) * 40).round(1)
+                  else
+                    contract_hours = 0
+                  end
 
-                    unless bcr == "n/a"
-                      user_hash = Hash.new
-                      user_hash[:user_id]         = dim_user.original_id
-                      user_hash[:company_id]      = dim_company.original_id
-                      user_hash[:rate_date]       = Date.new(year, month, 1).strftime("%d%m%Y").to_i
-                      user_hash[:avg_rate]        = avg_rate
-                      user_hash[:hours]           = hours
-                      user_hash[:bcr]             = bcr
-                      user_hash[:ucr]             = nil
-                      user_hash[:company_bcr]     = nil
-                      user_hash[:company_ucr]     = nil
-                      user_hash[:contract]        = contract
-                      user_hash[:contract_hours]  = contract_hours
-                      user_hash[:role]            = dim_user.role
-                      user_hash[:salary]          = valid_hr_data["Amount"]
-                      user_hash[:show_user]       = "Y"
+                  unless bcr == "n/a"
+                    user_hash = Hash.new
+                    user_hash[:user_id]         = dim_user.original_id
+                    user_hash[:company_id]      = dim_company.original_id
+                    user_hash[:rate_date]       = Date.new(year, month, 1).strftime("%d%m%Y").to_i
+                    user_hash[:avg_rate]        = avg_rate
+                    user_hash[:hours]           = hours
+                    user_hash[:bcr]             = bcr
+                    user_hash[:ucr]             = nil
+                    user_hash[:company_bcr]     = nil
+                    user_hash[:company_ucr]     = nil
+                    user_hash[:contract]        = contract
+                    user_hash[:contract_hours]  = contract_hours
+                    user_hash[:role]            = dim_user.role
+                    user_hash[:salary]          = valid_hr_data["Amount"]
+                    user_hash[:show_user]       = "Y"
 
-                      Dwh::EtlStorage.create(account_id: account.id, identifier: "rates", etl: "transform", data: user_hash)
-                    end
+                    Dwh::EtlStorage.create(account_id: account.id, identifier: "rates", etl: "transform", data: user_hash)
                   end
                 end
               end
