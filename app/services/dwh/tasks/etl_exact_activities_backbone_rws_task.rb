@@ -29,7 +29,25 @@ class Dwh::Tasks::EtlExactActivitiesBackboneRwsTask < Dwh::Tasks::BaseExactTask
       activities = Dwh::FactActivity.where(account_id: account.id, customer_id: rws.id, activity_date: dim_date.id)
       unless activities.blank?
         activities.each do |activity|
-          # Write or update activities in Backbone
+          # Check if activity exists in Backbone
+          url = URI::Parser.new.escape("#{ENV['BACKBONE_API_URL']}/api/v1/get_activity?activity_id=#{activity.id}&email=#{ENV['BACKBONE_API_EMAIL']}&password=#{ENV['BACKBONE_API_PASSWORD']}")
+          response = HTTParty.get(url)
+          unless response.body.include?("error")
+            # Parse the JSON response
+      response_data = JSON.parse(response.body)
+
+
+              activity_date  "dd-mm-yyy"
+              hours
+              rate
+              unbillable_id = original_id!
+              projectuser_id = original_id!
+              project_name
+              unbillable_name
+
+
+
+            # Wat te doen met deleted activities in Synergy en DWH? Remove task per dag gaan uitvoeren voor DWH en Backbone?
         end
       end
 
