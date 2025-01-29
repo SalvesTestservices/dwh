@@ -13,24 +13,26 @@ class Dwh::Tasks::EtlBaseAccountsTask < Dwh::Tasks::BaseTask
     begin
       # Set accounts
       accounts = [
-        { id: 1, name: 'QDat', is_holding: false },
-        { id: 2, name: 'Salves', is_holding: false },
-        { id: 3, name: 'Test Crew IT', is_holding: false },
-        { id: 4, name: 'Valori', is_holding: false },
-        { id: 5, name: 'Cerios', is_holding: true },
-        { id: 6, name: 'TestArchitecten', is_holding: true },
-        { id: 7, name: 'JOSF', is_holding: true },
-        { id: 8, name: 'Omnext', is_holding: true },
-        { id: 9, name: 'Testmanagement', is_holding: true },
-        { id: 10, name: 'Supportbook', is_holding: true }
+        { id: 1, original_id: 4, name: 'QDat', is_holding: false, administration: nil },
+        { id: 2, original_id: 2, name: 'Salves', is_holding: false, administration: nil },
+        { id: 3, original_id: 6, name: 'Test Crew IT', is_holding: false, administration: nil },
+        { id: 4, original_id: 8, name: 'Valori', is_holding: false, administration: "735376G001P" },
+        { id: 5, original_id: 1, name: 'Cerios', is_holding: true, administration: nil },
+        { id: 6, original_id: 9, name: 'TestArchitecten', is_holding: true, administration: nil },
+        { id: 7, original_id: 10, name: 'JOSF', is_holding: true, administration: nil },
+        { id: 8, original_id: 11, name: 'Omnext', is_holding: true, administration: nil },
+        { id: 9, original_id: 12, name: 'Testmanagement', is_holding: true, administration: nil },
+        { id: 10, original_id: 13, name: 'Supportbook', is_holding: true, administration: nil }
       ]
 
       # Transform data for upsert_all
       accounts_data = accounts.map do |account|
         {
-          original_id: account[:id],
+          id: account[:id],
+          original_id: account[:original_id],
           name: account[:name],
-          is_holding: account[:is_holding]
+          is_holding: account[:is_holding],
+          administration: account[:administration]
         }
       end
 
@@ -38,7 +40,6 @@ class Dwh::Tasks::EtlBaseAccountsTask < Dwh::Tasks::BaseTask
       Dwh::DimAccount.upsert_all(
         accounts_data,
         unique_by: :original_id,
-        update_only: [:name, :is_holding],
         returning: false
       )
         

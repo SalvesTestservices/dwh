@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_28_110000) do
+ActiveRecord::Schema[8.0].define(version: 2025_01_29_110000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -20,6 +20,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_28_110000) do
     t.string "is_holding"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "administration"
+    t.index ["administration"], name: "index_dim_accounts_on_administration"
     t.index ["is_holding"], name: "index_dim_accounts_on_is_holding"
     t.index ["original_id"], name: "index_dim_accounts_on_original_id", unique: true
   end
