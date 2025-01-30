@@ -1,4 +1,4 @@
-class Dwh::Tasks::EtlExactActivitiesBackboneRwsTask < Dwh::Tasks::BaseExactTask
+class Dwh::Tasks::EtlRwsDwhToBackboneTask < Dwh::Tasks::BaseExactTask
   queue_as :default
 
   def perform(task_account_id, task_account_name, run, result, task)
@@ -20,6 +20,66 @@ class Dwh::Tasks::EtlExactActivitiesBackboneRwsTask < Dwh::Tasks::BaseExactTask
         result.update(finished_at: DateTime.now, status: "error")
         return  
       end
+
+      ### Users created in the last 24 hours ###
+
+      account = Dwh::DimAccount.find_by(name: "Salves")
+      users = Dwh::DimUser.where(account_id: account.id, created_at: (DateTime.now - 1.day)..DateTime.now)
+      dump "CREATED USERS: #{users.count}"
+      unless users.blank?
+        users.each do |user|
+          # Split full name into first name and last name
+          name_parts = user.full_name.split(' ', 2)
+          first_name = name_parts[0]
+          last_name = name_parts[1]
+
+          # Convert contract
+          case user.contract
+          when "Vast"
+            contract = "fixed"
+          when "Tijdelijk contract"
+            contract = "temporary"
+          when "Midlancer"
+            contract = "midlance"
+          end
+          
+          # Create request body
+          body = {
+            first_name: first_name,
+            last_name: last_name,
+            email: user.email,
+            start_date: user.start_date,
+            contract: contract,
+            contract_hours: user.contract_hours
+          }
+          
+
+          # Create user in Backbone
+          begin
+            url = URI::Parser.new.escape("#{ENV['BACKBONE_API_URL']}/api/v1/create_user?email=#{ENV['BACKBONE_API_EMAIL']}&password=#{ENV['BACKBONE_API_PASSWORD']}")
+            
+            response = HTTParty.post(
+              url,
+              raw_body: body.to_json,
+              headers: { 
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json'
+              },
+              timeout: 30,
+              debug_output: $stdout  # This will show detailed request/response info
+            )
+            
+            dump "Response: #{response.code} - #{response.body}"
+          rescue => e
+            dump "Error class: #{e.class}"
+            dump "Error message: #{e.message}"
+            dump "Error backtrace: #{e.backtrace.join("\n")}"
+          end
+
+        end
+      end
+
+=begin
 
       # Get customer RWS from dim_customers
       rws = Dwh::DimCustomer.find_by(account_id: account.id, name "Rijkswaterstaat")
@@ -45,12 +105,12 @@ class Dwh::Tasks::EtlExactActivitiesBackboneRwsTask < Dwh::Tasks::BaseExactTask
               project_name
               unbillable_name
 
+# ook nieuwe medewerkers van salves ophalen en toevoegen
 
-
-            # Wat te doen met deleted activities in Synergy en DWH? Remove task per dag gaan uitvoeren voor DWH en Backbone?
+            # Alleen goedgekeurde activities toevoegen!!
         end
       end
-
+=end
     
 
       # Update result
