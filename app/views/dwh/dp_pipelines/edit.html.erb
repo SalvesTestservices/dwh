@@ -25,6 +25,14 @@
             <%= link_to I18n.t(".general.cancel"), dwh_dp_pipeline_path(@dp_pipeline), class: "text-primary hover:underline pt-2 pl-2" %>
           </div>
         </div>
+        <div class="flex flex-row justify-between">
+          <div class="w-full flex flex-col mt-2">
+            <div class="font-semibold text-gray-700 text-left pl-10"><%= I18n.t('.dp_pipeline.form.description') %></div>
+            <div class="mt-2 flex flex-row justify-start">
+              <%= form.text_field :description, autofocus: false, class: "bg-white w-3/4 block text-sm text-gray-800 p-1 border-gray-300 rounded focus:ring-gray-500 focus:border-gray-500" %>
+            </div>
+          </div>
+        </div>
         <dl class="mt-1 grid grid-cols-4 text-sm leading-6 w-full">
           <div class="mt-6 border-t border-gray-200 pt-6 sm:pr-4">
             <dt class="font-semibold text-gray-700 text-center"><%= I18n.t('.dp_pipeline.form.pipeline_key') %></dt>

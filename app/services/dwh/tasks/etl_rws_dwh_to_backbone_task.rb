@@ -25,7 +25,6 @@ class Dwh::Tasks::EtlRwsDwhToBackboneTask < Dwh::Tasks::BaseExactTask
 
       account = Dwh::DimAccount.find_by(name: "Salves")
       users = Dwh::DimUser.where(account_id: account.id, created_at: (DateTime.now - 1.day)..DateTime.now)
-      dump "CREATED USERS: #{users.count}"
       unless users.blank?
         users.each do |user|
           # Split full name into first name and last name
@@ -57,7 +56,6 @@ class Dwh::Tasks::EtlRwsDwhToBackboneTask < Dwh::Tasks::BaseExactTask
             contract_hours: user.contract_hours
           }
           
-
           # Create user in Backbone
           begin
             url = URI::Parser.new.escape("#{ENV['BACKBONE_API_URL']}/api/v1/create_user?email=#{ENV['BACKBONE_API_EMAIL']}&password=#{ENV['BACKBONE_API_PASSWORD']}")

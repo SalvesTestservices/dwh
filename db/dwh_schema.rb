@@ -10,9 +10,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_29_110000) do
+ActiveRecord::Schema[8.0].define(version: 2025_01_31_085900) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "dg_logs", force: :cascade do |t|
+    t.integer "object_id"
+    t.string "object_type"
+    t.integer "user_id"
+    t.string "action"
+    t.string "status"
+    t.string "error_message"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["action"], name: "index_dg_logs_on_action"
+    t.index ["object_id"], name: "index_dg_logs_on_object_id"
+    t.index ["object_type"], name: "index_dg_logs_on_object_type"
+    t.index ["status"], name: "index_dg_logs_on_status"
+    t.index ["user_id"], name: "index_dg_logs_on_user_id"
+  end
 
   create_table "dim_accounts", force: :cascade do |t|
     t.integer "original_id"
@@ -218,6 +234,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_29_110000) do
     t.integer "scoped_user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "description"
     t.index ["account_id"], name: "index_dp_pipelines_on_account_id"
     t.index ["dp_runs_count"], name: "index_dp_pipelines_on_dp_runs_count"
     t.index ["dp_tasks_count"], name: "index_dp_pipelines_on_dp_tasks_count"

@@ -16,16 +16,6 @@
         <div class="text-sm font-medium leading-6 text-gray-800 text-center"><%= I18n.t('.dp_pipeline.form.run_frequency') %></div>
         <div class="mt-1 text-sm leading-5 text-gray-500 text-center"><%= decorates.run_frequency %></div>
       </div>
-      <div class="col-span-1 flex flex-col">
-        <div class="text-sm font-medium leading-6 text-gray-800 text-center">QC</div>
-        <div class="mt-1 flex flex-row justify-center">
-          <% if dp_run.blank? %>
-            <%= "-" %>
-          <% else %>
-            <%= render "dwh/dp_runs/quality_checks_overall", size: "small", dp_run: dp_run, dp_quality_checks: dp_run.dp_quality_checks %>
-          <% end %>
-        </div>
-      </div>
       <div class="col-span-2 flex flex-col">
         <div class="text-sm font-medium leading-6 text-gray-800 text-center"><%= I18n.t('.dp_pipeline.form.last_executed_at') %></div>
         <div class="mt-1 text-sm leading-5 text-gray-500 text-center"><%= decorates.data_field(dp_pipeline.last_executed_at, "time") %></div>

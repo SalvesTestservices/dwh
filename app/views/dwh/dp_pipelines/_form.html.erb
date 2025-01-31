@@ -9,6 +9,7 @@
         <%= render(Form::SelectComponent.new(label: I18n.t(".dp_pipeline.form.account_id"), form: form, attribute: :account_id, collection: @accounts, value: :name, mandatory: true)) %>
         <%= render(Form::TextFieldComponent.new(label: I18n.t(".dp_pipeline.form.name"), form: form, attribute: :name, mandatory: true, autofocus: true, width: "medium")) %>
         <%= render(Form::TextFieldComponent.new(label: I18n.t(".dp_pipeline.form.pipeline_key"), form: form, attribute: :pipeline_key, mandatory: true, autofocus: false, width: "medium")) %>
+        <%= render(Form::TextFieldComponent.new(label: I18n.t(".dp_pipeline.form.description"), form: form, attribute: :description, mandatory: false, autofocus: true, width: "large")) %>
 
         <% collection = [['hourly', I18n.t('.dp_pipeline.frequencies.hourly')],['daily', I18n.t('.dp_pipeline.frequencies.daily')]] %>
         <%= render(Form::SelectComponent.new(label: I18n.t(".dp_pipeline.form.run_frequency"), form: form, attribute: :run_frequency, collection: collection, value: nil, mandatory: true)) %>

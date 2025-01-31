@@ -5,15 +5,17 @@
     <div class="bg-gray-50 -mx-4 px-4 py-8 shadow-sm ring-1 ring-gray-900/5 sm:mx-0 sm:rounded-lg sm:px-8 sm:pb-4 my-3 border-l-8 <%= status %> border-t border-r border-b border-gray-300">
       <div class="flex flex-row justify-between">
         <h2 class="pt-3 text-3xl font-semibold leading-6 text-gray-700"><%= dp_pipeline.name %></h2>
-        <div class="w-3/12 flex flex-row justify-center mt-2">
-          <% unless @dp_runs.blank? %>
-            <%= render "dwh/dp_runs/quality_checks_overall", size: "medium", dp_run: @dp_runs.first, dp_quality_checks: @dp_runs.first.dp_quality_checks %>
-          <% end %>
-        </div>
-        <div class="w-3/12 flex flex-row justify-end h-10 mt-3">
+        <div class="flex flex-row justify-end">
           <%= render(View::ButtonComponent.new(title: I18n.t(".general.edit"), url: edit_dwh_dp_pipeline_path(dp_pipeline), button_type: "link", size: "medium")) %>
         </div>
       </div>
+
+      <% if dp_pipeline.description.present? %>
+        <div class="flex flex-row justify-start mt-5 text-base text-gray-500">
+          <%= dp_pipeline.description %>
+        </div>
+      <% end %>
+
       <dl class="mt-1 grid grid-cols-4 text-sm leading-6 w-full">
         <div class="mt-6 border-t border-gray-200 pt-6 sm:pr-4">
           <dt class="font-semibold text-gray-700 text-center"><%= I18n.t('.dp_pipeline.form.pipeline_key') %></dt>

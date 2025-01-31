@@ -50,7 +50,7 @@ class Dwh::DpPipelinesController < ApplicationController
 
   def update
     @dp_pipeline = Dwh::DpPipeline.find(params[:id])
-    if @dp_pipeline.update(dp_pipeline_params)
+    if @dp_pipeline.update!(dp_pipeline_params)
       redirect_to dwh_dp_pipeline_path(@dp_pipeline), notice: I18n.t('.dp_pipeline.messages.updated')
     else
       get_form_data
@@ -79,6 +79,7 @@ class Dwh::DpPipelinesController < ApplicationController
   end
 
   private def dp_pipeline_params
-    params.require(:dwh_dp_pipeline).permit(:name, :status, :run_frequency, :load_method, :pipeline_key, :month, :year, :scoped_user_id, :account_id)
+    params.require(:dwh_dp_pipeline).permit(:name, :status, :description, :run_frequency, :load_method, :pipeline_key, :month, :year, 
+      :scoped_user_id, :account_id)
   end
 end
