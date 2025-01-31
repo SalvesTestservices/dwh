@@ -21,12 +21,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_31_085900) do
     t.string "action"
     t.string "status"
     t.string "error_message"
+    t.string "trigger"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["action"], name: "index_dg_logs_on_action"
     t.index ["object_id"], name: "index_dg_logs_on_object_id"
     t.index ["object_type"], name: "index_dg_logs_on_object_type"
     t.index ["status"], name: "index_dg_logs_on_status"
+    t.index ["trigger"], name: "index_dg_logs_on_trigger"
     t.index ["user_id"], name: "index_dg_logs_on_user_id"
   end
 

@@ -71,17 +71,27 @@ class Dwh::Tasks::EtlRwsDwhToBackboneTask < Dwh::Tasks::BaseExactTask
               debug_output: $stdout
             )
             
-            dump "Response: #{response.code} - #{response.body}"
+            # Create data governance log
+            if response.code == 200
+              Dwh::DgLog.create(object_id: user.id, object_type: "dim_user", action: "created_in_bb", status: "success", trigger: "etl_rws_dwh_to_backbone_task")
+            else
+              error_message = JSON.parse(response.body)["error"]
+              Dwh::DgLog.create(object_id: user.id, object_type: "dim_user", action: "created_in_bb", status: "failed", trigger: "etl_rws_dwh_to_backbone_task", error_message: error_message)
+            end
           rescue => e
-            dump "Error class: #{e.class}"
-            dump "Error message: #{e.message}"
-            dump "Error backtrace: #{e.backtrace.join("\n")}"
+            # Create data governance log
+            Dwh::DgLog.create(object_id: user.id, object_type: "dim_user", action: "created_in_bb", status: "failed", trigger: "etl_rws_dwh_to_backbone_task", error_message: e.message)
           end
-
         end
       end
 
 =begin
+  t.integer :object_id
+      t.string :object_type
+      t.integer :user_id
+      t.string :action
+      t.string :status
+      t.string :error_message
 
       # Get customer RWS from dim_customers
       rws = Dwh::DimCustomer.find_by(account_id: account.id, name "Rijkswaterstaat")
