@@ -21,7 +21,7 @@ class Dwh::Tasks::EtlRwsDwhToBackboneTask < Dwh::Tasks::BaseExactTask
         return  
       end
 
-      ### Users created in the last 24 hours ###
+      ### Users created for Salves in the last 24 hours ###
 
       account = Dwh::DimAccount.find_by(name: "Salves")
       users = Dwh::DimUser.where(account_id: account.id, created_at: (DateTime.now - 1.day)..DateTime.now)
@@ -35,20 +35,24 @@ class Dwh::Tasks::EtlRwsDwhToBackboneTask < Dwh::Tasks::BaseExactTask
 
           # Convert contract
           case user.contract
-          when "Vast"
+          when "Vast contract"
             contract = "fixed"
           when "Tijdelijk contract"
             contract = "temporary"
           when "Midlancer"
             contract = "midlance"
           end
+
+          # Convert start date
+          dim_date = Dwh::DimDate.find(user.start_date)
+          start_date = Date.new(dim_date.year, dim_date.month, dim_date.day)
           
           # Create request body
           body = {
             first_name: first_name,
             last_name: last_name,
-            email: user.email,
-            start_date: user.start_date,
+            user_email: user.email,
+            start_date: start_date,
             contract: contract,
             contract_hours: user.contract_hours
           }
@@ -60,13 +64,13 @@ class Dwh::Tasks::EtlRwsDwhToBackboneTask < Dwh::Tasks::BaseExactTask
             
             response = HTTParty.post(
               url,
-              raw_body: body.to_json,
+              body: body.to_json,
               headers: { 
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json'
               },
               timeout: 30,
-              debug_output: $stdout  # This will show detailed request/response info
+              debug_output: $stdout
             )
             
             dump "Response: #{response.code} - #{response.body}"
