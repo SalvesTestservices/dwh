@@ -8,6 +8,7 @@ class CreateDgLogs < ActiveRecord::Migration[7.0]
       t.string :status
       t.string :error_message
       t.string :trigger
+      t.string :direction
       
       t.timestamps
     end
@@ -18,5 +19,6 @@ class CreateDgLogs < ActiveRecord::Migration[7.0]
     add_index :dg_logs, :status
     add_index :dg_logs, :user_id
     add_index :dg_logs, :trigger
+    add_index :dg_logs, :direction
   end
 end 

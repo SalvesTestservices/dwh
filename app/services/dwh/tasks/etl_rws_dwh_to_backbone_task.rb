@@ -89,14 +89,14 @@ class Dwh::Tasks::EtlRwsDwhToBackboneTask < Dwh::Tasks::BaseExactTask
 
           # Create data governance log
           if response.code == 201
-            Dwh::DgLog.create!(object_id: activity.id, object_type: "fact_activity", action: "created_or_updated_in_bb", status: "success", trigger: "etl_rws_dwh_to_backbone_task")
+            Dwh::DgLog.create!(object_id: activity.id, object_type: "fact_activity", direction: "outbound", action: "created_or_updated_in_bb", status: "success", trigger: "etl_rws_dwh_to_backbone_task")
           else
             error_message = JSON.parse(response.body)["error"]
-            Dwh::DgLog.create!(object_id: activity.id, object_type: "fact_activity", action: "created_or_updated_in_bb", status: "failed", trigger: "etl_rws_dwh_to_backbone_task", error_message: error_message)
+            Dwh::DgLog.create!(object_id: activity.id, object_type: "fact_activity", direction: "outbound", action: "created_or_updated_in_bb", status: "failed", trigger: "etl_rws_dwh_to_backbone_task", error_message: error_message)
           end
         rescue => e
           # Create data governance log
-          Dwh::DgLog.create!(object_id: activity.id, object_type: "fact_activity", action: "created_or_updated_in_bb", status: "failed", trigger: "etl_rws_dwh_to_backbone_task", error_message: e.message)
+          Dwh::DgLog.create!(object_id: activity.id, object_type: "fact_activity", direction: "outbound", action: "created_or_updated_in_bb", status: "failed", trigger: "etl_rws_dwh_to_backbone_task", error_message: e.message)
         end
       end
     end
@@ -152,14 +152,14 @@ class Dwh::Tasks::EtlRwsDwhToBackboneTask < Dwh::Tasks::BaseExactTask
 
           # Create data governance log
           if response.code == 201
-            Dwh::DgLog.create!(object_id: user.id, object_type: "dim_user", action: "created_in_bb", status: "success", trigger: "etl_rws_dwh_to_backbone_task")
+            Dwh::DgLog.create!(object_id: user.id, object_type: "dim_user", direction: "outbound", action: "created_in_bb", status: "success", trigger: "etl_rws_dwh_to_backbone_task")
           else
             error_message = JSON.parse(response.body)["error"]
-            Dwh::DgLog.create!(object_id: user.id, object_type: "dim_user", action: "created_in_bb", status: "failed", trigger: "etl_rws_dwh_to_backbone_task", error_message: error_message)
+            Dwh::DgLog.create!(object_id: user.id, object_type: "dim_user", direction: "outbound", action: "created_in_bb", status: "failed", trigger: "etl_rws_dwh_to_backbone_task", error_message: error_message)
           end
         rescue => e
           # Create data governance log
-          Dwh::DgLog.create!(object_id: user.id, object_type: "dim_user", action: "created_in_bb", status: "failed", trigger: "etl_rws_dwh_to_backbone_task", error_message: e.message)
+          Dwh::DgLog.create!(object_id: user.id, object_type: "dim_user", direction: "outbound", action: "created_in_bb", status: "failed", trigger: "etl_rws_dwh_to_backbone_task", error_message: e.message)
         end
       end
     end

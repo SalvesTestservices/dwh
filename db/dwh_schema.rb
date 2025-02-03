@@ -22,9 +22,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_31_085900) do
     t.string "status"
     t.string "error_message"
     t.string "trigger"
+    t.string "direction"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["action"], name: "index_dg_logs_on_action"
+    t.index ["direction"], name: "index_dg_logs_on_direction"
     t.index ["object_id"], name: "index_dg_logs_on_object_id"
     t.index ["object_type"], name: "index_dg_logs_on_object_type"
     t.index ["status"], name: "index_dg_logs_on_status"
@@ -38,8 +40,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_31_085900) do
     t.string "is_holding"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "administration"
-    t.index ["administration"], name: "index_dim_accounts_on_administration"
+    t.string "administration_globe"
+    t.string "administration_synergy"
+    t.index ["administration_globe"], name: "index_dim_accounts_on_administration_globe"
+    t.index ["administration_synergy"], name: "index_dim_accounts_on_administration_synergy"
     t.index ["is_holding"], name: "index_dim_accounts_on_is_holding"
     t.index ["original_id"], name: "index_dim_accounts_on_original_id", unique: true
   end
