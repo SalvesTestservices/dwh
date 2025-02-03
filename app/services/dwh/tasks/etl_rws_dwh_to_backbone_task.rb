@@ -10,7 +10,7 @@ class Dwh::Tasks::EtlRwsDwhToBackboneTask < Dwh::Tasks::BaseExactTask
       return
     end
 
-    #begin
+    begin
       account = Account.find(task_account_id)
       api_url, api_key, administration = get_api_keys("synergy")
 
@@ -21,7 +21,7 @@ class Dwh::Tasks::EtlRwsDwhToBackboneTask < Dwh::Tasks::BaseExactTask
         return  
       end
 
-      # Create new Salves users in Backbone which were created in the last 24 hours
+      # Create new users in Backbone which were created in Synergy in the last 24 hours
       create_new_bb_users
 
       # Create or update RWS activities in Backbone
@@ -30,11 +30,11 @@ class Dwh::Tasks::EtlRwsDwhToBackboneTask < Dwh::Tasks::BaseExactTask
       # Update result
       result.update(finished_at: DateTime.now, status: "finished")
       Dwh::DataPipelineLogger.new.create_log(run.id, "success", "[#{task_account_name}] Finished task [#{task.task_key}] successfully")
-    #rescue => e
+    rescue => e
       # Update result to failed if an error occurs
-      #result.update(finished_at: DateTime.now, status: "failed", error: e.message)
-      #Dwh::DataPipelineLogger.new.create_log(run.id, "alert", "[#{task_account_name}] Finished task [#{task.task_key}] with error: #{e.message}")
-    #end
+      result.update(finished_at: DateTime.now, status: "failed", error: e.message)
+      Dwh::DataPipelineLogger.new.create_log(run.id, "alert", "[#{task_account_name}] Finished task [#{task.task_key}] with error: #{e.message}")
+    end
   end
 
   private def create_or_update_rws_activities
@@ -54,16 +54,24 @@ class Dwh::Tasks::EtlRwsDwhToBackboneTask < Dwh::Tasks::BaseExactTask
         # Get project name
         project_name = Dwh::DimProject.find(activity.project_id).name
 
+        # Get BB user id
+        dim_user = Dwh::DimUser.find(activity.user_id)
+        user_id = dim_user.blank? ? nil : dim_user.original_id
+
+        # Get BB projectuser id
+        fact_projectuser = Dwh::FactProjectuser.find(activity.projectuser_id)
+        projectuser_id = fact_projectuser.blank? ? nil : fact_projectuser.original_id
+
         # Create request body
         body = {
           activity_date: activity_date,
-          user_id: activity.user_id,
-          projectuser_id: activity.projectuser_id,
+          user_id: user_id,
+          projectuser_id: projectuser_id,
           project_name: project_name,
           hours: activity.hours,
           rate: activity.rate,
         }
-dump "BODY: #{body}"
+
         # Create or update the activity in Backbone
         begin
           url = URI::Parser.new.escape("#{ENV['BACKBONE_API_URL']}/api/v1/create_or_update_activity?email=#{ENV['BACKBONE_API_EMAIL']}&password=#{ENV['BACKBONE_API_PASSWORD']}")
@@ -78,7 +86,7 @@ dump "BODY: #{body}"
             timeout: 30,
             debug_output: $stdout
           )
-dump "RESPONSE: #{response}"
+
           # Create data governance log
           if response.code == 201
             Dwh::DgLog.create!(object_id: activity.id, object_type: "fact_activity", action: "created_or_updated_in_bb", status: "success", trigger: "etl_rws_dwh_to_backbone_task")
@@ -95,8 +103,7 @@ dump "RESPONSE: #{response}"
   end
 
   private def create_new_bb_users
-    dim_account = Dwh::DimAccount.find_by(name: "Salves")
-    users = Dwh::DimUser.where(account_id: dim_account.id, created_at: (DateTime.now - 1.day)..DateTime.now)
+    users = Dwh::DimUser.where(created_at: (DateTime.now - 1.day)..DateTime.now)
     unless users.blank?
       users.each do |user|
         # Split full name into first name and last name
