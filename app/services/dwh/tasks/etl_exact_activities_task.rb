@@ -308,7 +308,11 @@ class Dwh::Tasks::EtlExactActivitiesTask < Dwh::Tasks::BaseExactTask
           ### Load activities, already because it is needed for holiday hours
           Dwh::Loaders::ActivitiesLoader.new.load_data(account)
         end
+      end
 
+      # Remove activities of previous month
+      if Date.current.day == 1
+        Dwh::Tasks::EtlExactActivitiesRemoveTask.perform_later(account.id)
       end
 
       # Update result
