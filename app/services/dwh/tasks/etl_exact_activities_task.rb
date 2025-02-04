@@ -310,11 +310,6 @@ class Dwh::Tasks::EtlExactActivitiesTask < Dwh::Tasks::BaseExactTask
         end
       end
 
-      # Remove activities of previous month
-      if Date.current.day == 1
-        Dwh::Tasks::EtlExactActivitiesRemoveTask.perform_later(account.id)
-      end
-
       # Update result
       result.update(finished_at: DateTime.now, status: "finished")
       Dwh::DataPipelineLogger.new.create_log(run.id, "success", "[#{task_account_name}] Finished task [#{task.task_key}] successfully")
