@@ -1,9 +1,6 @@
 class UsersController < ApplicationController
-  # Add Pundit authorization
-  include Pundit::Authorization
-
   def index
-    @users = policy_scope(User).order(:first_name)
+    @users = User.order(:first_name)
 
     @breadcrumbs = []
     @breadcrumbs << [I18n.t(".user.titles.index"), users_path]
@@ -11,7 +8,6 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
-    authorize @user
 
     @breadcrumbs = []
     @breadcrumbs << [I18n.t(".user.titles.index"), users_path]
@@ -20,7 +16,6 @@ class UsersController < ApplicationController
 
   def new
     @user = User.new
-    authorize @user
 
     @breadcrumbs = []
     @breadcrumbs << [I18n.t(".user.titles.index"), users_path]
@@ -29,7 +24,6 @@ class UsersController < ApplicationController
 
   def create
     @user = User.new(user_params)
-    authorize @user
 
     if @user.save
       redirect_to users_path, notice: I18n.t(".user.messages.created")
@@ -40,7 +34,6 @@ class UsersController < ApplicationController
 
   def edit
     @user = User.find(params[:id])
-    authorize @user
 
     @breadcrumbs = []
     @breadcrumbs << [I18n.t(".user.titles.index"), users_path]
@@ -49,7 +42,6 @@ class UsersController < ApplicationController
 
   def update
     @user = User.find(params[:id])
-    authorize @user
 
     if @user.update(user_params)
       redirect_to users_path, notice: I18n.t(".user.messages.updated")
@@ -60,7 +52,6 @@ class UsersController < ApplicationController
 
   def destroy
     @user = User.find(params[:id])
-    authorize @user
     
     @user.destroy
     redirect_to users_path, notice: I18n.t(".user.messages.destroyed")
