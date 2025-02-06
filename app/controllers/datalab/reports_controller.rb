@@ -2,9 +2,9 @@ module Datalab
   class ReportsController < ApplicationController
     include Pagy::Backend
     before_action :authenticate_user!
-    before_action :authorize!(:read, :datalab), only: [:index, :show, :generate, :export]
-    before_action :authorize!(:write, :datalab), only: [:new, :create, :update]
-    before_action :authorize!(:delete, :datalab), only: [:destroy]
+    before_action -> { authorize!(:read, :datalab) }, only: [:index, :show, :generate, :export]
+    before_action -> { authorize!(:write, :datalab) }, only: [:new, :create, :update]
+    before_action -> { authorize!(:delete, :datalab) }, only: [:destroy]
     before_action :set_report, only: [:show, :update, :generate, :export, :destroy]
     before_action :set_anchor_service, only: [:show, :generate, :export]
 

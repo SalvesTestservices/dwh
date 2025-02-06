@@ -1,7 +1,7 @@
 class RolesController < ApplicationController
-  before_action :authorize!(:read, :roles), only: [:index, :show]
-  before_action :authorize!(:write, :roles), only: [:new, :create, :edit, :update]
-  before_action :authorize!(:delete, :roles), only: [:destroy]
+  before_action -> { authorize!(:read, :roles) }, only: [:index]
+  before_action -> { authorize!(:write, :roles) }, only: [:new, :create, :edit, :update]
+  before_action -> { authorize!(:delete, :roles) }, only: [:destroy]
   before_action :set_role, only: [:edit, :update, :destroy]
 
   def index
