@@ -1,5 +1,7 @@
 module Datalab
   class DesignerController < ApplicationController
+    before_action :authenticate_user!
+    before_action :authorize!(:write, :datalab)
     before_action :set_datalab_report
     
     def show
