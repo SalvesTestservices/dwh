@@ -14,7 +14,7 @@ nl:
     cancel:         Annuleren
   user:
     titles:
-      index:        Gebruikers & Rollen
+      index:        Gebruikers
       new:          Toevoegen gebruiker
       edit:         Wijzigen gebruiker
     roles:
@@ -26,10 +26,16 @@ nl:
       created:      Gebruiker is aangemaakt
       updated:      Gebruiker is gewijzigd
       destroyed:    Gebruiker is verwijderd
+  role:
+    titles:
+      index:        Rollen
+      new:          Toevoegen rol
+      edit:         Wijzigen rol
   site:
     titles:
-      data_lab:     Data lab
-      data_api:     Data API
+      users_and_roles:  Gebruikers & Rollen
+      data_lab:         Data lab
+      data_api:         Data API
   data_overview:
     titles:
       bonus_overview:     Bonus uren

@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }
   
   resources :users
-  resources :roles
+  resources :roles, except: [:index, :show]
 
   # Data targets
   resources :data_targets, only: [:index] do

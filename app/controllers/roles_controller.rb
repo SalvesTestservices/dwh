@@ -2,13 +2,8 @@ class RolesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_role, only: [:edit, :update, :destroy]
   
-  before_action -> { authorize!(:read, :roles) }, only: [:index]
   before_action -> { authorize!(:write, :roles) }, only: [:new, :create, :edit, :update]
   before_action -> { authorize!(:delete, :roles) }, only: [:destroy]
-
-  def index
-    @roles = Role.all
-  end
 
   def new
     @role = Role.new

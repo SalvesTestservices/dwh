@@ -7,9 +7,11 @@ class UsersController < ApplicationController
 
   def index
     @users = User.order(:first_name)
+    @roles = Role.order(:name)
+    @view = params[:view] || "users"
 
     @breadcrumbs = []
-    @breadcrumbs << [I18n.t(".user.titles.index"), users_path]
+    @breadcrumbs << [I18n.t(".site.titles.users_and_roles"), users_path]
   end
 
   def show
