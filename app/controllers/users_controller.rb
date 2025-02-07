@@ -1,4 +1,10 @@
 class UsersController < ApplicationController
+  before_action :authenticate_user!
+
+  before_action -> { authorize!(:read, :users) }, only: [:index, :show]
+  before_action -> { authorize!(:write, :users) }, only: [:new, :create, :edit, :update]
+  before_action -> { authorize!(:delete, :users) }, only: [:destroy]
+
   def index
     @users = User.order(:first_name)
 

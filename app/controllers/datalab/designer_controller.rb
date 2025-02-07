@@ -1,8 +1,9 @@
 module Datalab
   class DesignerController < ApplicationController
     before_action :authenticate_user!
-    before_action -> { authorize!(:write, :datalab) }
     before_action :set_datalab_report
+
+    before_action -> { authorize!(:write, :datalab) }
     
     def show
       anchor = Datalab::AnchorRegistry.get_anchor(@datalab_report.anchor_type)

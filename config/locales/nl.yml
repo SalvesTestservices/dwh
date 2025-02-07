@@ -14,7 +14,7 @@ nl:
     cancel:         Annuleren
   user:
     titles:
-      index:        Gebruikers
+      index:        Gebruikers & Rollen
       new:          Toevoegen gebruiker
       edit:         Wijzigen gebruiker
     roles:
