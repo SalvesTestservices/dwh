@@ -1,5 +1,5 @@
-=begin
 class Dwh::Tasks::EtlLucanetTask < Dwh::Tasks::BaseTask
+=begin
   queue_as :default
 
   class LucanetConnection < ActiveRecord::Base
@@ -104,5 +104,5 @@ class Dwh::Tasks::EtlLucanetTask < Dwh::Tasks::BaseTask
     results = LucanetConnection.connection.execute("SELECT * FROM \"#{table_name}\"")
     results.to_a
   end
-end
 =end
+end
