@@ -1,3 +1,4 @@
+=begin
 class Dwh::Tasks::EtlLucanetTask < Dwh::Tasks::BaseTask
   queue_as :default
 
@@ -104,3 +105,4 @@ class Dwh::Tasks::EtlLucanetTask < Dwh::Tasks::BaseTask
     results.to_a
   end
 end
+=end
