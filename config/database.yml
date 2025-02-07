@@ -37,13 +37,19 @@ production:
   primary:
     <<: *default
     host: <%= ENV["POSTGRESQL_HOST"] %>
-    database: <%= ENV["POSTGRESQL_DATABASE"] %>
+    database: <%= ENV["POSTGRESQL_BASE_DATABASE"] %>
     username: <%= ENV["POSTGRESQL_USERNAME"] %>
     password: <%= ENV["POSTGRESQL_PASSWORD"] %>
   dwh:
     <<: *default
-    host: <%= ENV["POSTGRESQL_DWH_HOST"] %>
-    database: <%= ENV["POSTGRESQL_DWH_DATABASE"] %>
-    username: <%= ENV["POSTGRESQL_DWH_USERNAME"] %>
-    password: <%= ENV["POSTGRESQL_DWH_PASSWORD"] %>
+    host: <%= ENV["POSTGRESQL_HOST"] %>
+    database: <%= ENV["POSTGRESQL_DATA_DATABASE"] %>
+    username: <%= ENV["POSTGRESQL_USERNAME"] %>
+    password: <%= ENV["POSTGRESQL_PASSWORD"] %>
     migrations_paths: ["db/dwh_migrate"]
+  cable:
+    <<: *default
+    host: <%= ENV["POSTGRESQL_HOST"] %>
+    database: <%= ENV["POSTGRESQL_CABLE_DATABASE"] %>
+    username: <%= ENV["POSTGRESQL_USERNAME"] %>
+    password: <%= ENV["POSTGRESQL_PASSWORD"] %>
