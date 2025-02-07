@@ -53,3 +53,9 @@ production:
     database: <%= ENV["POSTGRESQL_CABLE_DATABASE"] %>
     username: <%= ENV["POSTGRESQL_USERNAME"] %>
     password: <%= ENV["POSTGRESQL_PASSWORD"] %>
+  cache:
+    <<: *default
+    host: <%= ENV["POSTGRESQL_HOST"] %>
+    database: <%= ENV["POSTGRESQL_CACHE_DATABASE"] %>
+    username: <%= ENV["POSTGRESQL_USERNAME"] %>
+    password: <%= ENV["POSTGRESQL_PASSWORD"] %>
