@@ -9,43 +9,42 @@
 
 <main>
   <div class="mx-auto max-w-8xl py-2 md:py-6">
-    <div class="mt-8 flex flex-col pt-5">
-      <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
-        <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-          <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-            <table class="min-w-full divide-y divide-gray-300">
-              <thead class="bg-gray-50">
-                <tr>
-                  <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-700 sm:pl-6"><%= I18n.t(".activerecord.attributes.user.first_name") %></th>
-                  <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-700"><%= I18n.t(".activerecord.attributes.user.last_name") %></th>
-                  <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-700"><%= I18n.t(".activerecord.attributes.user.role") %></th>
-                  <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-700"><%= I18n.t(".activerecord.attributes.user.email") %></th>
-                  <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-700"></th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-gray-200 bg-white">
-                <% @users.each do |user| %>
-                  <% decorate user do |decorates| %>
-                    <tr>
-                      <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-700 sm:pl-6"><%= decorates.data_field(user.first_name) %></td>
-                      <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= decorates.data_field(user.last_name) %></td>
-                      <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= decorates.role %></td>
-                      <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= decorates.data_field(user.email) %></td>
-                      <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 flex flex-row justify-center">
-                        <% if can?(:write, :users) %>
-                          <%= render(View::ButtonComponent.new(title: I18n.t(".general.edit").downcase, url: edit_user_path(current_user), button_type: "link", size: "small")) %>
-                        <% end %>
-                        <% if can?(:delete, :users) %>
-                          <%= render(View::ButtonComponent.new(title: I18n.t(".general.destroy").downcase, url: user_path(current_user), button_type: "delete_button", size: "small")) %>
-                        <% end %>
-                      </td>
-                    </tr>
-                  <% end %>
-                <% end %>
-              </tbody>
-            </table>
-          </div>
+    <div class="bg-gray-50 rounded-lg p-4 my-3 border border-gray-300">
+      <div class="min-w-full divide-y divide-gray-200">
+        <div class="bg-gray-50 grid grid-cols-5">
+          <%= render(DivTable::HeaderComponent.new(title: I18n.t(".activerecord.attributes.user.first_name"), align: "text-left")) %>
+          <%= render(DivTable::HeaderComponent.new(title: I18n.t(".activerecord.attributes.user.last_name"), align: "text-left")) %>
+          <%= render(DivTable::HeaderComponent.new(title: I18n.t(".activerecord.attributes.user.role"), align: "text-left")) %>
+          <%= render(DivTable::HeaderComponent.new(title: I18n.t(".activerecord.attributes.user.email"), align: "text-left")) %>
+          <%= render(DivTable::HeaderComponent.new(title: "", align: "text-center")) %>
         </div>
+
+        <% if @users.blank? %>
+          <div class="bg-white grid grid-cols-1">
+            <div class="table-cell h-20 pt-7 whitespace-nowrap text-xm text-center text-gray-900"><%= I18n.t('.general.no_records') %></div>
+          </div>
+        <% else %>
+          <% @users.each do |user| %>
+            <% decorate user do |decorates| %>
+              <div class="bg-white grid grid-cols-5 items-center">
+                <%= render(DivTable::CellComponent.new(value: decorates.data_field(user.first_name), align: "text-left")) %>
+                <%= render(DivTable::CellComponent.new(value: decorates.data_field(user.last_name), align: "text-left")) %>
+                <%= render(DivTable::CellComponent.new(value: decorates.role, align: "text-left")) %>
+                <%= render(DivTable::CellComponent.new(value: decorates.data_field(user.email), align: "text-left")) %>
+                <div class="px-2 py-3 text-sm text-gray-700">
+                  <div class="flex flex-row justify-center gap-2 w-full">
+                    <% if can?(:write, :users) %>
+                      <%= render(View::ButtonComponent.new(title: I18n.t(".general.edit").downcase, url: edit_user_path(current_user), button_type: "link", size: "small")) %>
+                    <% end %>
+                    <% if can?(:delete, :users) %>
+                      <%= render(View::ButtonComponent.new(title: I18n.t(".general.destroy").downcase, url: user_path(current_user), button_type: "delete_button", size: "small")) %>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          <% end %>
+        <% end %>
       </div>
     </div>
   </div>

@@ -1,7 +1,6 @@
 class Table::CellComponent < ViewComponent::Base
-  def initialize(value:, align:, mobile:)
+  def initialize(value:, align:)
     @value = value
     @align = align
-    @mobile = mobile == "show" ? "" : "hidden sm:table-cell"
   end
 end

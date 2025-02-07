@@ -1,20 +1,20 @@
 <div id="<%= role %>-quarters-table" class="bg-gray-50 rounded-lg p-4 my-3 border border-gray-300 mt-5">
   <div class="min-w-full divide-y divide-gray-200">
     <div class="bg-gray-50 grid grid-cols-1">
-      <%= render(DivTable::HeaderComponent.new(title: "#{I18n.t('.data_target.form.fte_previous')}: #{DwhCalculator.new.fte_previous_year(@company, role, @year)}", align: "text-left", mobile: "show")) %>
+      <%= render(DivTable::HeaderComponent.new(title: "#{I18n.t('.data_target.form.fte_previous')}: #{DwhCalculator.new.fte_previous_year(@company, role, @year)}", align: "text-left")) %>
     </div>
     <div class="bg-gray-50 grid grid-cols-11">
-      <%= render(DivTable::HeaderComponent.new(title: I18n.t('.data_target.form.year'), align: "text-center", mobile: "show")) %>
-      <%= render(DivTable::HeaderComponent.new(title: I18n.t('.data_target.form.month'), align: "text-left", mobile: "show")) %>
-      <%= render(DivTable::HeaderComponent.new(title: I18n.t('.data_target.form.fte'), align: "text-center", mobile: "show")) %>
-      <%= render(DivTable::HeaderComponent.new(title: I18n.t('.data_target.form.billable_hours'), align: "text-center", mobile: "show")) %>
-      <%= render(DivTable::HeaderComponent.new(title: I18n.t('.data_target.form.bruto_margin'), align: "text-center", mobile: "show")) %>
-      <%= render(DivTable::HeaderComponent.new(title: I18n.t('.data_target.form.cost_price'), align: "text-center", mobile: "show")) %>
-      <%= render(DivTable::HeaderComponent.new(title: I18n.t('.data_target.form.workable_hours'), align: "text-center", mobile: "show")) %>
-      <%= render(DivTable::HeaderComponent.new(title: I18n.t('.data_target.form.productivity'), align: "text-center", mobile: "show")) %>
-      <%= render(DivTable::HeaderComponent.new(title: I18n.t('.data_target.form.hour_rate'), align: "text-center", mobile: "show")) %>
-      <%= render(DivTable::HeaderComponent.new(title: I18n.t('.data_target.form.fte_delta'), align: "text-center", mobile: "show")) %>
-      <%= render(DivTable::HeaderComponent.new(title: I18n.t('.data_target.form.turnover'), align: "text-center", mobile: "show")) %>
+      <%= render(DivTable::HeaderComponent.new(title: I18n.t('.data_target.form.year'), align: "text-center")) %>
+      <%= render(DivTable::HeaderComponent.new(title: I18n.t('.data_target.form.month'), align: "text-left")) %>
+      <%= render(DivTable::HeaderComponent.new(title: I18n.t('.data_target.form.fte'), align: "text-center")) %>
+      <%= render(DivTable::HeaderComponent.new(title: I18n.t('.data_target.form.billable_hours'), align: "text-center")) %>
+      <%= render(DivTable::HeaderComponent.new(title: I18n.t('.data_target.form.bruto_margin'), align: "text-center")) %>
+      <%= render(DivTable::HeaderComponent.new(title: I18n.t('.data_target.form.cost_price'), align: "text-center")) %>
+      <%= render(DivTable::HeaderComponent.new(title: I18n.t('.data_target.form.workable_hours'), align: "text-center")) %>
+      <%= render(DivTable::HeaderComponent.new(title: I18n.t('.data_target.form.productivity'), align: "text-center")) %>
+      <%= render(DivTable::HeaderComponent.new(title: I18n.t('.data_target.form.hour_rate'), align: "text-center")) %>
+      <%= render(DivTable::HeaderComponent.new(title: I18n.t('.data_target.form.fte_delta'), align: "text-center")) %>
+      <%= render(DivTable::HeaderComponent.new(title: I18n.t('.data_target.form.turnover'), align: "text-center")) %>
     </div>
 
     <% @total_billable_hours  = 0 %>
@@ -53,9 +53,9 @@
 
     <% decorate data_targets.first do |decorates| %>
       <div class="bg-gray-50 grid grid-cols-11">
-        <%= render(DivTable::HeaderComponent.new(title: nil, align: "text-center", mobile: "show")) %>
-        <%= render(DivTable::HeaderComponent.new(title: nil, align: "text-left", mobile: "show")) %>
-        <%= render(DivTable::HeaderComponent.new(title: nil, align: "text-right", mobile: "show")) %>
+        <%= render(DivTable::HeaderComponent.new(title: nil, align: "text-center")) %>
+        <%= render(DivTable::HeaderComponent.new(title: nil, align: "text-left")) %>
+        <%= render(DivTable::HeaderComponent.new(title: nil, align: "text-right")) %>
 
         <div class="table-cell align-top px-2 py-3 text-center text-xs font-medium text-gray-700 uppercase tracking-wider">
           <span id="<%= role %>_workable_hours"><%= decorates.sum(@total_billable_hours) %></span>
@@ -67,7 +67,7 @@
           <span id="<%= role %>_cost_price"><%= decorates.avg(@total_cost_price, @nr_months_filled) %></span>
         </div>
 
-        <%= render(DivTable::HeaderComponent.new(title: decorates.sum(@total_workable_hours), align: "text-center", mobile: "show")) %>
+        <%= render(DivTable::HeaderComponent.new(title: decorates.sum(@total_workable_hours), align: "text-center")) %>
 
         <div class="table-cell align-top px-2 py-3 text-center text-xs font-medium text-gray-700 uppercase tracking-wider">
           <span id="<%= role %>_productivity"><%= "#{decorates.avg(@total_productivity, @nr_months_filled)}%" %></span>
