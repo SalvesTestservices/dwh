@@ -2,12 +2,16 @@ nl:
   activerecord:
     models:
       user:                     Gebruiker
+      role:                     Rol
     attributes:
       user:
         first_name:             Voornaam
         last_name:              Achternaam
         email:                  E-mail
         role:                   Rol
+      role:
+        name:                   Naam
+        permissions:            Permissies
     errors:
       models:
         user:
