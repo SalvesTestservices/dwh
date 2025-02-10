@@ -137,6 +137,7 @@ class Dwh::Tasks::BaseExactTask < Dwh::Tasks::BaseTask
 
   def unbillable_work_project_numbers
     [
+      "CERIOS_UREN_INTERN",
       "AANVRAAG WBSO 2022",
       "BD_TALEERGANG_BONUS",
       "BD_UREN",
@@ -170,7 +171,12 @@ class Dwh::Tasks::BaseExactTask < Dwh::Tasks::BaseTask
       "WBSO - ITAI",
       "WBSO- RESILIENCE",
       "LEEGLOOP",
-      "ZIEK_GED_HERST"
+      "ZIEK_GED_HERST",
+      "ACADEMY", 
+      "ACADEMY_EIGEN_BNS", 
+      "ACADEMY_EIGEN_NBNS", 
+      "ACADEMY_WT", 
+      "ACADEMY_WT_LL"
     ]
   end
 end

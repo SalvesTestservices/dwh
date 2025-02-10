@@ -49,36 +49,34 @@ class Dwh::Tasks::EtlExactProjectsTask < Dwh::Tasks::BaseExactTask
         
         unless projects["Results"].blank?              
           projects["Results"].each do |project|
-            unless project["ProjectNumber"] == "CERIOS_UREN_INTERN"
-              unless unbillable_work_project_numbers.map(&:strip).include?(project["ProjectNumber"])
-                dim_customer = Dwh::DimCustomer.find_by(original_id: project["CustomerID"])
-                dim_customer_id = dim_customer.blank? ? nil : dim_customer.original_id
+            unless unbillable_work_project_numbers.map(&:strip).include?(project["ProjectNumber"])
+              dim_customer = Dwh::DimCustomer.find_by(original_id: project["CustomerID"])
+              dim_customer_id = dim_customer.blank? ? nil : dim_customer.original_id
 
-                status = project["Status"] == "G" ? "inactive" : "active"
-                calculation_type = project["Type"] == "F" ? "fixed_price" : "hour_based"
-                calculation_type = "service" if project["Description"].downcase.include?("josf")
+              status = project["Status"] == "G" ? "inactive" : "active"
+              calculation_type = project["Type"] == "F" ? "fixed_price" : "hour_based"
+              calculation_type = "service" if project["Description"].downcase.include?("josf")
 
-                start_date = project["StartDate"].blank? ? nil : project["StartDate"].to_date.strftime("%d%m%Y").to_i
-                end_date = project["EndDate"].blank? ? nil : project["EndDate"].to_date.strftime("%d%m%Y").to_i
-                expected_end_date = project["ExpectedEndDate"].blank? ? nil : project["ExpectedEndDate"].to_date.strftime("%d%m%Y").to_i
-                expected_end_date = end_date if expected_end_date.blank?
-                company_id = project["ProjectCostCenter"].blank? ? nil : project["ProjectCostCenter"].gsub(project["CompanyCode"], "")
+              start_date = project["StartDate"].blank? ? nil : project["StartDate"].to_date.strftime("%d%m%Y").to_i
+              end_date = project["EndDate"].blank? ? nil : project["EndDate"].to_date.strftime("%d%m%Y").to_i
+              expected_end_date = project["ExpectedEndDate"].blank? ? nil : project["ExpectedEndDate"].to_date.strftime("%d%m%Y").to_i
+              expected_end_date = end_date if expected_end_date.blank?
+              company_id = project["ProjectCostCenter"].blank? ? nil : project["ProjectCostCenter"].gsub(project["CompanyCode"], "")
 
-                project_hash = Hash.new
-                project_hash[:original_id]        = project["ProjectNumber"].strip
-                project_hash[:name]               = project["Description"]
-                project_hash[:status]             = status
-                project_hash[:company_id]         = company_id
-                project_hash[:calculation_type]   = calculation_type
-                project_hash[:start_date]         = start_date
-                project_hash[:end_date]           = end_date
-                project_hash[:expected_end_date]  = expected_end_date
-                project_hash[:broker_id]          = nil
-                project_hash[:customer_id]        = dim_customer_id
-                project_hash[:updated_at]         = project["ModifiedDate"].to_date.strftime("%d%m%Y").to_i
+              project_hash = Hash.new
+              project_hash[:original_id]        = project["ProjectNumber"].strip
+              project_hash[:name]               = project["Description"]
+              project_hash[:status]             = status
+              project_hash[:company_id]         = company_id
+              project_hash[:calculation_type]   = calculation_type
+              project_hash[:start_date]         = start_date
+              project_hash[:end_date]           = end_date
+              project_hash[:expected_end_date]  = expected_end_date
+              project_hash[:broker_id]          = nil
+              project_hash[:customer_id]        = dim_customer_id
+              project_hash[:updated_at]         = project["ModifiedDate"].to_date.strftime("%d%m%Y").to_i
 
-                Dwh::EtlStorage.create(account_id: account.id, identifier: "projects", etl: "transform", data: project_hash)
-              end
+              Dwh::EtlStorage.create(account_id: account.id, identifier: "projects", etl: "transform", data: project_hash)
             end
           end
         end
