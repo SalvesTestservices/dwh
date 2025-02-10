@@ -18,10 +18,10 @@
       <div class="w-2/12 align-top px-2 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
         <%= I18n.t(".activerecord.attributes.role.name") %>
       </div>
-      <div class="w-6/12 align-top px-2 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+      <div class="w-8/12 align-top px-2 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
         <%= I18n.t(".activerecord.attributes.role.permissions") %>
       </div>
-      <div class="w-3/12 align-top px-2 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider"></div>
+      <div class="w-2/12 align-top px-2 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider"></div>
     </div>
 
     <% if roles.blank? %>
@@ -32,8 +32,8 @@
       <% roles.each do |role| %>
         <div class="bg-white flex flex-row items-center">
           <div class="w-2/12 text-left flex items-center px-2 h-9 whitespace-nowrap text-xs text-gray-900"><%= role.name %></div>
-          <div class="w-6/12 text-sm text-gray-500">
-            <div class="flex flex-wrap gap-2 w-full">
+          <div class="w-8/12 text-sm text-gray-500">
+            <div class="flex flex-wrap gap-2 w-full py-2">
               <% role.permissions.each do |permission| %>
                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                   <%= permission %>
@@ -41,7 +41,7 @@
               <% end %>
             </div>
           </div>
-          <div class="w-3/12 px-2 py-3 text-sm text-gray-700">
+          <div class="w-2/12 px-2 py-3 text-sm text-gray-700">
             <div class="flex flex-row justify-center gap-2 w-full">
               <% if can?(:write, :roles) %>
                 <%= render(View::ButtonComponent.new(title: I18n.t(".general.edit").downcase, url: edit_role_path(role), button_type: "link", size: "small")) %>

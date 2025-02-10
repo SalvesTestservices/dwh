@@ -7,6 +7,10 @@ class RolesController < ApplicationController
 
   def new
     @role = Role.new
+
+    @breadcrumbs = []
+    @breadcrumbs << [I18n.t(".site.titles.users_and_roles"), users_path(view: "roles")]
+    @breadcrumbs << [I18n.t(".role.titles.new")]
   end
 
   def create
@@ -19,11 +23,14 @@ class RolesController < ApplicationController
   end
 
   def edit
+    @breadcrumbs = []
+    @breadcrumbs << [I18n.t(".site.titles.users_and_roles"), users_path(view: "roles")]
+    @breadcrumbs << [I18n.t(".role.titles.edit")]
   end
 
   def update
     if @role.update(role_params)
-      redirect_to roles_path, notice: 'Role was successfully updated.'
+      redirect_to users_path(view: "roles"), notice: 'Role was successfully updated.'
     else
       render :edit, status: :unprocessable_entity
     end
@@ -31,16 +38,14 @@ class RolesController < ApplicationController
 
   def destroy
     @role.destroy
-    redirect_to roles_path, notice: 'Role was successfully deleted.'
+    redirect_to users_path(view: "roles"), notice: 'Role was successfully deleted.'
   end
 
-  private
-
-  def set_role
+  private def set_role
     @role = Role.find(params[:id])
   end
 
-  def role_params
+  private def role_params
     params.require(:role).permit(:name, permissions: [])
   end
 end 

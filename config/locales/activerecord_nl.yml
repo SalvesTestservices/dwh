@@ -11,7 +11,7 @@ nl:
         role:                   Rol
       role:
         name:                   Naam
-        permissions:            Permissies
+        permissions:            Rechten
     errors:
       models:
         user:

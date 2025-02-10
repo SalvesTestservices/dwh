@@ -1,10 +1,10 @@
-<div class="container mx-auto px-4 py-8">
-  <div class="max-w-3xl mx-auto">
-    <div class="flex items-center justify-between mb-6">
-      <h1 class="text-2xl font-bold">New Role</h1>
-      <%= link_to 'Back to Roles', roles_path, class: "text-blue-600 hover:text-blue-900" %>
-    </div>
+<%= render "layouts/page_header", 
+  breadcrumbs: @breadcrumbs, 
+  title: I18n.t(".role.titles.new"), 
+  icon: ["lock", "medium", "gray"],
+  buttons: nil
+%>
 
-    <%= render 'form', role: @role %>
-  </div>
-</div> 
+<div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+  <%= render "form", role: @role %>
+</div>

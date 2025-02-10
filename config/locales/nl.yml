@@ -31,6 +31,15 @@ nl:
       index:        Rollen
       new:          Toevoegen rol
       edit:         Wijzigen rol
+  permissions:
+    resources:
+      users:        Gebruikers
+      roles:        Rollen
+      datalab:      Data lab
+    actions:
+      read:         Lezen
+      write:        Schrijven
+      delete:       Verwijderen
   site:
     titles:
       users_and_roles:  Gebruikers & Rollen
