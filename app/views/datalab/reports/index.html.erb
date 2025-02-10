@@ -1,8 +1,14 @@
+<% if can?(:write, :datalab) %>
+  <% buttons = [[I18n.t('.datalab.report.titles.new'), new_datalab_report_path]] %>
+<% else %>
+  <% buttons = [] %>
+<% end %>
+
 <%= render "layouts/page_header", 
   breadcrumbs: @breadcrumbs, 
   title: I18n.t('.datalab.report.titles.index'), 
   icon: ["datalab", "medium", "gray"],
-  buttons: [[I18n.t('.datalab.report.titles.new'), new_datalab_report_path]]
+  buttons: buttons
 %>
 
 <main>

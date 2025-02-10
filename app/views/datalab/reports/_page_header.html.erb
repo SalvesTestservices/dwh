@@ -62,20 +62,24 @@
 
     <% if report.user_id == current_user.id %>
       <div class="w-1/3 flex justify-end items-start mt-2">
-        <%= link_to datalab_designer_path(report), data: { turbo: false, turbo_prefetch: false }, class: "flex flex-row items-center px-4 py-2 text-sm text-gray-700 bg-gray-100 hover:bg-gray-50 mr-1 border border-gray-300 shadow-sm font-medium rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500" do %>
-          <%= render(View::IconComponent.new(icon_type: "edit", size: "small", color: "gray")) %>
-          <span class="ml-2"><%= I18n.t('.datalab.report.titles.edit') %></span>
+        <% if can?(:write, :datalab) %>
+          <%= link_to datalab_designer_path(report), data: { turbo: false, turbo_prefetch: false }, class: "flex flex-row items-center px-4 py-2 text-sm text-gray-700 bg-gray-100 hover:bg-gray-50 mr-1 border border-gray-300 shadow-sm font-medium rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500" do %>
+            <%= render(View::IconComponent.new(icon_type: "edit", size: "small", color: "gray")) %>
+            <span class="ml-2"><%= I18n.t('.datalab.report.titles.edit') %></span>
+          <% end %>
         <% end %>
 
-        <%= button_to datalab_report_path(report), 
-            method: :delete, 
+        <% if can?(:delete, :datalab) %>
+          <%= button_to datalab_report_path(report), 
+              method: :delete, 
             data: { 
               turbo_prefetch: false,
               turbo_confirm: I18n.t('.datalab.report.messages.confirmation')
             }, 
             class: "flex flex-row items-center px-4 py-2 text-sm text-gray-700 bg-gray-100 hover:bg-gray-50 mr-1 border border-gray-300 shadow-sm font-medium rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500" do %>
           <%= render(View::IconComponent.new(icon_type: "delete", size: "small", color: "red")) %>
-          <span class="ml-2"><%= I18n.t('.datalab.report.titles.delete') %></span>
+            <span class="ml-2"><%= I18n.t('.datalab.report.titles.delete') %></span>
+          <% end %>
         <% end %>
       </div>
     <% end%>        

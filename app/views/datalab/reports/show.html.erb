@@ -46,12 +46,14 @@
           <span class="ml-2"><%= I18n.t('.datalab.report.titles.reset_filters') %></span>
         <% end %>
 
-        <%= form.button formaction: export_datalab_report_path(@report, format: :xlsx),
-                       formmethod: "get",
-                       data: { turbo: false },
-                       class: "flex flex-row items-center px-4 py-2 text-sm text-gray-700 bg-gray-100 hover:bg-gray-50 mr-1 border border-gray-300 shadow-sm font-medium rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500" do %>
-          <%= render(View::IconComponent.new(icon_type: "download", size: "small", color: "gray")) %>
-          <span class="ml-2"><%= I18n.t('.datalab.report.titles.download') %></span>
+        <% if can?(:read, :datalab) %>
+          <%= form.button formaction: export_datalab_report_path(@report, format: :xlsx),
+                        formmethod: "get",
+                        data: { turbo: false },
+                        class: "flex flex-row items-center px-4 py-2 text-sm text-gray-700 bg-gray-100 hover:bg-gray-50 mr-1 border border-gray-300 shadow-sm font-medium rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500" do %>
+            <%= render(View::IconComponent.new(icon_type: "download", size: "small", color: "gray")) %>
+            <span class="ml-2"><%= I18n.t('.datalab.report.titles.download') %></span>
+          <% end %>
         <% end %>
       </div>
     <% end %>

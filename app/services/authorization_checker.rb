@@ -7,6 +7,7 @@ class AuthorizationChecker
     data_api: [:read, :write, :delete],
     users: [:read, :write, :delete],
     roles: [:read, :write, :delete],
+    employee_overviews: [:read, :write, :delete],
   }.freeze
 
   def self.can?(user, action, resource)
