@@ -1,8 +1,14 @@
+<% if can?(:delete, :data_pipelines) %>
+  <% buttons = [[I18n.t('.dp_pipeline.titles.destroy'), dwh_dp_pipeline_path(@dp_pipeline), "delete"]] %>
+<% else %>
+  <% buttons = [] %>
+<% end %>
+
 <%= render "layouts/page_header", 
   breadcrumbs: @breadcrumbs, 
   title: I18n.t('.dp_pipeline.titles.show'), 
   icon: ["pipeline", "medium", "gray"],
-  buttons: [[I18n.t('.dp_pipeline.titles.destroy'), dwh_dp_pipeline_path(@dp_pipeline), "delete"]]
+  buttons: buttons
 %>
 
 <main>
@@ -22,7 +28,10 @@
                 <%= render(View::IconComponent.new(icon_type: "check", size: "medium", color: "gray")) %>
                 <h2 class="ml-2 mt-1 text-2xl font-semibold leading-6 text-gray-700"><%= I18n.t('.dp_task.titles.index') %></h2>
               </div>
-              <%= link_to I18n.t('.dp_task.titles.new'), new_dwh_dp_task_path(dp_pipeline_id: @dp_pipeline), class: "px-4 py-2 text-sm text-gray-700 bg-gray-100 hover:bg-gray-50 mr-1 border border-gray-300 shadow-sm font-medium rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500" %>
+
+              <% if can?(:write, :data_pipelines) %>
+                <%= link_to I18n.t('.dp_task.titles.new'), new_dwh_dp_task_path(dp_pipeline_id: @dp_pipeline), class: "px-4 py-2 text-sm text-gray-700 bg-gray-100 hover:bg-gray-50 mr-1 border border-gray-300 shadow-sm font-medium rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500" %>
+              <% end %>
             </div>
           </div>
 
@@ -48,7 +57,7 @@
                 <h2 class="ml-2 mt-1 text-2xl font-semibold leading-6 text-gray-700"><%= I18n.t('.dp_run.titles.index') %></h2>
               </div>
 
-              <% if @dp_pipeline.active? %>
+              <% if @dp_pipeline.active? and can?(:write, :data_pipelines) %>
                 <%= render(View::ButtonComponent.new(title: I18n.t('.dp_run.titles.new'), url: dwh_dp_runs_path(dp_pipeline_id: @dp_pipeline), button_type: "button", size: "medium")) %>
               <% end %>
             </div>

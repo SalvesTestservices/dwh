@@ -38,7 +38,7 @@ nl:
       datalab:            Data lab
       data_pipelines:     Data pipelines
       data_targets:       Data targets
-      data_warehouse:     Data warehouse
+      data_governance:    Data governance
       data_api:           Data API
       employee_overviews: Medewerker overzichten
     actions:

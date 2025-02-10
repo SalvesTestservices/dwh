@@ -25,14 +25,20 @@
         </div>
       </div>
       <div class="w-1/12 flex flex-col items-center gap-x-0">
-        <%= render "dwh/dp_tasks/pause_start", dp_task: dp_task %>
-
-        <%= link_to edit_dwh_dp_task_path(dp_task) do %>
-          <%= render(View::IconComponent.new(icon_type: "edit", size: "small", color: "gray")) %>
+        <% if can?(:write, :data_pipelines) %>
+          <%= render "dwh/dp_tasks/pause_start", dp_task: dp_task %>
         <% end %>
 
-        <%= button_to dwh_dp_task_path(dp_task), method: :delete, class: "mt-2" do %>
-          <%= render(View::IconComponent.new(icon_type: "delete", size: "small", color: "gray")) %>
+        <% if can?(:write, :data_pipelines) %>
+          <%= link_to edit_dwh_dp_task_path(dp_task) do %>
+            <%= render(View::IconComponent.new(icon_type: "edit", size: "small", color: "gray")) %>
+          <% end %>
+        <% end %>
+
+        <% if can?(:delete, :data_pipelines) %>
+          <%= button_to dwh_dp_task_path(dp_task), method: :delete, class: "mt-2" do %>
+            <%= render(View::IconComponent.new(icon_type: "delete", size: "small", color: "gray")) %>
+          <% end %>
         <% end %>
       </div>
     </li>

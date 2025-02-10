@@ -1,8 +1,14 @@
+<% if can?(:write, :data_pipelines) %>
+  <% buttons = [[I18n.t('.dp_pipeline.titles.new'), new_dwh_dp_pipeline_path]] %>
+<% else %>
+  <% buttons = [] %>
+<% end %>
+
 <%= render "layouts/page_header", 
   breadcrumbs: @breadcrumbs, 
   title: I18n.t('.dp_pipeline.titles.index'), 
   icon: ["pipeline", "medium", "gray"],
-  buttons: [[I18n.t('.dp_pipeline.titles.new'), new_dwh_dp_pipeline_path]]
+  buttons: buttons
 %>
 
 <main>

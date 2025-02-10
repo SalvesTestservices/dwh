@@ -3,7 +3,7 @@ class AuthorizationChecker
     datalab: [:read, :write, :delete],
     data_pipelines: [:read, :write, :delete],
     data_targets: [:read, :write, :delete],
-    data_warehouse: [:read, :write, :delete],
+    data_governance: [:read, :write, :delete],
     data_api: [:read, :write, :delete],
     users: [:read, :write, :delete],
     roles: [:read, :write, :delete],
