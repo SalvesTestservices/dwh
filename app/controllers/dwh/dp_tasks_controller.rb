@@ -1,5 +1,7 @@
 class Dwh::DpTasksController < ApplicationController
   before_action :authenticate_user!
+  before_action -> { authorize!(:write, :data_pipelines) }, only: [:new, :create, :edit, :update, :pause, :start, :move]
+  before_action -> { authorize!(:delete, :data_pipelines) }, only: [:destroy]
 
   def new
     @dp_task = Dwh::DpTask.new

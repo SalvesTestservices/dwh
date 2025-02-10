@@ -1,5 +1,8 @@
 class Dwh::DpRunsController < ApplicationController
   before_action :authenticate_user!
+  before_action -> { authorize!(:read, :data_pipelines) }, only: [:show]
+  before_action -> { authorize!(:write, :data_pipelines) }, only: [:create]
+  before_action -> { authorize!(:delete, :data_pipelines) }, only: [:destroy]
 
   def show
     @dp_run = Dwh::DpRun.includes(:dp_pipeline).find(params[:id])

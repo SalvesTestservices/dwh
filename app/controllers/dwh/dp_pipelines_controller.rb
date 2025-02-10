@@ -1,6 +1,9 @@
 class Dwh::DpPipelinesController < ApplicationController
   before_action :authenticate_user!
-
+  before_action -> { authorize!(:read, :data_pipelines) }, only: [:index, :show]
+  before_action -> { authorize!(:write, :data_pipelines) }, only: [:new, :create, :edit, :update]
+  before_action -> { authorize!(:delete, :data_pipelines) }, only: [:destroy]
+  
   def index
     @dp_pipelines = Dwh::DpPipeline.includes(:dp_tasks).includes(:dp_runs).order(position: :asc)
 

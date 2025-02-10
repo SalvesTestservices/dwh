@@ -1,5 +1,7 @@
 class DataTargetsController < ApplicationController
   before_action :authenticate_user!
+  before_action -> { authorize!(:read, :data_targets) }, only: [:index]
+  before_action -> { authorize!(:write, :data_targets) }, only: [:update, :quarter_targets]
 
   def index
     if params[:company_id].present?

@@ -33,9 +33,14 @@ nl:
       edit:         Wijzigen rol
   permissions:
     resources:
-      users:        Gebruikers
-      roles:        Rollen
-      datalab:      Data lab
+      users:              Gebruikers
+      roles:              Rollen
+      datalab:            Data lab
+      data_pipelines:     Data pipelines
+      data_targets:       Data targets
+      data_warehouse:     Data warehouse
+      data_api:           Data API
+      employee_overviews: Medewerker overzichten
     actions:
       read:         Lezen
       write:        Schrijven

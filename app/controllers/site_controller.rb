@@ -1,6 +1,7 @@
 class SiteController < ApplicationController
   before_action :authenticate_user!
-  
+  before_action -> { authorize!(:read, :data_api) }, only: [:api_documentation]
+
   def index
   end
 
