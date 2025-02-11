@@ -20,6 +20,7 @@ class Dwh::Tasks::EtlBaseTargetsTask < Dwh::Tasks::BaseTask
 
           # Iterate companies
           unless companies.blank?
+            dump "HUH1"
             companies.each do |company|
               data_targets = DataTarget.where(account_id: dim_account.id, company_id: company.id, year: year)
 
@@ -28,8 +29,10 @@ class Dwh::Tasks::EtlBaseTargetsTask < Dwh::Tasks::BaseTask
               roles.each do |role|
                 role_targets = data_targets.where(role: role)
                 if role_targets.blank?
+                  dump "HUH1"
                   create_empty_data_target_hash(year, dim_account, company.id, role)
                 else
+                  dump "HUH2"
                   role_targets.each do |role_target|
                     data_target_hash = Hash.new
                     
@@ -59,7 +62,7 @@ class Dwh::Tasks::EtlBaseTargetsTask < Dwh::Tasks::BaseTask
                     data_target_hash[:turnover]            = role_target.turnover(false)
                     data_target_hash[:employee_attrition]  = convert_to_fractional(role_target.employee_attrition)
                     data_target_hash[:employee_absence]    = convert_to_fractional(role_target.employee_absence)
-
+                    dump "HUH3 #{data_target_hash}"
                     Dwh::EtlStorage.create(account_id: dim_account.id, identifier: "data_targets", etl: "extract", data: data_target_hash)
                   end
                 end

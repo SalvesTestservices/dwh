@@ -32,7 +32,8 @@ class Dwh::Tasks::EtlBaseAccountsTask < Dwh::Tasks::BaseTask
           original_id: account[:original_id],
           name: account[:name],
           is_holding: account[:is_holding],
-          administration: account[:administration]
+          administration_globe: account[:administration_globe],
+          administration_synergy: account[:administration_synergy]
         }
       end
 
