@@ -9,7 +9,7 @@ class Dwh::Loaders::CompaniesLoader
     unless companies.blank?
       companies.each do |company|
         Dwh::DimCompany.upsert({ account_id: dim_account.id, original_id: company.data['original_id'], name: company.data['name'], 
-          name_short: company.data['name_short'] }, unique_by: [:account_id, :original_id])
+          name_short: company.data['name_short'], company_group: company.data['company_group'] }, unique_by: [:account_id, :original_id])
 
         company.destroy
       end

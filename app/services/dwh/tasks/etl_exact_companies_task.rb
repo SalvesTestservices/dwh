@@ -52,12 +52,15 @@ class Dwh::Tasks::EtlExactCompaniesTask < Dwh::Tasks::BaseExactTask
       unless companies.blank?
         companies.each do |company|
           if desired_companies.include?(company["Description"]) and company["CompanyCode"] == "001"
+            company_code = company["Code"].gsub(company["CompanyCode"], "")
+            
             companies_hash = Hash.new
-            companies_hash[:account_id]   = account.id
-            companies_hash[:original_id]  = company["Code"].gsub(company["CompanyCode"], "")
-            companies_hash[:name]         = company["Description"]
-            companies_hash[:name_short]   = company["Code"].gsub(company["CompanyCode"], "").gsub("CC", "")
-            companies_hash[:updated_at]   = company["ModifiedDate"].to_date.strftime("%d%m%Y").to_i
+            companies_hash[:account_id]    = account.id
+            companies_hash[:original_id]   = company_code
+            companies_hash[:name]          = company["Description"]
+            companies_hash[:name_short]    = company_code.gsub("CC", "")
+            companies_hash[:company_group] = "#{account.name} - #{company_code}"
+            companies_hash[:updated_at]    = company["ModifiedDate"].to_date.strftime("%d%m%Y").to_i
 
             Dwh::EtlStorage.create(account_id: account.id, identifier: "companies", etl: "transform", data: companies_hash)
           end
