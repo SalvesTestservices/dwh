@@ -14,7 +14,7 @@ class DpPipelines < ActiveRecord::Migration[7.0]
       t.integer   :year
       t.integer   :position
       t.integer   :scoped_user_id
-
+      t.string    :description
       t.timestamps
     end
     add_index :dp_pipelines, :name

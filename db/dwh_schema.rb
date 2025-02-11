@@ -10,25 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_11_093300) do
+ActiveRecord::Schema[8.0].define(version: 2025_01_31_085600) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
-
-  create_table "dg_audit_logs", force: :cascade do |t|
-    t.integer "user_id"
-    t.string "full_name"
-    t.string "action"
-    t.datetime "audited_at"
-    t.string "auditable_type", null: false
-    t.bigint "auditable_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["action"], name: "index_dg_audit_logs_on_action"
-    t.index ["auditable_type", "auditable_id"], name: "index_dg_audit_logs_on_auditable"
-    t.index ["auditable_type", "auditable_id"], name: "index_dg_audit_logs_on_auditable_type_and_auditable_id"
-    t.index ["created_at"], name: "index_dg_audit_logs_on_created_at"
-    t.index ["user_id"], name: "index_dg_audit_logs_on_user_id"
-  end
 
   create_table "dg_logs", force: :cascade do |t|
     t.integer "object_id"
@@ -54,10 +38,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_11_093300) do
     t.integer "original_id"
     t.string "name"
     t.string "is_holding"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
     t.string "administration_globe"
     t.string "administration_synergy"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["administration_globe"], name: "index_dim_accounts_on_administration_globe"
     t.index ["administration_synergy"], name: "index_dim_accounts_on_administration_synergy"
     t.index ["is_holding"], name: "index_dim_accounts_on_is_holding"
@@ -76,9 +60,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_11_093300) do
     t.string "original_id"
     t.string "name"
     t.string "name_short"
+    t.string "company_group"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "company_group"
     t.index ["account_id", "original_id"], name: "index_dim_companies_on_account_id_and_original_id", unique: true
     t.index ["account_id"], name: "index_dim_companies_on_account_id"
     t.index ["company_group"], name: "index_dim_companies_on_company_group"
@@ -160,9 +144,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_11_093300) do
     t.integer "end_date"
     t.integer "expected_end_date"
     t.integer "customer_id"
+    t.integer "broker_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "broker_id"
     t.index ["account_id", "original_id"], name: "index_dim_projects_on_account_id_and_original_id", unique: true
     t.index ["account_id"], name: "index_dim_projects_on_account_id"
     t.index ["broker_id"], name: "index_dim_projects_on_broker_id"
@@ -256,9 +240,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_11_093300) do
     t.integer "year"
     t.integer "position"
     t.integer "scoped_user_id"
+    t.string "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "description"
     t.index ["account_id"], name: "index_dp_pipelines_on_account_id"
     t.index ["dp_runs_count"], name: "index_dp_pipelines_on_dp_runs_count"
     t.index ["dp_tasks_count"], name: "index_dp_pipelines_on_dp_tasks_count"

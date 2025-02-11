@@ -21,7 +21,7 @@ class DimUsers < ActiveRecord::Migration[7.0]
 
       t.timestamps
     end
-    add_index :dim_users, [:account_id, :original_id], unique: true
+    add_index :dim_users, [:account_id, :original_id, :company_id], unique: true, name: "index_dim_users_on_account_id_and_original_id_and_company_id"
     add_index :dim_users, :account_id
     add_index :dim_users, :original_id
     add_index :dim_users, :company_id

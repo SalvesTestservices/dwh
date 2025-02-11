@@ -5,11 +5,13 @@ class DimCompanies < ActiveRecord::Migration[7.0]
       t.string :original_id
       t.string  :name
       t.string  :name_short
+      t.string  :company_group
 
       t.timestamps
     end
     add_index :dim_companies, [:account_id, :original_id], unique: true
     add_index :dim_companies, :account_id
     add_index :dim_companies, :original_id
+    add_index :dim_companies, :company_group
   end
 end

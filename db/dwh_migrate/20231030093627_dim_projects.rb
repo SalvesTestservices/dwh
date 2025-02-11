@@ -11,10 +11,10 @@ class DimProjects < ActiveRecord::Migration[7.0]
       t.integer :end_date
       t.integer :expected_end_date
       t.integer :customer_id
-
+      t.integer :broker_id
       t.timestamps
     end
-    add_index :dim_projects, [:account_id, :original_id, :start_date, :end_date], unique: true, name: 'index_dim_projects_on_acc_id_orig_id_start_end'
+    add_index :dim_projects, [:account_id, :original_id], unique: true, name: 'index_dim_projects_on_account_id_and_original_id'
     add_index :dim_projects, :account_id
     add_index :dim_projects, :original_id
     add_index :dim_projects, :company_id
@@ -24,5 +24,6 @@ class DimProjects < ActiveRecord::Migration[7.0]
     add_index :dim_projects, :expected_end_date
     add_index :dim_projects, :end_date
     add_index :dim_projects, :customer_id
+    add_index :dim_projects, :broker_id
   end
 end
