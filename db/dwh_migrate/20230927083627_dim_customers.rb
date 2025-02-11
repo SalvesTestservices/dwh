@@ -5,6 +5,7 @@ class DimCustomers < ActiveRecord::Migration[7.0]
       t.string :original_id
       t.string  :name
       t.string  :status
+      t.integer :backbone_id
 
       t.timestamps
     end
@@ -12,5 +13,6 @@ class DimCustomers < ActiveRecord::Migration[7.0]
     add_index :dim_customers, :account_id
     add_index :dim_customers, :original_id
     add_index :dim_customers, :status
+    add_index :dim_customers, :backbone_id
   end
 end

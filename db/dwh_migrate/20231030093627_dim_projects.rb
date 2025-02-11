@@ -12,6 +12,8 @@ class DimProjects < ActiveRecord::Migration[7.0]
       t.integer :expected_end_date
       t.integer :customer_id
       t.integer :broker_id
+      t.integer :backbone_id
+
       t.timestamps
     end
     add_index :dim_projects, [:account_id, :original_id], unique: true, name: 'index_dim_projects_on_account_id_and_original_id'
@@ -25,5 +27,6 @@ class DimProjects < ActiveRecord::Migration[7.0]
     add_index :dim_projects, :end_date
     add_index :dim_projects, :customer_id
     add_index :dim_projects, :broker_id
+    add_index :dim_projects, :backbone_id
   end
 end

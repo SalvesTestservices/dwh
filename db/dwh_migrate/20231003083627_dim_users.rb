@@ -18,6 +18,7 @@ class DimUsers < ActiveRecord::Migration[7.0]
       t.string  :city
       t.string  :country
       t.integer :unavailable_before
+      t.integer :backbone_id
 
       t.timestamps
     end
@@ -32,5 +33,6 @@ class DimUsers < ActiveRecord::Migration[7.0]
     add_index :dim_users, :leave_date
     add_index :dim_users, :country
     add_index :dim_users, :unavailable_before
+    add_index :dim_users, :backbone_id
   end
 end
