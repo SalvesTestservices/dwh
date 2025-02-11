@@ -10,9 +10,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_31_085900) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_11_093300) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "dg_audit_logs", force: :cascade do |t|
+    t.integer "user_id"
+    t.string "full_name"
+    t.string "action"
+    t.datetime "audited_at"
+    t.string "auditable_type", null: false
+    t.bigint "auditable_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["action"], name: "index_dg_audit_logs_on_action"
+    t.index ["auditable_type", "auditable_id"], name: "index_dg_audit_logs_on_auditable"
+    t.index ["auditable_type", "auditable_id"], name: "index_dg_audit_logs_on_auditable_type_and_auditable_id"
+    t.index ["created_at"], name: "index_dg_audit_logs_on_created_at"
+    t.index ["user_id"], name: "index_dg_audit_logs_on_user_id"
+  end
 
   create_table "dg_logs", force: :cascade do |t|
     t.integer "object_id"
@@ -62,8 +78,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_31_085900) do
     t.string "name_short"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "company_group"
     t.index ["account_id", "original_id"], name: "index_dim_companies_on_account_id_and_original_id", unique: true
     t.index ["account_id"], name: "index_dim_companies_on_account_id"
+    t.index ["company_group"], name: "index_dim_companies_on_company_group"
     t.index ["original_id"], name: "index_dim_companies_on_original_id"
   end
 
@@ -199,7 +217,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_31_085900) do
     t.integer "unavailable_before"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["account_id", "original_id"], name: "index_dim_users_on_account_id_and_original_id", unique: true
+    t.index ["account_id", "original_id", "company_id"], name: "index_dim_users_on_account_id_and_original_id_and_company_id", unique: true
     t.index ["account_id"], name: "index_dim_users_on_account_id"
     t.index ["company_id"], name: "index_dim_users_on_company_id"
     t.index ["contract"], name: "index_dim_users_on_contract"
