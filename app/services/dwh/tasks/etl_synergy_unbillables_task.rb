@@ -1,4 +1,4 @@
-class Dwh::Tasks::EtlExactUnbillablesTask < Dwh::Tasks::BaseExactTask
+class Dwh::Tasks::EtlSynergyUnbillablesTask < Dwh::Tasks::BaseSynergyTask
   queue_as :default
 
   def perform(task_account_id, task_account_name, run, result, task)

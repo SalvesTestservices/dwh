@@ -1,4 +1,4 @@
-class Dwh::Tasks::BaseExactTask < Dwh::Tasks::BaseTask
+class Dwh::Tasks::BaseSynergyTask
   def get_api_keys(name)
     case name
     when "globe"
