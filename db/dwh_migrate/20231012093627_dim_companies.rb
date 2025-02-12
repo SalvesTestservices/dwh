@@ -6,7 +6,9 @@ class DimCompanies < ActiveRecord::Migration[7.0]
       t.string  :name
       t.string  :name_short
       t.string  :company_group
-      t.integer :backbone_id
+      t.string  :old_original_id
+      t.string  :old_source
+      t.boolean :refreshed, default: false
 
       t.timestamps
     end
@@ -14,6 +16,8 @@ class DimCompanies < ActiveRecord::Migration[7.0]
     add_index :dim_companies, :account_id
     add_index :dim_companies, :original_id
     add_index :dim_companies, :company_group
-    add_index :dim_companies, :backbone_id
+    add_index :dim_companies, :old_original_id
+    add_index :dim_companies, :old_source
+    add_index :dim_companies, :refreshed
   end
 end

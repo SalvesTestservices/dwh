@@ -12,7 +12,9 @@ class DimProjects < ActiveRecord::Migration[7.0]
       t.integer :expected_end_date
       t.integer :customer_id
       t.integer :broker_id
-      t.integer :backbone_id
+      t.string  :old_original_id
+      t.string  :old_source
+      t.boolean :refreshed, default: false
 
       t.timestamps
     end
@@ -27,6 +29,8 @@ class DimProjects < ActiveRecord::Migration[7.0]
     add_index :dim_projects, :end_date
     add_index :dim_projects, :customer_id
     add_index :dim_projects, :broker_id
-    add_index :dim_projects, :backbone_id
+    add_index :dim_projects, :old_original_id
+    add_index :dim_projects, :old_source
+    add_index :dim_projects, :refreshed
   end
 end
