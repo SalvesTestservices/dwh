@@ -53,7 +53,7 @@ class Dwh::Tasks::EtlSynergyCompaniesTask < Dwh::Tasks::BaseSynergyTask
         companies.each do |company|
           if desired_companies.include?(company["Description"]) and company["CompanyCode"] == "001"
             company_code = company["Code"].gsub(company["CompanyCode"], "")
-            
+
             companies_hash = Hash.new
             companies_hash[:account_id]    = account.id
             companies_hash[:original_id]   = company_code

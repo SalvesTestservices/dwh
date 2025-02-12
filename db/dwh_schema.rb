@@ -50,8 +50,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_31_085600) do
 
   create_table "dim_brokers", force: :cascade do |t|
     t.string "name"
+    t.integer "backbone_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["backbone_id"], name: "index_dim_brokers_on_backbone_id"
     t.index ["name"], name: "index_dim_brokers_on_name", unique: true
   end
 
@@ -61,10 +63,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_31_085600) do
     t.string "name"
     t.string "name_short"
     t.string "company_group"
+    t.integer "backbone_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["account_id", "original_id"], name: "index_dim_companies_on_account_id_and_original_id", unique: true
     t.index ["account_id"], name: "index_dim_companies_on_account_id"
+    t.index ["backbone_id"], name: "index_dim_companies_on_backbone_id"
     t.index ["company_group"], name: "index_dim_companies_on_company_group"
     t.index ["original_id"], name: "index_dim_companies_on_original_id"
   end
@@ -74,10 +78,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_31_085600) do
     t.string "original_id"
     t.string "name"
     t.string "status"
+    t.integer "backbone_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["account_id", "original_id"], name: "index_dim_customers_on_account_id_and_original_id", unique: true
     t.index ["account_id"], name: "index_dim_customers_on_account_id"
+    t.index ["backbone_id"], name: "index_dim_customers_on_backbone_id"
     t.index ["original_id"], name: "index_dim_customers_on_original_id"
     t.index ["status"], name: "index_dim_customers_on_status"
   end
@@ -117,22 +123,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_31_085600) do
     t.index ["yearmonth"], name: "index_dim_dates_on_yearmonth"
   end
 
-  create_table "dim_holidays", force: :cascade do |t|
-    t.string "uid"
-    t.integer "account_id"
-    t.integer "company_id"
-    t.integer "holiday_date"
-    t.string "name"
-    t.string "country"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["account_id"], name: "index_dim_holidays_on_account_id"
-    t.index ["company_id"], name: "index_dim_holidays_on_company_id"
-    t.index ["country"], name: "index_dim_holidays_on_country"
-    t.index ["holiday_date"], name: "index_dim_holidays_on_holiday_date"
-    t.index ["uid"], name: "index_dim_holidays_on_uid", unique: true
-  end
-
   create_table "dim_projects", force: :cascade do |t|
     t.integer "account_id"
     t.string "original_id"
@@ -145,10 +135,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_31_085600) do
     t.integer "expected_end_date"
     t.integer "customer_id"
     t.integer "broker_id"
+    t.integer "backbone_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["account_id", "original_id"], name: "index_dim_projects_on_account_id_and_original_id", unique: true
     t.index ["account_id"], name: "index_dim_projects_on_account_id"
+    t.index ["backbone_id"], name: "index_dim_projects_on_backbone_id"
     t.index ["broker_id"], name: "index_dim_projects_on_broker_id"
     t.index ["calculation_type"], name: "index_dim_projects_on_calculation_type"
     t.index ["company_id"], name: "index_dim_projects_on_company_id"
@@ -199,10 +191,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_31_085600) do
     t.string "city"
     t.string "country"
     t.integer "unavailable_before"
+    t.integer "backbone_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["account_id", "original_id", "company_id"], name: "index_dim_users_on_account_id_and_original_id_and_company_id", unique: true
     t.index ["account_id"], name: "index_dim_users_on_account_id"
+    t.index ["backbone_id"], name: "index_dim_users_on_backbone_id"
     t.index ["company_id"], name: "index_dim_users_on_company_id"
     t.index ["contract"], name: "index_dim_users_on_contract"
     t.index ["country"], name: "index_dim_users_on_country"
