@@ -18,11 +18,11 @@ class Dwh::Tasks::EtlBaseAccountsTask < Dwh::Tasks::BaseTask
         { id: 3, original_id: 6, name: 'Test Crew IT', is_holding: false, administration_globe: nil, administration_synergy: nil },
         { id: 4, original_id: 8, name: 'Valori', is_holding: false, administration_globe: "735376G001P", administration_synergy: "735376S001P" },
         { id: 5, original_id: 1, name: 'Cerios', is_holding: true, administration_globe: nil, administration_synergy: nil },
-        { id: 6, original_id: 9, name: 'TestArchitecten', is_holding: true, administration_globe: nil, administration_synergy: nil },
-        { id: 7, original_id: 10, name: 'JOSF', is_holding: true, administration_globe: nil, administration_synergy: nil },
-        { id: 8, original_id: 11, name: 'Omnext', is_holding: true, administration_globe: nil, administration_synergy: nil },
-        { id: 9, original_id: 12, name: 'Testmanagement', is_holding: true, administration_globe: nil, administration_synergy: nil },
-        { id: 10, original_id: 13, name: 'Supportbook', is_holding: true, administration_globe: nil, administration_synergy: nil }
+        { id: 6, original_id: 9, name: 'TestArchitecten', is_holding: false, administration_globe: nil, administration_synergy: nil },
+        { id: 7, original_id: 10, name: 'JOSF', is_holding: false, administration_globe: nil, administration_synergy: nil },
+        { id: 8, original_id: 11, name: 'Omnext', is_holding: false, administration_globe: nil, administration_synergy: nil },
+        { id: 9, original_id: 12, name: 'Testmanagement', is_holding: false, administration_globe: nil, administration_synergy: nil },
+        { id: 10, original_id: 13, name: 'Supportbook', is_holding: false, administration_globe: nil, administration_synergy: nil }
       ]
 
       # Transform data for upsert_all
