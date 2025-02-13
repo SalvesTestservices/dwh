@@ -37,11 +37,11 @@ class Dwh::Tasks::BaseTask < ApplicationJob
     when "last_day"
       Date.current.yesterday.strftime("%Y-%m-%d")
     when "last_week"
-      Date.current.last_week.strftime("%Y-%m-%d")
+      Date.current.last_week.beginning_of_week.strftime("%Y-%m-%d")
     when "last_month"
-      Date.current.last_month.strftime("%Y-%m-%d")
-    when "last_year"
-      Date.current.last_year.strftime("%Y-%m-%d")
+      Date.current.last_month.beginning_of_month.strftime("%Y-%m-%d")
+    when "this_year"
+      Date.current.beginning_of_year.strftime("%Y-%m-%d")
     end
   end
 

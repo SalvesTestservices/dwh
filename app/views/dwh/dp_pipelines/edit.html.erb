@@ -76,7 +76,7 @@
           <div class="mt-6 border-t border-gray-200 pt-6 sm:pr-4">
             <dt class="font-semibold text-gray-700 text-center"><%= I18n.t('.dp_pipeline.form.get_history') %></dt>
             <dd class="mt-2 flex flex-row justify-center">
-              <% collection = [['last_day', I18n.t('.dp_pipeline.history_periods.last_day')],['last_week', I18n.t('.dp_pipeline.history_periods.last_week')],['last_month', I18n.t('.dp_pipeline.history_periods.last_month')],['last_year', I18n.t('.dp_pipeline.history_periods.last_year')]] %>
+              <% collection = [['last_day', I18n.t('.dp_pipeline.history_periods.last_day')],['last_week', I18n.t('.dp_pipeline.history_periods.last_week')],['last_month', I18n.t('.dp_pipeline.history_periods.last_month')],['this_year', I18n.t('.dp_pipeline.history_periods.this_year')]] %>
               <%= form.collection_select :get_history, collection, :first, :last, { include_blank: true }, { class: 'block w-48 rounded border-gray-300 bg-white p-1 text-sm focus:border-gray-500 focus:outline-none focus:ring-gray-500 sm:text-sm' } %>
             </dd>
           </div>

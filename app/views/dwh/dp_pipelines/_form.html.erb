@@ -14,6 +14,9 @@
         <% collection = [['hourly', I18n.t('.dp_pipeline.frequencies.hourly')],['daily', I18n.t('.dp_pipeline.frequencies.daily')]] %>
         <%= render(Form::SelectComponent.new(label: I18n.t(".dp_pipeline.form.run_frequency"), form: form, attribute: :run_frequency, collection: collection, value: nil, mandatory: true)) %>
 
+        <% collection = [['last_day', I18n.t('.dp_pipeline.history_periods.last_day')],['last_week', I18n.t('.dp_pipeline.history_periods.last_week')],['last_month', I18n.t('.dp_pipeline.history_periods.last_month')],['this_year', I18n.t('.dp_pipeline.history_periods.this_year')]] %>
+        <%= render(Form::SelectComponent.new(label: I18n.t(".dp_pipeline.form.get_history"), form: form, attribute: :get_history, collection: collection, value: nil, mandatory: true)) %>
+
         <% collection = [['active', I18n.t('.dp_pipeline.states.active')],['inactive', I18n.t('.dp_pipeline.states.inactive')]] %>
         <%= render(Form::SelectComponent.new(label: I18n.t(".dp_pipeline.form.status"), form: form, attribute: :status, collection: collection, value: nil, mandatory: true)) %>
 
