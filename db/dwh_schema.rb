@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_13_075803) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_13_285600) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -32,6 +32,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_13_075803) do
     t.index ["status"], name: "index_dg_lineage_logs_on_status"
     t.index ["trigger"], name: "index_dg_lineage_logs_on_trigger"
     t.index ["user_id"], name: "index_dg_lineage_logs_on_user_id"
+  end
+
+  create_table "dg_quality_logs", force: :cascade do |t|
+    t.integer "quality_check_id"
+    t.string "result"
+    t.string "error_message"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["quality_check_id"], name: "index_dg_quality_logs_on_quality_check_id"
+    t.index ["result"], name: "index_dg_quality_logs_on_result"
   end
 
   create_table "dim_accounts", force: :cascade do |t|
