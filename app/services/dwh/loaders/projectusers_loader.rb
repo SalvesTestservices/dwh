@@ -3,7 +3,7 @@ class Dwh::Loaders::ProjectusersLoader
   end
 
   def load_data(account)
-    dim_account = Dwh::DimAccount.find_by(original_id: account.id)
+    dim_account = Dwh::DimAccount.find_by(original_id: account.original_id)
 
     projectusers = Dwh::EtlStorage.where(account_id: account.id, identifier: "projectusers", etl: "transform")
     unless projectusers.blank?

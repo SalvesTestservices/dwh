@@ -3,7 +3,7 @@ class Dwh::Loaders::UnbillablesLoader
   end
 
   def load_data(account)
-    dim_account = Dwh::DimAccount.find_by(original_id: account.id)
+    dim_account = Dwh::DimAccount.find_by(original_id: account.original_id)
 
     unbillables = Dwh::EtlStorage.where(account_id: account.id, identifier: "unbillables", etl: "transform")
     unless unbillables.blank?

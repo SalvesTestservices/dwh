@@ -55,7 +55,6 @@ class Dwh::Tasks::EtlSynergyCompaniesTask < Dwh::Tasks::BaseSynergyTask
             company_code = company["Code"].gsub(company["CompanyCode"], "")
 
             companies_hash = Hash.new
-            companies_hash[:account_id]    = account.id
             companies_hash[:original_id]   = company_code
             companies_hash[:name]          = company["Description"]
             companies_hash[:name_short]    = company_code.gsub("CC", "")

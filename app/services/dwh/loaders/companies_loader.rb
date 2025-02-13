@@ -3,7 +3,7 @@ class Dwh::Loaders::CompaniesLoader
   end
 
   def load_data(account)
-    dim_account = Dwh::DimAccount.find_by(original_id: account.id)
+    dim_account = Dwh::DimAccount.find_by(original_id: account.original_id)
 
     companies = Dwh::EtlStorage.where(account_id: account.id, identifier: "companies", etl: "transform")
     unless companies.blank?
