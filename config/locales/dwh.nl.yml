@@ -99,3 +99,9 @@ nl:
     results:
       success:          succes
       failed:           gefaald
+  dg_quality_log:
+    titles:
+      index:            Kwaliteits issues
+    results:
+      success:          succes
+      failed:           fout

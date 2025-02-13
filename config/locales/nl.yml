@@ -50,6 +50,7 @@ nl:
       delete:       Verwijderen
   site:
     titles:
+      dashboard:        Dashboard
       users_and_roles:  Gebruikers & Rollen
       data_lab:         Data lab
       data_api:         Data API

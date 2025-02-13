@@ -1,2 +1,31 @@
-<div class="flex flex-row w-full">
-</div>
+<%= render "layouts/page_header", 
+  breadcrumbs: @breadcrumbs, 
+  title: I18n.t('.site.titles.dashboard'), 
+  icon: ["home", "medium", "gray"],
+  buttons: nil
+%>
+
+<main>
+  <div class="mx-auto max-w-8xl py-6 mt-2">
+
+    <h2 class="my-5 text-xl pb-2 border-b-2 border-gray-400 font-semibold leading-7 text-gray-900"><%= I18n.t('.dg_quality_log.titles.index') %></h2>
+    <ul role="list" class="divide-y divide-gray-300 bg-gray-50 py-2 shadow-sm ring-1 ring-gray-900/5 sm:mx-0 sm:rounded-lg sm:px-8 sm:pb-4 my-3 border border-gray-100">
+      <% @dg_quality_logs.each do |dg_quality_log| %>
+        <% decorate dg_quality_log do |decorates| %>
+          <li class="flex items-center justify-between p-3">
+            <div class="flex flex-row">
+              <%= decorates.result%>
+              <div class="text-base font-semibold leading-6 text-gray-900 space">
+                <%= decorates.data_field(dg_quality_log.error_message) %>
+              </div>
+            </div>
+            <div class="flex flex-none items-center gap-x-1">
+              bla
+            </div>
+          </li>
+        <% end %>
+      <% end %>
+    </ul>
+  
+  </div>
+</main>
