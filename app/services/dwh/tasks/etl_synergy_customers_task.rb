@@ -30,7 +30,7 @@ class Dwh::Tasks::EtlSynergyCustomersTask < Dwh::Tasks::BaseSynergyTask
         full_skip_token = skip_token.blank? ? nil : "&SkipToken=#{skip_token}"
 
         # Send the API GET request
-        customers = send_get_request(api_url, api_key, administration, "/Synergy/AccountListFiltered?filter=CreatedDate ge DateTime'#{get_history_date(run.dp_pipeline.get_history)}'#{full_skip_token}")
+        customers = send_get_request(api_url, api_key, administration, "/Synergy/AccountListFiltered?filter=ModifiedDate ge DateTime'#{get_history_date(run.dp_pipeline.get_history)}'#{full_skip_token}")
 
         # Set the next request
         if customers["SkipToken"] == "" or customers["SkipToken"].blank?
@@ -45,14 +45,14 @@ class Dwh::Tasks::EtlSynergyCustomersTask < Dwh::Tasks::BaseSynergyTask
         unless customers["Results"].blank?
           customers["Results"].each do |customer|
             if customer["CustomerType"] == "C"
-              status = customer["CustomerType"] == "C" ? "active" : "inactive"
+              status = customer["CustomerStatus"] == "A" ? "active" : "inactive"
         
               customers_hash = Hash.new
               customers_hash[:original_id]  = customer["ID"].strip
               customers_hash[:name]         = customer["AccountName"]
               customers_hash[:status]       = status
               customers_hash[:updated_at]   = customer["ModifiedDate"].to_date.strftime("%d%m%Y").to_i
-        
+
               Dwh::EtlStorage.create(account_id: account.id, identifier: "customers", etl: "transform", data: customers_hash)
             end
           end
