@@ -32,7 +32,7 @@ class Dwh::Tasks::EtlSynergyProjectsTask < Dwh::Tasks::BaseSynergyTask
         full_skip_token = skip_token.blank? ? nil : "&SkipToken=#{skip_token}"
 
         # Send the API GET request
-        projects = send_get_request(api_url, api_key, administration, "/Synergy/ProjectListFiltered?filter=ModifiedDate ge DateTime'2020-01-01'#{full_skip_token}")
+        projects = send_get_request(api_url, api_key, administration, "/Synergy/ProjectListFiltered?filter=ModifiedDate ge DateTime'#{get_history_date(run.dp_pipeline.get_history)}'#{full_skip_token}")
 
         # Set the next request
         if projects["Message"].present? and projects["Message"] == "An error has occurred."

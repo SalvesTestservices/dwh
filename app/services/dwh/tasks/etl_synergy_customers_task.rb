@@ -30,7 +30,7 @@ class Dwh::Tasks::EtlSynergyCustomersTask < Dwh::Tasks::BaseSynergyTask
         full_skip_token = skip_token.blank? ? nil : "&SkipToken=#{skip_token}"
 
         # Send the API GET request
-        customers = send_get_request(api_url, api_key, administration, "/Synergy/AccountListFiltered?filter=ModifiedDate ge DateTime'2020-01-01'#{full_skip_token}")
+        customers = send_get_request(api_url, api_key, administration, "/Synergy/AccountListFiltered?filter=CreatedDate ge DateTime'#{get_history_date(run.dp_pipeline.get_history)}'#{full_skip_token}")
 
         # Set the next request
         if customers["SkipToken"] == "" or customers["SkipToken"].blank?

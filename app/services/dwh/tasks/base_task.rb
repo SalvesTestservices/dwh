@@ -32,6 +32,19 @@ class Dwh::Tasks::BaseTask < ApplicationJob
     all_dependencies_finished
   end
 
+  def get_history_date(get_history)
+    case get_history
+    when "last_day"
+      Date.current.yesterday.strftime("%Y-%m-%d")
+    when "last_week"
+      Date.current.last_week.strftime("%Y-%m-%d")
+    when "last_month"
+      Date.current.last_month.strftime("%Y-%m-%d")
+    when "last_year"
+      Date.current.last_year.strftime("%Y-%m-%d")
+    end
+  end
+
   def convert_to_fractional(value)
     value.blank? ? nil : value / 100.0
   end
