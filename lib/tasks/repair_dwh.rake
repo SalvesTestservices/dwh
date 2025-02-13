@@ -12,18 +12,28 @@ Het record kan worden gevonden op basis van de original_id die uit synergy mee k
 Het old_original_id is de oude original_id die in het DWH staat.
 De repair task moet in het DWH de original_id vervangen door de nieuwe id.
 De old_source wordt bepaald ahv van het account.
-En refreshed op true zetten.
+En migrated op true zetten.
 Hierdoor verwijst het record naar het juiste record in Synergy en niet meer naar Backbone of oude Synergy.
-Op basis van refreshed kun je bepalen of de record gemigreerd is en of er records in het DWH zijn die niet meer bestaan in de nieuwe Synergy.
+Op basis van migrated kun je bepalen of de record gemigreerd is en of er records in het DWH zijn die niet meer bestaan in de nieuwe Synergy.
+
+- ophalen record in synergy
+- original_id uitlezen uit free text field
+- id uitlezen
+- record opzoeken in DWH obv original_id en account
+- old_original_id vullen met original_id
+- old_source vullen met account
+- migrated vullen met true
+- original_id vullen met id van Synergy
+- opslaan
 
 Voor migratie
 
-ID    ORIGINAL_ID   OLD_ORIGINAL_ID   OLD_SOURCE           REFRESHED
+ID    ORIGINAL_ID   OLD_ORIGINAL_ID   OLD_SOURCE           MIGRATED
 123   456                                                  false
 
 Na migratie, nieuwe record is 729, freetextfield is 456
 
-ID    ORIGINAL_ID   OLD_ORIGINAL_ID   OLD_SOURCE           REFRESHED
+ID    ORIGINAL_ID   OLD_ORIGINAL_ID   OLD_SOURCE           MIGRATED
 123   729           456               backbone/synergy     true
 
 
