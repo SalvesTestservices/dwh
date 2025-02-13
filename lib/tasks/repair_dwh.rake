@@ -29,7 +29,7 @@ Op basis van migrated kun je bepalen of de record gemigreerd is en of er records
 Voor migratie
 
 ID    ORIGINAL_ID   OLD_ORIGINAL_ID   OLD_SOURCE           MIGRATED
-123   456                                                  false
+123   456                                                  false  
 
 Na migratie, nieuwe record is 729, freetextfield is 456
 

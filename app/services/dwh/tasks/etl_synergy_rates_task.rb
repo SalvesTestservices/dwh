@@ -18,7 +18,7 @@ class Dwh::Tasks::EtlSynergyRatesTask < Dwh::Tasks::BaseSynergyTask
       year    = dp_pipeline.year.blank? ? Date.current.year : dp_pipeline.year.to_i
       month   = dp_pipeline.month.blank? ? Date.current.month : dp_pipeline.month.to_i
 
-      api_url, api_key, administration = get_api_keys("synergy")
+      api_url, api_key, administration = get_api_keys("synergy", account.id)
 
       # Cancel the task if the API keys are not valid
       if api_url.blank? or api_key.blank? or administration.blank?

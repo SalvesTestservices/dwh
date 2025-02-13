@@ -14,7 +14,7 @@ class Dwh::Tasks::EtlSynergyCompaniesTask < Dwh::Tasks::BaseSynergyTask
       # Extract companies
       account = Account.find(task_account_id)
 
-      api_url, api_key, administration = get_api_keys("synergy")
+      api_url, api_key, administration = get_api_keys("synergy", account.id)
 
       # Cancel the task if the API keys are not valid
       if api_url.blank? or api_key.blank? or administration.blank?

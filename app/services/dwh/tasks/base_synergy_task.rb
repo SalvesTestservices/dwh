@@ -1,14 +1,17 @@
 class Dwh::Tasks::BaseSynergyTask < Dwh::Tasks::BaseTask
-  def get_api_keys(name)
+  def get_api_keys(name, account_id)
+    dim_account = Dwh::DimAccount.find(account_id)
+    return nil, nil, nil if dim_account.blank?
+
     case name
     when "globe"
       api_url        = ENV["DWH_CLICKKER_GLOBE_URL"]
       api_key        = ENV["DWH_CLICKKER_GLOBE_KEY"]
-      administration = ENV["DWH_CLICKKER_GLOBE_ADMINISTRATION"]
+      administration = dim_account.administration_globe.blank? ? nil : dim_account.administration_globe
     when "synergy"
       api_url        = ENV["DWH_CLICKKER_SYNERGY_URL"]
       api_key        = ENV["DWH_CLICKKER_SYNERGY_KEY"]
-      administration = ENV["DWH_CLICKKER_SYNERGY_ADMINISTRATION"]
+      administration = dim_account.administration_synergy.blank? ? nil : dim_account.administration_synergy
     end
     
     return api_url, api_key, administration

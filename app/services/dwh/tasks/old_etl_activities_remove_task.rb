@@ -17,7 +17,7 @@ class Dwh::Tasks::EtlOldActivitiesRemoveTask < Dwh::Tasks::BaseSynergyTask
       previous_month_end   = Date.new(Date.current.year, Date.current.month, -1).prev_month
 
       # Cancel the task if the API keys are not valid
-      api_url, api_key, administration = get_api_keys("synergy")
+      api_url, api_key, administration = get_api_keys("synergy", account.id)
       if api_url.blank? or api_key.blank? or administration.blank?
         Dwh::DataPipelineLogger.new.create_log(run.id, "alert", "[#{task_account_name}] Invalid API keys")
         result.update(finished_at: DateTime.now, status: "error")
