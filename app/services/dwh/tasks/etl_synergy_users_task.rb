@@ -28,8 +28,6 @@ class Dwh::Tasks::EtlSynergyUsersTask < Dwh::Tasks::BaseSynergyTask
       # Set excluded user ids
       excluded_user_ids = [48, 50, 167, 516, 439, 503, 494, 493, 470, 440, 437, 434, 429, 424, 425, 415, 403, 398, 396, 377, 374, 372, 370, 360, 352, 346, 344, 334, 331, 323, 319, 318, 305, 304, 276, 263, 262, 259, 246, 245, 244, 227, 205, 197, 191, 141, 186, 180, 162, 160, 158, 153, 152, 149, 145, 139, 137, 136, 128, 123, 112, 109, 107, 105, 102, 23, 22, 21, 20, 19, 18, 17, 16, 15, 13, 12, 11, 10, 527]
 
-      # 397 MArcel de Keizer has been removed from the list of excluded users
-      
       # Scope user ids
       scoped_user_id = dp_pipeline.scoped_user_id.blank? ? "" : " and ID eq #{dp_pipeline.scoped_user_id}"
 
@@ -40,7 +38,7 @@ class Dwh::Tasks::EtlSynergyUsersTask < Dwh::Tasks::BaseSynergyTask
         full_skip_token = skip_token.blank? ? nil : "&SkipToken=#{skip_token}"
 
         # Send the API GET request
-        users = send_get_request(api_url, api_key, administration, "/Synergy/ResourceListFiltered?filter=CreatedDate ge DateTime'#{get_history_date(run.dp_pipeline.get_history)}'#{scoped_user_id}#{full_skip_token}")
+        users = send_get_request(api_url, api_key, administration, "/Synergy/ResourceListFiltered?filter=ModifiedDate ge DateTime'#{get_history_date(run.dp_pipeline.get_history)}'#{scoped_user_id}#{full_skip_token}")
 
         # Set the next request
         if users["SkipToken"] == "" or users["SkipToken"].blank?
@@ -55,14 +53,11 @@ class Dwh::Tasks::EtlSynergyUsersTask < Dwh::Tasks::BaseSynergyTask
         unless users["Results"].blank?
           users["Results"].each do |user|
             unless excluded_user_ids.include?(user["ID"])
-              dim_company = Dwh::DimCompany.find_by(name_short: user["CostCenter"].gsub(user["CompanyCode"], ""))
+              dim_company = Dwh::DimCompany.find_by(name_short: user["CostCenter"].gsub(user["CompanyCode"], "").gsub("CC", ""))
               unless dim_company.blank?
-                contract = get_contract(user["ID"])
+                contract = get_contract(api_url, api_key, administration,user["ID"])
                 contract_hours = (user["FTE"].to_f * 40).round(1)
                 start_date, end_date = get_employment_dates(api_url, api_key, administration, user["ID"])
-
-                # Exception for soecific user
-                end_date = 30042024 if user["ID"].to_i == 167
 
                 # Get salary
                 request_list = send_get_request(api_url, api_key, administration, "Synergy/RequestListFiltered?filter=RequestType eq 1060015 and ResourceID eq #{user["ID"]}")
@@ -108,7 +103,6 @@ class Dwh::Tasks::EtlSynergyUsersTask < Dwh::Tasks::BaseSynergyTask
                 users_hash[:city]           = user["City"]
                 users_hash[:country]        = country
                 users_hash[:updated_at]     = user["ModifiedDate"].to_date.strftime("%d%m%Y").to_i
-
 
                 Dwh::EtlStorage.create(account_id: account.id, identifier: "users", etl: "transform", data: users_hash)
               end

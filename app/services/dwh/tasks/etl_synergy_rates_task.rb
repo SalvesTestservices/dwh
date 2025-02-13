@@ -55,7 +55,8 @@ class Dwh::Tasks::EtlSynergyRatesTask < Dwh::Tasks::BaseSynergyTask
               valid_hr_data = get_valid_hr_data(api_url, api_key, administration, dim_user.original_id, month, year)
               if valid_hr_data.blank? || start_date_as_date > Date.current
                 # Send email to notify of missing hr data
-                UserMailer.dwh_email("Geen HR data aanwezig voor: #{dim_user.full_name} (ID: #{dim_user.original_id})").deliver_later
+                #UserMailer.dwh_email("Geen HR data aanwezig voor: #{dim_user.full_name} (ID: #{dim_user.original_id})").deliver_later
+                # Vervangen door een log
               else
                 # Get company
                 dim_company = Dwh::DimCompany.find_by(id: dim_user.company_id)

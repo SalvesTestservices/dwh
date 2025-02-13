@@ -26,6 +26,9 @@ nl:
       created:      Gebruiker is aangemaakt
       updated:      Gebruiker is gewijzigd
       destroyed:    Gebruiker is verwijderd
+    contracts:
+      fixed:        Vast contract
+      temporary:    Tijdelijk contract
   role:
     titles:
       index:        Rollen

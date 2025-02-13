@@ -95,12 +95,9 @@ class Dwh::Tasks::BaseSynergyTask < Dwh::Tasks::BaseTask
     I18n.t(".users.roles.#{role}")
   end
 
-  def get_contract(user_id)
+  def get_contract(api_url, api_key, administration, user_id)
     contract = nil
     raw_contract = nil
-
-    api_url, api_key, administration = get_api_keys("valori")
-    administration = ENV["DW_CLICKKER_VALORI_SYNERGY_ADMINISTRATION"]
 
     query = "SELECT absences.ID AS ID, absences.HID AS HID, absences.EmpID as EmployeeID, absences.FreeTextField_01 AS Type, absences.FreeTextField_15 AS TypeDesc, absences.startdate AS StartDate, absences.enddate AS EndDate, absences.Description AS Description, (CASE WHEN CAST(absences.DocumentID AS char(40)) IS NULL THEN 0 ELSE 1 END) AS AttachmentPresent FROM absences WHERE absences.Type=11001 AND absences.EmpID=#{user_id} ORDER BY absences.FreeTextField_15,absences.startdate,absences.HID"
     body = send_custom_query(api_url, api_key, administration, "", query)
@@ -119,7 +116,7 @@ class Dwh::Tasks::BaseSynergyTask < Dwh::Tasks::BaseTask
     end
 
     unless raw_contract.blank?
-      contract = raw_contract == "BWONBEPAALD" ? "#{I18n.t('.users.contracts.fixed')}" : "#{I18n.t('.users.contracts.temporary')}"
+      contract = raw_contract == "BWONBEPAALD" ? "#{I18n.t('.user.contracts.fixed')}" : "#{I18n.t('.user.contracts.temporary')}"
     end
 
     contract
