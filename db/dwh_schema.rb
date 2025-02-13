@@ -38,9 +38,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_13_285600) do
     t.integer "quality_check_id"
     t.string "result"
     t.string "error_message"
+    t.datetime "read_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["quality_check_id"], name: "index_dg_quality_logs_on_quality_check_id"
+    t.index ["read_at"], name: "index_dg_quality_logs_on_read_at"
     t.index ["result"], name: "index_dg_quality_logs_on_result"
   end
 
