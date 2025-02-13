@@ -64,12 +64,15 @@
           </div>
 
           <%= turbo_stream_from "runs_#{@dp_pipeline.id}" %>
-          <ul role="list" id="runs_<%= @dp_pipeline.id %>">
-            <%= render partial: "dwh/dp_runs/dp_run", collection: @dp_runs, as: :dp_run %>
-          </ul>
+          <div id="runs_<%= @dp_pipeline.id %>">
+            <ul role="list">
+              <%= render partial: "dwh/dp_runs/dp_run", collection: @dp_runs, as: :dp_run %>
+            </ul>
 
-          <%== render partial: 'layouts/pagy', locals: { pagy: @pagy } %>
-
+            <div class="mt-4">
+              <%== pagy_nav(@pagy) %>
+            </div>
+          </div>
         </div>
 
       </div>
