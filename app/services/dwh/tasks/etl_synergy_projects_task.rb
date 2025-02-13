@@ -51,6 +51,7 @@ class Dwh::Tasks::EtlSynergyProjectsTask < Dwh::Tasks::BaseSynergyTask
           projects["Results"].each do |project|
             unless unbillable_work_project_numbers.map(&:strip).include?(project["ProjectNumber"])
               dim_customer = Dwh::DimCustomer.find_by(original_id: project["CustomerID"])
+              dim_customer = Dwh::DimCustomer.find_by(original_id: project["CustomerID"])
               dim_customer_id = dim_customer.blank? ? nil : dim_customer.original_id
 
               status = project["Status"] == "G" ? "inactive" : "active"
@@ -61,7 +62,7 @@ class Dwh::Tasks::EtlSynergyProjectsTask < Dwh::Tasks::BaseSynergyTask
               end_date = project["EndDate"].blank? ? nil : project["EndDate"].to_date.strftime("%d%m%Y").to_i
               expected_end_date = project["ExpectedEndDate"].blank? ? nil : project["ExpectedEndDate"].to_date.strftime("%d%m%Y").to_i
               expected_end_date = end_date if expected_end_date.blank?
-              company_id = project["ProjectCostCenter"].blank? ? nil : project["ProjectCostCenter"].gsub(project["CompanyCode"], "")
+              company_id = project["ProjectCostCenter"].blank? ? nil : project["ProjectCostCenter"].gsub(project["CompanyCode"].gsub("CC", ""), "")
 
               project_hash = Hash.new
               project_hash[:original_id]        = project["ProjectNumber"].strip
