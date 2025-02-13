@@ -82,7 +82,6 @@ class Dwh::DpPipelinesController < ApplicationController
   end
 
   private def dp_pipeline_params
-    params.require(:dwh_dp_pipeline).permit(:name, :status, :description, :run_frequency, :load_method, :pipeline_key, :month, :year, 
-      :scoped_user_id, :account_id)
+    params.require(:dwh_dp_pipeline).permit(:name, :status, :description, :run_frequency, :load_method, :pipeline_key, :month, :year, :get_history, :scoped_user_id, :account_id)
   end
 end

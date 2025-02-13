@@ -41,7 +41,7 @@
           <dd class="mt-2 text-gray-500 text-center"><%= decorates.data_field(dp_pipeline.scoped_user_id) %></dd>
         </div>
       </dl>
-      <dl class="mt-1 grid grid-cols-4 text-sm leading-6 w-full">
+      <dl class="mt-1 grid grid-cols-5 text-sm leading-6 w-full">
         <div class="mt-6 border-t border-gray-200 pt-6 sm:pr-4">
           <dt class="font-semibold text-gray-700 text-center"><%= I18n.t('.dp_pipeline.form.account_id') %></dt>
           <dd class="mt-2 text-gray-500 text-center"><%= decorates.account %></dd>
@@ -49,6 +49,10 @@
         <div class="mt-6 border-t border-gray-200 pt-6 sm:pr-4">
           <dt class="font-semibold text-gray-700 text-center"><%= I18n.t('.dp_pipeline.form.run_frequency') %></dt>
           <dd class="mt-2 text-gray-500 text-center"><%= decorates.run_frequency %></dd>
+        </div>
+        <div class="mt-6 border-t border-gray-200 pt-6 sm:pr-4">
+          <dt class="font-semibold text-gray-700 text-center"><%= I18n.t('.dp_pipeline.form.get_history') %></dt>
+          <dd class="mt-2 text-gray-500 text-center"><%= I18n.t(".dp_pipeline.history_periods.#{dp_pipeline.get_history}") %></dd>
         </div>
         <div class="mt-6 border-t border-gray-200 pt-6 sm:pr-4">
           <dt class="font-semibold text-gray-700 text-center"><%= I18n.t('.dp_pipeline.form.dp_runs_count') %></dt>

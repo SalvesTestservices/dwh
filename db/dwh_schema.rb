@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_31_085600) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_13_075803) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -253,9 +253,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_31_085600) do
     t.string "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "get_history", default: "last_day"
     t.index ["account_id"], name: "index_dp_pipelines_on_account_id"
     t.index ["dp_runs_count"], name: "index_dp_pipelines_on_dp_runs_count"
     t.index ["dp_tasks_count"], name: "index_dp_pipelines_on_dp_tasks_count"
+    t.index ["get_history"], name: "index_dp_pipelines_on_get_history"
     t.index ["last_executed_at"], name: "index_dp_pipelines_on_last_executed_at"
     t.index ["load_method"], name: "index_dp_pipelines_on_load_method"
     t.index ["month"], name: "index_dp_pipelines_on_month"

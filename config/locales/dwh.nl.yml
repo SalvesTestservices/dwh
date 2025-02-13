@@ -27,6 +27,12 @@ nl:
       year:             Jaar
       period:           Periode
       scoped_user_id:   Scoped original user ID
+      get_history:      Op te halen periode
+    history_periods:
+      last_day:         Laatste dag
+      last_week:        Laatste week
+      last_month:       Laatste maand
+      last_year:        Laatste jaar
     states:
       active:           Actief
       inactive:         Inactief
