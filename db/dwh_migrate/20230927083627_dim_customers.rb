@@ -7,7 +7,7 @@ class DimCustomers < ActiveRecord::Migration[7.0]
       t.string  :status
       t.string  :old_original_id
       t.string  :old_source
-      t.boolean :refreshed, default: false
+      t.boolean :migrated, default: false
 
       t.timestamps
     end
@@ -17,6 +17,6 @@ class DimCustomers < ActiveRecord::Migration[7.0]
     add_index :dim_customers, :status
     add_index :dim_customers, :old_original_id
     add_index :dim_customers, :old_source
-    add_index :dim_customers, :refreshed
+    add_index :dim_customers, :migrated
   end
 end

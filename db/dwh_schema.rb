@@ -65,16 +65,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_31_085600) do
     t.string "company_group"
     t.string "old_original_id"
     t.string "old_source"
-    t.boolean "refreshed", default: false
+    t.boolean "migrated", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["account_id", "original_id"], name: "index_dim_companies_on_account_id_and_original_id", unique: true
     t.index ["account_id"], name: "index_dim_companies_on_account_id"
     t.index ["company_group"], name: "index_dim_companies_on_company_group"
+    t.index ["migrated"], name: "index_dim_companies_on_migrated"
     t.index ["old_original_id"], name: "index_dim_companies_on_old_original_id"
     t.index ["old_source"], name: "index_dim_companies_on_old_source"
     t.index ["original_id"], name: "index_dim_companies_on_original_id"
-    t.index ["refreshed"], name: "index_dim_companies_on_refreshed"
   end
 
   create_table "dim_customers", force: :cascade do |t|
@@ -84,15 +84,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_31_085600) do
     t.string "status"
     t.string "old_original_id"
     t.string "old_source"
-    t.boolean "refreshed", default: false
+    t.boolean "migrated", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["account_id", "original_id"], name: "index_dim_customers_on_account_id_and_original_id", unique: true
     t.index ["account_id"], name: "index_dim_customers_on_account_id"
+    t.index ["migrated"], name: "index_dim_customers_on_migrated"
     t.index ["old_original_id"], name: "index_dim_customers_on_old_original_id"
     t.index ["old_source"], name: "index_dim_customers_on_old_source"
     t.index ["original_id"], name: "index_dim_customers_on_original_id"
-    t.index ["refreshed"], name: "index_dim_customers_on_refreshed"
     t.index ["status"], name: "index_dim_customers_on_status"
   end
 
@@ -145,7 +145,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_31_085600) do
     t.integer "broker_id"
     t.string "old_original_id"
     t.string "old_source"
-    t.boolean "refreshed", default: false
+    t.boolean "migrated", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["account_id", "original_id"], name: "index_dim_projects_on_account_id_and_original_id", unique: true
@@ -156,10 +156,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_31_085600) do
     t.index ["customer_id"], name: "index_dim_projects_on_customer_id"
     t.index ["end_date"], name: "index_dim_projects_on_end_date"
     t.index ["expected_end_date"], name: "index_dim_projects_on_expected_end_date"
+    t.index ["migrated"], name: "index_dim_projects_on_migrated"
     t.index ["old_original_id"], name: "index_dim_projects_on_old_original_id"
     t.index ["old_source"], name: "index_dim_projects_on_old_source"
     t.index ["original_id"], name: "index_dim_projects_on_original_id"
-    t.index ["refreshed"], name: "index_dim_projects_on_refreshed"
     t.index ["start_date"], name: "index_dim_projects_on_start_date"
     t.index ["status"], name: "index_dim_projects_on_status"
   end
@@ -205,7 +205,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_31_085600) do
     t.integer "unavailable_before"
     t.string "old_original_id"
     t.string "old_source"
-    t.boolean "refreshed", default: false
+    t.boolean "migrated", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["account_id", "original_id", "company_id"], name: "index_dim_users_on_account_id_and_original_id_and_company_id", unique: true
@@ -215,10 +215,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_31_085600) do
     t.index ["country"], name: "index_dim_users_on_country"
     t.index ["employee_type"], name: "index_dim_users_on_employee_type"
     t.index ["leave_date"], name: "index_dim_users_on_leave_date"
+    t.index ["migrated"], name: "index_dim_users_on_migrated"
     t.index ["old_original_id"], name: "index_dim_users_on_old_original_id"
     t.index ["old_source"], name: "index_dim_users_on_old_source"
     t.index ["original_id"], name: "index_dim_users_on_original_id"
-    t.index ["refreshed"], name: "index_dim_users_on_refreshed"
     t.index ["role"], name: "index_dim_users_on_role"
     t.index ["start_date"], name: "index_dim_users_on_start_date"
     t.index ["unavailable_before"], name: "index_dim_users_on_unavailable_before"
