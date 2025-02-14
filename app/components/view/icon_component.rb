@@ -91,6 +91,8 @@ class View::IconComponent < ViewComponent::Base
       icon = "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='#{@color}' stroke-linecap='round' stroke-linejoin='round' width='#{@size}' height='#{@size}' stroke-width='2'> <path d='M10 19a2 2 0 1 0 -4 0a2 2 0 0 0 4 0z'></path> <path d='M18 5a2 2 0 1 0 -4 0a2 2 0 0 0 4 0z'></path> <path d='M10 5a2 2 0 1 0 -4 0a2 2 0 0 0 4 0z'></path> <path d='M6 12a2 2 0 1 0 -4 0a2 2 0 0 0 4 0z'></path> <path d='M18 19a2 2 0 1 0 -4 0a2 2 0 0 0 4 0z'></path> <path d='M14 12a2 2 0 1 0 -4 0a2 2 0 0 0 4 0z'></path> <path d='M22 12a2 2 0 1 0 -4 0a2 2 0 0 0 4 0z'></path> <path d='M6 12h4'></path> <path d='M14 12h4'></path> <path d='M15 7l-2 3'></path> <path d='M9 7l2 3'></path> <path d='M11 14l-2 3'></path> <path d='M13 14l2 3'></path> </svg>"
     when "lock"
       icon = "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='#{@color}' stroke-linecap='round' stroke-linejoin='round' width='#{@size}' height='#{@size}' stroke-width='2'> <path d='M5 13a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-6z'></path> <path d='M11 16a1 1 0 1 0 2 0a1 1 0 0 0 -2 0'></path> <path d='M8 11v-4a4 4 0 1 1 8 0v4'></path> </svg>"
+    when "exit"
+      icon = "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='#{@color}' stroke-linecap='round' stroke-linejoin='round' width='#{@size}' height='#{@size}' stroke-width='2'> <path d='M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2'></path> <path d='M9 12h12l-3 -3'></path> <path d='M18 15l3 -3'></path> </svg>"
     end
     icon.html_safe
   end

@@ -64,20 +64,29 @@
       </div>
     <% end %>
 
-    <% if can?(:read, :employee_overviews) %>
-      <%= link_to bonus_overview_path, class: "#{request.path.include?("bonus") ? 'bg-gray-100' : 'bg-white'} flex items-center px-3 py-3 text-lg font-medium text-gray-700 rounded-md hover:bg-gray-200 hover:text-gray-900" do %>
-        <%= render(View::IconComponent.new(icon_type: "bonus", size: "medium", color: "gray")) %>
-        <span class="ml-3"><%= I18n.t(".data_overview.titles.bonus_overview") %></span>
+    <div class="py-5">
+      <% if can?(:read, :employee_overviews) %>
+        <%= link_to bonus_overview_path, class: "#{request.path.include?("bonus") ? 'bg-gray-100' : 'bg-white'} flex items-center px-3 py-3 text-lg font-medium text-gray-700 rounded-md hover:bg-gray-200 hover:text-gray-900" do %>
+          <%= render(View::IconComponent.new(icon_type: "bonus", size: "medium", color: "gray")) %>
+          <span class="ml-3"><%= I18n.t(".data_overview.titles.bonus_overview") %></span>
+        <% end %>
       <% end %>
-    <% end %>
 
-    <% if can?(:read, :employee_overviews) %>
-      <%= link_to holiday_overview_path, class: "#{request.path.include?("holiday") ? 'bg-gray-100' : 'bg-white'} flex items-center px-3 py-3 text-lg font-medium text-gray-700 rounded-md hover:bg-gray-200 hover:text-gray-900" do %>
-        <%= render(View::IconComponent.new(icon_type: "holiday", size: "medium", color: "gray")) %>
-        <span class="ml-3"><%= I18n.t(".data_overview.titles.holiday_overview") %></span>
+      <% if can?(:read, :employee_overviews) %>
+        <%= link_to holiday_overview_path, class: "#{request.path.include?("holiday") ? 'bg-gray-100' : 'bg-white'} flex items-center px-3 py-3 text-lg font-medium text-gray-700 rounded-md hover:bg-gray-200 hover:text-gray-900" do %>
+          <%= render(View::IconComponent.new(icon_type: "holiday", size: "medium", color: "gray")) %>
+          <span class="ml-3"><%= I18n.t(".data_overview.titles.holiday_overview") %></span>
+        <% end %>
       <% end %>
-    <% end %>
-
+    </div>
+    <div class="border-t border-gray-200 pt-5">
+      <%= button_to destroy_user_session_path, 
+          method: :delete, 
+          form_class: "bg-white flex items-center px-3 py-3 text-lg font-medium text-gray-700 rounded-md hover:bg-gray-200 hover:text-gray-900",
+          class: "flex items-center w-full" do %>
+        <%= render(View::IconComponent.new(icon_type: "exit", size: "medium", color: "gray")) %>
+        <span class="ml-3"><%= I18n.t(".devise.sessions.signout") %></span>
+      <% end %>
     </div>
   </nav>
 </div>
