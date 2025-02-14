@@ -1,8 +1,14 @@
+<% if can?(:write, :users) %>
+  <% buttons = [[I18n.t('.user.titles.new'), new_user_path]] %>
+<% else %>
+  <% buttons = [] %>
+<% end %>
+
 <%= render "layouts/page_header", 
   breadcrumbs: @breadcrumbs, 
   title: I18n.t(".user.titles.index"), 
   icon: ["users", "medium", "gray"],
-  buttons: [[I18n.t(".user.titles.new"), new_user_path]]
+  buttons: buttons
 %>
 
 <main>

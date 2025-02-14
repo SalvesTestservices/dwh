@@ -1,8 +1,14 @@
+<% if can?(:write, :roles) %>
+  <% buttons = [[I18n.t('.role.titles.new'), new_role_path]] %>
+<% else %>
+  <% buttons = [] %>
+<% end %>
+
 <%= render "layouts/page_header", 
   breadcrumbs: @breadcrumbs, 
   title: I18n.t(".role.titles.index"), 
   icon: ["lock", "medium", "gray"],
-  buttons: [[I18n.t(".role.titles.new"), new_role_path]]
+  buttons: buttons
 %>
 
 <main>
