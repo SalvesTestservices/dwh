@@ -49,17 +49,19 @@
         <% end %>
 
         <% if can?(:read, :users) %>
-          <%= link_to users_path, class: "#{request.path.include?("users") ? 'bg-gray-100' : 'bg-white'} flex items-center px-3 py-3 text-lg font-medium text-gray-700 rounded-md hover:bg-gray-200 hover:text-gray-900" do %>
-            <%= render(View::IconComponent.new(icon_type: "users", size: "medium", color: "gray")) %>
-            <span class="ml-3"><%= I18n.t(".user.titles.index") %></span>
-          <% end %>
-        <% end %>
+          <div class="border-t border-gray-200 pt-5">
+            <%= link_to users_path, class: "#{request.path.include?("users") ? 'bg-gray-100' : 'bg-white'} flex items-center px-3 py-3 text-lg font-medium text-gray-700 rounded-md hover:bg-gray-200 hover:text-gray-900" do %>
+              <%= render(View::IconComponent.new(icon_type: "users", size: "medium", color: "gray")) %>
+              <span class="ml-3"><%= I18n.t(".user.titles.index") %></span>
+            <% end %>
 
-        <% if can?(:read, :roles) %>
-          <%= link_to roles_path, class: "#{request.path.include?("role") ? 'bg-gray-100' : 'bg-white'} flex items-center px-3 py-3 text-lg font-medium text-gray-700 rounded-md hover:bg-gray-200 hover:text-gray-900" do %>
-            <%= render(View::IconComponent.new(icon_type: "lock", size: "medium", color: "gray")) %>
-            <span class="ml-3"><%= I18n.t(".role.titles.index") %></span>
-          <% end %>
+            <% if can?(:read, :roles) %>
+              <%= link_to roles_path, class: "#{request.path.include?("role") ? 'bg-gray-100' : 'bg-white'} flex items-center px-3 py-3 text-lg font-medium text-gray-700 rounded-md hover:bg-gray-200 hover:text-gray-900" do %>
+                <%= render(View::IconComponent.new(icon_type: "lock", size: "medium", color: "gray")) %>
+                <span class="ml-3"><%= I18n.t(".role.titles.index") %></span>
+              <% end %>
+            <% end %>
+          </div>
         <% end %>
       </div>
     <% end %>
