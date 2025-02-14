@@ -1,9 +1,9 @@
-<div id="<%= role %>-quarters-table" class="bg-gray-50 rounded-lg p-4 my-3 border border-gray-300 mt-5">
+<div id="<%= role %>-quarters-table" class="bg-white rounded-lg p-4 my-3 border border-gray-300 mt-5">
   <div class="min-w-full divide-y divide-gray-200">
-    <div class="bg-gray-50 grid grid-cols-1">
+    <div class="bg-gray-100 grid grid-cols-1">
       <%= render(DivTable::HeaderComponent.new(title: "#{I18n.t('.data_target.form.fte_previous')}: #{DwhCalculator.new.fte_previous_year(@company, role, @year)}", align: "text-left")) %>
     </div>
-    <div class="bg-gray-50 grid grid-cols-11">
+    <div class="bg-gray-100 grid grid-cols-11">
       <%= render(DivTable::HeaderComponent.new(title: I18n.t('.data_target.form.year'), align: "text-center")) %>
       <%= render(DivTable::HeaderComponent.new(title: I18n.t('.data_target.form.month'), align: "text-left")) %>
       <%= render(DivTable::HeaderComponent.new(title: I18n.t('.data_target.form.fte'), align: "text-center")) %>
@@ -29,12 +29,11 @@
 
     <% targets = data_targets.where(role: role) %>
     <% if targets.blank? %>
-      <div class="bg-white grid grid-cols-1">
+      <div class="bg-gray-50 grid grid-cols-1">
         <div class="table-cell h-20 pt-7 whitespace-nowrap text-xm text-center text-gray-900"><%= I18n.t('.data_target.titles.no_records') %></div>
       </div>
     <% else %>
       <% targets.each do |data_target| %>
-        <% dump "HUH #{data_target.turnover}" %>
         <%= render "data_target", data_target: data_target %>
 
         <% decorate data_target do |decorates| %>
@@ -52,7 +51,7 @@
     <% end %>
 
     <% decorate data_targets.first do |decorates| %>
-      <div class="bg-gray-50 grid grid-cols-11">
+      <div class="bg-gray-100 grid grid-cols-11">
         <%= render(DivTable::HeaderComponent.new(title: nil, align: "text-center")) %>
         <%= render(DivTable::HeaderComponent.new(title: nil, align: "text-left")) %>
         <%= render(DivTable::HeaderComponent.new(title: nil, align: "text-right")) %>

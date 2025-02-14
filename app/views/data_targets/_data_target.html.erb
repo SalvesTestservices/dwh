@@ -1,6 +1,6 @@
 <div id="ct-<%= data_target.id %>" >
   <% decorate data_target do |decorates| %>
-    <div class="bg-white grid grid-cols-11">
+    <div class="bg-gray-50 grid grid-cols-11">
       <%= render(DivTable::CellComponent.new(value: "#{data_target.year} - Q#{data_target.quarter}", align: "text-center")) %>
       <%= render(DivTable::CellComponent.new(value: I18n.t(".date.month_names")[data_target.month].capitalize, align: "text-left")) %>
 
