@@ -27,7 +27,7 @@
 
             <div class="py-2 mt-0 grid grid-cols-3 gap-4 items-start border-t border-gray-200">
               <%= form.label I18n.t(".dp_task.form.depends_on"), class: "block text-sm font-medium text-gray-700" %>
-              <%= form.select :depends_on, options_from_collection_for_select(@dp_tasks, 'task_key', 'name', @dp_task.depends_on), {}, { size: 10, multiple: true, class: "mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" } %>
+              <%= form.select :depends_on, options_from_collection_for_select(@dp_tasks, 'task_key', 'name', @dp_task.depends_on), {}, { size: 10, multiple: true, class: "mt-1 block w-full py-2 px-3 border border-gray-300 bg-gray-50 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" } %>
             </div>
 
             <div class="grid grid-cols-3 gap-4 items-start border-t border-gray-200 pt-5">

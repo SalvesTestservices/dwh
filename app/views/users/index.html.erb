@@ -8,9 +8,9 @@
 <main>
   <div class="mx-auto max-w-8xl mt-10">
 
-    <div class="bg-gray-50 rounded-lg p-4 my-3 border border-gray-300">
-      <div class="min-w-full divide-y divide-gray-200">
-        <div class="bg-gray-50 grid grid-cols-5">
+    <div class="bg-white rounded-lg p-4 my-3 border border-gray-300">
+      <div class="min-w-full divide-y divide-gray-300">
+        <div class="bg-white grid grid-cols-5">
           <%= render(DivTable::HeaderComponent.new(title: I18n.t(".activerecord.attributes.user.first_name"), align: "text-left")) %>
           <%= render(DivTable::HeaderComponent.new(title: I18n.t(".activerecord.attributes.user.last_name"), align: "text-left")) %>
           <%= render(DivTable::HeaderComponent.new(title: I18n.t(".activerecord.attributes.user.role"), align: "text-left")) %>
@@ -19,13 +19,13 @@
         </div>
 
         <% if @users.blank? %>
-          <div class="bg-white grid grid-cols-1">
+          <div class="bg-gray-50 grid grid-cols-1">
             <div class="table-cell h-20 pt-7 whitespace-nowrap text-xm text-center text-gray-900"><%= I18n.t('.general.no_records') %></div>
           </div>
         <% else %>
           <% @users.each do |user| %>
             <% decorate user do |decorates| %>
-              <div class="bg-white grid grid-cols-5 items-center">
+              <div class="bg-gray-50 grid grid-cols-5 items-center">
                 <%= render(DivTable::CellComponent.new(value: decorates.data_field(user.first_name), align: "text-left")) %>
                 <%= render(DivTable::CellComponent.new(value: decorates.data_field(user.last_name), align: "text-left")) %>
                 <%= render(DivTable::CellComponent.new(value: decorates.role, align: "text-left")) %>

@@ -2,7 +2,7 @@
   <% decorate dp_pipeline do |decorates| %>
     <% status = dp_pipeline.status == "active" ? "border-l-green-500" : "border-l-gray-500" %>
 
-    <div class="bg-gray-50 -mx-4 px-4 py-8 shadow-sm ring-1 ring-gray-900/5 sm:mx-0 sm:rounded-lg sm:px-8 sm:pb-4 my-3 border-l-8 <%= status %> border-t border-r border-b border-gray-300">
+    <div class="bg-white -mx-4 px-4 py-8 shadow-sm ring-1 ring-gray-900/5 sm:mx-0 sm:rounded-lg sm:px-8 sm:pb-4 my-3 border-l-8 <%= status %> border-t border-r border-b border-gray-300">
       <div class="flex flex-row justify-between">
         <h2 class="pt-3 text-3xl font-semibold leading-6 text-gray-700"><%= dp_pipeline.name %></h2>
         <div class="flex flex-row justify-end">
