@@ -104,4 +104,4 @@ nl:
       index:            Kwaliteits issues
     results:
       success:          succes
-      failed:           fout
+      failed:           issue
