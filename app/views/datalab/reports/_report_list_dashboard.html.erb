@@ -1,0 +1,30 @@
+<div>
+  <%= render "shared/section_header", title: I18n.t('.datalab.report.titles.shared_reports'), icon: "datalab" %>
+
+  <ul role="list" class="divide-y divide-gray-300 bg-white py-2 shadow-sm ring-1 ring-gray-900/5 sm:mx-0 sm:rounded-lg px-1 my-3 border border-gray-100">
+    <% datalab_reports.each do |report| %>
+      <% decorate report do |decorates| %>
+        <li class="flex items-center justify-between gap-x-6 px-5 py-5">
+          <div class="min-w-0">
+            <div class="flex items-start gap-x-3">
+              <p class="text-base font-semibold leading-6 text-gray-900"><%= decorates.data_field(report.name) %></p>
+            </div>
+            <div class="flex flex-row justify-start mt-2">
+              <%= decorates.anchor_type("full") %>
+              <%= decorates.is_public %>
+            </div>
+            <div class="flex flex-col gap-x-2 leading-5 mt-3">
+              <p class="text-gray-700 text-xs"><%= decorates.created %></p>
+            </div>
+          </div>
+          
+          <div class="flex flex-none items-center gap-x-1">
+            <% if can?(:read, :datalab) %>
+              <%= render(View::ButtonComponent.new(title: I18n.t(".general.details"), url: datalab_report_path(report), button_type: "link", size: "small")) %>
+            <% end %>
+          </div>
+        </li>
+      <% end %>
+    <% end %>
+  </ul>
+</div>

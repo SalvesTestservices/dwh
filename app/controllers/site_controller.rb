@@ -12,6 +12,7 @@ class SiteController < ApplicationController
 
   def dwh_dashboard
     @dg_quality_logs = Dwh::DgQualityLog.where(result: "failed",read_at: nil).order(created_at: :desc)
+    @datalab_reports = DatalabReport.where(is_public: true).order(:name)
 
     @breadcrumbs = []
     @breadcrumbs << [I18n.t(".site.titles.dashboard")]
