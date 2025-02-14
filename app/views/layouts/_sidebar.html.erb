@@ -66,7 +66,7 @@
       </div>
     <% end %>
 
-    <div class="py-5">
+    <div class="">
       <% if can?(:read, :employee_overviews) %>
         <%= link_to bonus_overview_path, class: "#{request.path.include?("bonus") ? 'bg-gray-100' : 'bg-white'} flex items-center px-3 py-3 text-lg font-medium text-gray-700 rounded-md hover:bg-gray-200 hover:text-gray-900" do %>
           <%= render(View::IconComponent.new(icon_type: "bonus", size: "medium", color: "gray")) %>
