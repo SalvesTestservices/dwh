@@ -1,0 +1,58 @@
+<%= render "layouts/page_header", 
+  breadcrumbs: @breadcrumbs, 
+  title: I18n.t(".role.titles.index"), 
+  icon: ["lock", "medium", "gray"],
+  buttons: [[I18n.t(".role.titles.new"), new_role_path]]
+%>
+
+<main>
+  <div class="mx-auto max-w-8xl mt-10">
+
+    <div class="bg-gray-50 rounded-lg p-4 my-3 border border-gray-300">
+      <div class="min-w-full divide-y divide-gray-200">
+        <div class="bg-gray-50 flex flex-row items-center">
+          <div class="w-2/12 align-top px-2 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+            <%= I18n.t(".activerecord.attributes.role.name") %>
+          </div>
+          <div class="w-8/12 align-top px-2 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+            <%= I18n.t(".activerecord.attributes.role.permissions") %>
+          </div>
+          <div class="w-2/12 align-top px-2 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider"></div>
+        </div>
+
+        <% if @roles.blank? %>
+          <div class="bg-white flex flex-row justify-center items-center">
+            <div class="table-cell h-20 pt-7 whitespace-nowrap text-xm text-center text-gray-900"><%= I18n.t('.general.no_records') %></div>
+          </div>
+        <% else %>
+          <% @roles.each do |role| %>
+            <div class="bg-white flex flex-row items-center">
+              <div class="w-2/12 text-left flex items-center px-2 h-9 whitespace-nowrap text-xs text-gray-900"><%= role.name %></div>
+              <div class="w-8/12 text-sm text-gray-500">
+                <div class="flex flex-wrap gap-2 w-full py-2">
+                  <% role.permissions.each do |permission| %>
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                      <%= permission %>
+                    </span>
+                  <% end %>
+                </div>
+              </div>
+              <div class="w-2/12 px-2 py-3 text-sm text-gray-700">
+                <div class="flex flex-row justify-center gap-2 w-full">
+                  <% if can?(:write, :roles) %>
+                    <%= render(View::ButtonComponent.new(title: I18n.t(".general.edit").downcase, url: edit_role_path(role), button_type: "link", size: "small")) %>
+                  <% end %>
+                  <% if can?(:delete, :roles) %>
+                    <%= render(View::ButtonComponent.new(title: I18n.t(".general.destroy").downcase, url: role_path(role), button_type: "delete_button", size: "small")) %>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+
+
+  </div>
+</main>
