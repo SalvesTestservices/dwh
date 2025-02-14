@@ -9,6 +9,7 @@ nl:
         last_name:              Achternaam
         email:                  E-mail
         role:                   Rol
+        label:                  Label
       role:
         name:                   Naam
         permissions:            Rechten

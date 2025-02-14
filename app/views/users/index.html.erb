@@ -14,7 +14,7 @@
           <%= render(DivTable::HeaderComponent.new(title: I18n.t(".activerecord.attributes.user.first_name"), align: "text-left")) %>
           <%= render(DivTable::HeaderComponent.new(title: I18n.t(".activerecord.attributes.user.last_name"), align: "text-left")) %>
           <%= render(DivTable::HeaderComponent.new(title: I18n.t(".activerecord.attributes.user.role"), align: "text-left")) %>
-          <%= render(DivTable::HeaderComponent.new(title: I18n.t(".activerecord.attributes.user.email"), align: "text-left")) %>
+          <%= render(DivTable::HeaderComponent.new(title: I18n.t(".activerecord.attributes.user.label"), align: "text-left")) %>
           <%= render(DivTable::HeaderComponent.new(title: "", align: "text-center")) %>
         </div>
 
@@ -29,7 +29,7 @@
                 <%= render(DivTable::CellComponent.new(value: decorates.data_field(user.first_name), align: "text-left")) %>
                 <%= render(DivTable::CellComponent.new(value: decorates.data_field(user.last_name), align: "text-left")) %>
                 <%= render(DivTable::CellComponent.new(value: decorates.role, align: "text-left")) %>
-                <%= render(DivTable::CellComponent.new(value: decorates.data_field(user.email), align: "text-left")) %>
+                <%= render(DivTable::CellComponent.new(value: decorates.data_field(user.label), align: "text-left")) %>
                 <div class="px-2 py-3 text-sm text-gray-700">
                   <div class="flex flex-row justify-center gap-2 w-full">
                     <% if can?(:write, :users) %>

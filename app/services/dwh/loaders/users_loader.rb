@@ -31,6 +31,10 @@ class Dwh::Loaders::UsersLoader
             end
           end
         end
+
+        # Also create user as account user, so it can login and view overviews
+        
+
         user.destroy
       end
     end

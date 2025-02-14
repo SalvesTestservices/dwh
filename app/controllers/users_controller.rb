@@ -22,6 +22,7 @@ class UsersController < ApplicationController
 
   def new
     @user = User.new
+    @accounts = Dwh::DimAccount.order(:name)
 
     @breadcrumbs = []
     @breadcrumbs << [I18n.t(".user.titles.index"), users_path]
@@ -34,12 +35,14 @@ class UsersController < ApplicationController
     if @user.save
       redirect_to users_path, notice: I18n.t(".user.messages.created")
     else
+      @accounts = Dwh::DimAccount.order(:name)
       render :new, status: :unprocessable_entity
     end
   end
 
   def edit
     @user = User.find(params[:id])
+    @accounts = Dwh::DimAccount.order(:name)
 
     @breadcrumbs = []
     @breadcrumbs << [I18n.t(".user.titles.index"), users_path]
@@ -50,6 +53,7 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
 
     if @user.update(user_params)
+      @accounts = Dwh::DimAccount.order(:name)
       redirect_to users_path, notice: I18n.t(".user.messages.updated")
     else
       render :edit, status: :unprocessable_entity
@@ -64,6 +68,6 @@ class UsersController < ApplicationController
   end
 
   private def user_params
-    params.require(:user).permit(:email, :first_name, :last_name, :role) 
+    params.require(:user).permit(:email, :first_name, :last_name, :role, :label) 
   end
 end 
