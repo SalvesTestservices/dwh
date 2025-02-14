@@ -7,6 +7,7 @@
         <span class="text-sm italic"><%= I18n.t(".general.mandatory") %></span>
 
         <%= render(Form::TextFieldComponent.new(label: I18n.t(".activerecord.attributes.role.name"), form: form, attribute: :name, mandatory: true, autofocus: true, width: "medium")) %>
+        <%= render(Form::TextFieldComponent.new(label: I18n.t(".activerecord.attributes.role.key"), form: form, attribute: :key, mandatory: true, autofocus: true, width: "medium")) %>
 
         <div class="py-3 mt-0 grid grid-cols-3 gap-4 items-start border-t border-gray-200">
           <%= form.label I18n.t(".activerecord.attributes.role.permissions"), class: "block text-sm font-medium text-gray-700 pt-3" %>

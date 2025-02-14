@@ -11,8 +11,11 @@
     <div class="bg-white rounded-lg p-4 my-3 border border-gray-300">
       <div class="min-w-full divide-y divide-gray-300">
         <div class="bg-white flex flex-row items-center">
-          <div class="w-2/12 align-top px-2 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+          <div class="w-1/12 align-top px-2 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
             <%= I18n.t(".activerecord.attributes.role.name") %>
+          </div>
+          <div class="w-1/12 align-top px-2 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+            <%= I18n.t(".activerecord.attributes.role.key") %>
           </div>
           <div class="w-8/12 align-top px-2 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
             <%= I18n.t(".activerecord.attributes.role.permissions") %>
@@ -27,7 +30,8 @@
         <% else %>
           <% @roles.each do |role| %>
             <div class="bg-gray-50 flex flex-row items-center">
-              <div class="w-2/12 text-left flex items-center px-2 h-9 whitespace-nowrap text-sm text-gray-900"><%= role.name %></div>
+              <div class="w-1/12 text-left flex items-center px-2 h-9 whitespace-nowrap text-sm text-gray-900"><%= role.name %></div>
+              <div class="w-1/12 text-left flex items-center px-2 h-9 whitespace-nowrap text-sm text-gray-900"><%= role.key %></div>
               <div class="w-8/12 text-sm text-gray-500">
                 <div class="flex flex-wrap gap-2 w-full py-2">
                   <% role.permissions.each do |permission| %>

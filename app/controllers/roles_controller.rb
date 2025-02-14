@@ -54,6 +54,6 @@ class RolesController < ApplicationController
   end
 
   private def role_params
-    params.require(:role).permit(:name, permissions: [])
+    params.require(:role).permit(:name, :key, permissions: [])
   end
 end 

@@ -5,6 +5,10 @@ Rails.application.routes.draw do
   
   resources :users
   resources :roles, except: [:show]
+  resources :site, only: [:index] do
+    get :dwh_dashboard, on: :collection
+    get :employee_dashboard, on: :collection    
+  end
 
   # Data targets
   resources :data_targets, only: [:index] do

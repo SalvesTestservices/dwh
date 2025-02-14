@@ -1,6 +1,5 @@
 class User < ApplicationRecord
-  devise :database_authenticatable, :recoverable, :omniauthable, :timeoutable,
-      omniauth_providers: [:microsoft_graph]
+  devise :database_authenticatable, :recoverable, :omniauthable, :timeoutable, omniauth_providers: [:microsoft_graph]
 
   validates :email, presence: true, uniqueness: true
   validates :first_name, presence: true
@@ -8,6 +7,8 @@ class User < ApplicationRecord
 
   has_many :user_roles, dependent: :destroy
   has_many :roles, through: :user_roles
+
+  after_create :create_user_role
 
   def full_name
     "#{first_name} #{last_name}"
@@ -25,6 +26,10 @@ class User < ApplicationRecord
     role == "viewer"
   end
 
+  def employee?
+    role == "employee"
+  end
+
   def self.from_omniauth(auth)
     # First try to find by provider/uid
     user = where(provider: auth.provider, uid: auth.uid).first
@@ -40,5 +45,10 @@ class User < ApplicationRecord
       ) unless user.provider && user.uid
       return user
     end
+  end
+
+  private def create_user_role
+    role = Role.find_by(key: self.role)
+    UserRole.create(user: self, role: role)
   end
 end 

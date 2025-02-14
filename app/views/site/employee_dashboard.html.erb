@@ -1,0 +1,32 @@
+<%= render "layouts/page_header", 
+  breadcrumbs: @breadcrumbs, 
+  title: I18n.t('.site.titles.dashboard'), 
+  icon: ["home", "medium", "gray"],
+  buttons: nil
+%>
+
+<main>
+  <div class="mx-auto max-w-4xl flex flex-row justify-center mt-32">
+    <div class="grid grid-cols-2 gap-10 w-full">
+
+      <%= link_to bonus_overview_path do %>
+        <div class="overflow-hidden rounded-lg bg-white border border-gray-200 shadow-sm">
+          <div class="px-4 py-5 sm:p-6 h-80 flex flex-col justify-center items-center">
+            <%= render(View::IconComponent.new(icon_type: "bonus", size: "large", color: "gray")) %>
+            <div class="text-gray-800 text-2xl text-center mt-10"><%= I18n.t(".data_overview.titles.bonus_overview").downcase %></div>
+          </div>
+        </div>
+      <% end %>
+
+      <%= link_to holiday_overview_path do %>
+        <div class="overflow-hidden rounded-lg bg-white border border-gray-200 shadow-sm">
+          <div class="px-4 py-5 sm:p-6 h-80 flex flex-col justify-center items-center">
+            <%= render(View::IconComponent.new(icon_type: "holiday", size: "large", color: "gray")) %>
+            <div class="text-gray-800 text-2xl text-center mt-10"><%= I18n.t(".data_overview.titles.holiday_overview").downcase %></div>
+          </div>
+        </div>
+      <% end %>
+
+    </div>
+  </div>
+</main>

@@ -1,56 +1,53 @@
 <div class="w-1/6 bg-white border-r border-gray-200 h-screen">
-  <div class="flex flex-col pb-5 border-b border-gray-300">
+  <div class="flex flex-col">
     <div class="flex flex-row justify-center px-6 py-6">
       <%= link_to image_tag("logo.svg", alt: "Logo", class: "w-36 my-4"), root_path %>
     </div>
-    <div class="flex flex-row justify-center text-sm text-white bg-gray-400 py-2 px-4 mx-auto rounded-md"><%= current_user.full_name %></div>
   </div>
 
-  <nav class="px-4 py-8">
-    <div class="space-y-1">
-      <% if can?(:read, :datalab) %>
-        <%= link_to root_path, class: "#{current_page?(root_path) ? 'bg-gray-100' : 'bg-white'} flex items-center px-3 py-3 text-lg font-medium text-gray-700 rounded-md hover:bg-gray-200 hover:text-gray-900" do %>
-          <%= render(View::IconComponent.new(icon_type: "home", size: "medium", color: "gray")) %>
-          <span class="ml-3"><%= I18n.t(".site.titles.dashboard") %></span>
-        <% end %>
-      <% end %>
+  <nav class="px-4 py-8 space-y-1">
+    <%= link_to root_path, class: "#{request.path.include?("site") ? 'bg-gray-100' : 'bg-white'} flex items-center px-3 py-3 text-lg font-medium text-gray-700 rounded-md hover:bg-gray-200 hover:text-gray-900" do %>
+      <%= render(View::IconComponent.new(icon_type: "home", size: "medium", color: "gray")) %>
+      <span class="ml-3"><%= I18n.t(".site.titles.dashboard") %></span>
+    <% end %>
 
-      <% if can?(:read, :datalab) %>
-        <%= link_to datalab_reports_path, class: "#{request.path.include?("datalab") ? 'bg-gray-100' : 'bg-white'} flex items-center px-3 py-3 text-lg font-medium text-gray-700 rounded-md hover:bg-gray-200 hover:text-gray-900" do %>
-          <%= render(View::IconComponent.new(icon_type: "datalab", size: "medium", color: "gray")) %>
-          <span class="ml-3"><%= I18n.t(".site.titles.data_lab") %></span>
+    <% if can?(:read, :datalab) %>
+      <div class="border-b border-gray-200 pb-5">
+        <% if can?(:read, :datalab) %>
+          <%= link_to datalab_reports_path, class: "#{request.path.include?("datalab") ? 'bg-gray-100' : 'bg-white'} flex items-center px-3 py-3 text-lg font-medium text-gray-700 rounded-md hover:bg-gray-200 hover:text-gray-900" do %>
+            <%= render(View::IconComponent.new(icon_type: "datalab", size: "medium", color: "gray")) %>
+            <span class="ml-3"><%= I18n.t(".site.titles.data_lab") %></span>
+          <% end %>
         <% end %>
-      <% end %>
 
-      <% if can?(:read, :data_pipelines) %>
-        <%= link_to dwh_dp_pipelines_path, class: "#{request.path.include?("dp_") ? 'bg-gray-100' : 'bg-white'} flex items-center px-3 py-3 text-lg font-medium text-gray-700 rounded-md hover:bg-gray-200 hover:text-gray-900" do %>
-          <%= render(View::IconComponent.new(icon_type: "pipeline", size: "medium", color: "gray")) %>
-          <span class="ml-3"><%= I18n.t(".dp_pipeline.titles.index") %></span>
+        <% if can?(:read, :data_pipelines) %>
+          <%= link_to dwh_dp_pipelines_path, class: "#{request.path.include?("dp_") ? 'bg-gray-100' : 'bg-white'} flex items-center px-3 py-3 text-lg font-medium text-gray-700 rounded-md hover:bg-gray-200 hover:text-gray-900" do %>
+            <%= render(View::IconComponent.new(icon_type: "pipeline", size: "medium", color: "gray")) %>
+            <span class="ml-3"><%= I18n.t(".dp_pipeline.titles.index") %></span>
+          <% end %>
         <% end %>
-      <% end %>
 
-      <% if can?(:read, :data_targets) %>
-        <%= link_to data_targets_path, class: "#{request.path.include?("data_target") ? 'bg-gray-100' : 'bg-white'} flex items-center px-3 py-3 text-lg font-medium text-gray-700 rounded-md hover:bg-gray-200 hover:text-gray-900" do %>
-          <%= render(View::IconComponent.new(icon_type: "target", size: "medium", color: "gray")) %>
-          <span class="ml-3"><%= I18n.t(".data_target.titles.index") %></span>
+        <% if can?(:read, :data_targets) %>
+          <%= link_to data_targets_path, class: "#{request.path.include?("data_target") ? 'bg-gray-100' : 'bg-white'} flex items-center px-3 py-3 text-lg font-medium text-gray-700 rounded-md hover:bg-gray-200 hover:text-gray-900" do %>
+            <%= render(View::IconComponent.new(icon_type: "target", size: "medium", color: "gray")) %>
+            <span class="ml-3"><%= I18n.t(".data_target.titles.index") %></span>
+          <% end %>
         <% end %>
-      <% end %>
 
-      <% if can?(:read, :data_governance) %>
-        <%= link_to data_governance_index_path, class: "#{request.path.include?("data_governance") ? 'bg-gray-100' : 'bg-white'} flex items-center px-3 py-3 text-lg font-medium text-gray-700 rounded-md hover:bg-gray-200 hover:text-gray-900" do %>
-          <%= render(View::IconComponent.new(icon_type: "certificate", size: "medium", color: "gray")) %>
-          <span class="ml-3"><%= I18n.t(".data_governance.titles.index") %></span>
+        <% if can?(:read, :data_governance) %>
+          <%= link_to data_governance_index_path, class: "#{request.path.include?("data_governance") ? 'bg-gray-100' : 'bg-white'} flex items-center px-3 py-3 text-lg font-medium text-gray-700 rounded-md hover:bg-gray-200 hover:text-gray-900" do %>
+            <%= render(View::IconComponent.new(icon_type: "certificate", size: "medium", color: "gray")) %>
+            <span class="ml-3"><%= I18n.t(".data_governance.titles.index") %></span>
+          <% end %>
         <% end %>
-      <% end %>
 
-      <% if can?(:read, :data_api) %>
-        <%= link_to api_docs_path, class: "#{request.path.include?("api") ? 'bg-gray-100' : 'bg-white'} flex items-center px-3 py-3 text-lg font-medium text-gray-700 rounded-md hover:bg-gray-200 hover:text-gray-900" do %>
-          <%= render(View::IconComponent.new(icon_type: "api", size: "medium", color: "gray")) %>
-          <span class="ml-3"><%= I18n.t(".site.titles.data_api") %></span>
+        <% if can?(:read, :data_api) %>
+          <%= link_to api_docs_path, class: "#{request.path.include?("api") ? 'bg-gray-100' : 'bg-white'} flex items-center px-3 py-3 text-lg font-medium text-gray-700 rounded-md hover:bg-gray-200 hover:text-gray-900" do %>
+            <%= render(View::IconComponent.new(icon_type: "api", size: "medium", color: "gray")) %>
+            <span class="ml-3"><%= I18n.t(".site.titles.data_api") %></span>
+          <% end %>
         <% end %>
-      <% end %>
 
-      <div class="border-t border-gray-300 py-6">
         <% if can?(:read, :users) %>
           <%= link_to users_path, class: "#{request.path.include?("users") ? 'bg-gray-100' : 'bg-white'} flex items-center px-3 py-3 text-lg font-medium text-gray-700 rounded-md hover:bg-gray-200 hover:text-gray-900" do %>
             <%= render(View::IconComponent.new(icon_type: "users", size: "medium", color: "gray")) %>
@@ -65,6 +62,22 @@
           <% end %>
         <% end %>
       </div>
+    <% end %>
+
+    <% if can?(:read, :employee_overviews) %>
+      <%= link_to bonus_overview_path, class: "#{request.path.include?("bonus") ? 'bg-gray-100' : 'bg-white'} flex items-center px-3 py-3 text-lg font-medium text-gray-700 rounded-md hover:bg-gray-200 hover:text-gray-900" do %>
+        <%= render(View::IconComponent.new(icon_type: "bonus", size: "medium", color: "gray")) %>
+        <span class="ml-3"><%= I18n.t(".data_overview.titles.bonus_overview") %></span>
+      <% end %>
+    <% end %>
+
+    <% if can?(:read, :employee_overviews) %>
+      <%= link_to holiday_overview_path, class: "#{request.path.include?("holiday") ? 'bg-gray-100' : 'bg-white'} flex items-center px-3 py-3 text-lg font-medium text-gray-700 rounded-md hover:bg-gray-200 hover:text-gray-900" do %>
+        <%= render(View::IconComponent.new(icon_type: "holiday", size: "medium", color: "gray")) %>
+        <span class="ml-3"><%= I18n.t(".data_overview.titles.holiday_overview") %></span>
+      <% end %>
+    <% end %>
+
     </div>
   </nav>
 </div>

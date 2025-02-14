@@ -12,6 +12,7 @@ nl:
         label:                  Label
       role:
         name:                   Naam
+        key:                    Identificatie
         permissions:            Rechten
     errors:
       models:

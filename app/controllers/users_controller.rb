@@ -6,7 +6,7 @@ class UsersController < ApplicationController
   before_action -> { authorize!(:delete, :users) }, only: [:destroy]
 
   def index
-    @users = User.order(:first_name)
+    @users = User.where.not(role: "employee").order(:first_name)
 
     @breadcrumbs = []
     @breadcrumbs << [I18n.t(".user.titles.index"), users_path]
