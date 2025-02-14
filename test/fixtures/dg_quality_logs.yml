@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  quality_check_id: 1
+  result: MyString
+  error_message: MyString
+  read_at: 2025-02-14 11:43:36
+
+two:
+  quality_check_id: 1
+  result: MyString
+  error_message: MyString
+  read_at: 2025-02-14 11:43:36

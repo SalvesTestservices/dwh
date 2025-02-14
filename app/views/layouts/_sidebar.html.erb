@@ -35,7 +35,7 @@
         <% end %>
 
         <% if can?(:read, :data_governance) %>
-          <%= link_to data_governance_index_path, class: "#{request.path.include?("data_governance") ? 'bg-gray-100' : 'bg-white'} flex items-center px-3 py-3 text-lg font-medium text-gray-700 rounded-md hover:bg-gray-200 hover:text-gray-900" do %>
+          <%= link_to dg_data_governance_index_path, class: "#{request.path.include?("data_governance") ? 'bg-gray-100' : 'bg-white'} flex items-center px-3 py-3 text-lg font-medium text-gray-700 rounded-md hover:bg-gray-200 hover:text-gray-900" do %>
             <%= render(View::IconComponent.new(icon_type: "certificate", size: "medium", color: "gray")) %>
             <span class="ml-3"><%= I18n.t(".data_governance.titles.index") %></span>
           <% end %>

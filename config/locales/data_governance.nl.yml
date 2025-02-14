@@ -6,3 +6,6 @@ nl:
       data_security:    Data security
       data_logging:     Data logging
       data_catalog:     Data catalog
+  data_quality:
+    messages:
+      no_logs:          Geen issues :-)

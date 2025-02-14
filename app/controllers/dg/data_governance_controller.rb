@@ -1,4 +1,4 @@
-class DataGovernanceController < ApplicationController
+class Dg::DataGovernanceController < ApplicationController
   before_action :authenticate_user!
   before_action -> { authorize!(:read, :data_governance) }, only: [:index]
 
