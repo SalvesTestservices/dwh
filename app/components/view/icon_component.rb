@@ -8,7 +8,7 @@ class View::IconComponent < ViewComponent::Base
   private def set_size(size)
     case size
     when "small"
-      size = "20"
+      size = "24"
     when "medium"
       size = "32"
     when "large"
