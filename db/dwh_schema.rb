@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_14_123457) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_17_084739) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -220,8 +220,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_14_123457) do
     t.boolean "migrated", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.date "birth_date"
     t.index ["account_id", "original_id", "company_id"], name: "index_dim_users_on_account_id_and_original_id_and_company_id", unique: true
     t.index ["account_id"], name: "index_dim_users_on_account_id"
+    t.index ["birth_date"], name: "index_dim_users_on_birth_date"
     t.index ["company_id"], name: "index_dim_users_on_company_id"
     t.index ["contract"], name: "index_dim_users_on_contract"
     t.index ["country"], name: "index_dim_users_on_country"

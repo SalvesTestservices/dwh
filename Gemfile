@@ -36,7 +36,8 @@ end
 group :development do
   gem "web-console"
   gem "rails_live_reload"
-  gem 'foreman'
+  gem "foreman"
+  gem "mailbin"
 end
 
 platforms :ruby, :mswin, :mingw, :x64_mingw do

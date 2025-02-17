@@ -58,6 +58,7 @@ class Dwh::Tasks::EtlSynergyUsersTask < Dwh::Tasks::BaseSynergyTask
                 contract = get_contract(api_url, api_key, administration,user["ID"])
                 contract_hours = (user["FTE"].to_f * 40).round(1)
                 start_date, end_date = get_employment_dates(api_url, api_key, administration, user["ID"])
+                birth_date = user["BirthDate"].blank? ? nil : user["BirthDate"].to_date.strftime("%d%m%Y").to_i
 
                 # Get salary
                 request_list = send_get_request(api_url, api_key, administration, "Synergy/RequestListFiltered?filter=RequestType eq 1060015 and ResourceID eq #{user["ID"]}")
@@ -92,6 +93,7 @@ class Dwh::Tasks::EtlSynergyUsersTask < Dwh::Tasks::BaseSynergyTask
                 users_hash[:company_id]     = dim_company.original_id
                 users_hash[:start_date]     = start_date
                 users_hash[:leave_date]     = end_date
+                users_hash[:birth_date]     = birth_date
                 users_hash[:role]           = role
                 users_hash[:email]          = user["EmailWork"]
                 users_hash[:employee_type]  = "Consultant"

@@ -189,6 +189,10 @@ GEM
       net-imap
       net-pop
       net-smtp
+    mailbin (1.0.0)
+      importmap-rails
+      rails (>= 7.1.0)
+      turbo-rails
     marcel (1.0.4)
     method_source (1.1.0)
     mini_mime (1.1.5)
@@ -459,6 +463,7 @@ DEPENDENCIES
   importmap-rails
   jbuilder
   kamal
+  mailbin
   omniauth-microsoft_graph
   omniauth-rails_csrf_protection
   pagy

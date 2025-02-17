@@ -14,18 +14,18 @@ class Dwh::Loaders::UsersLoader
           dim_user = Dwh::DimUser.find_by(account_id: dim_account.id, original_id: user.data['original_id'], company_id: dim_company.id)
           if dim_user.blank?
             dim_user = Dwh::DimUser.create({ account_id: dim_account.id, original_id: user.data['original_id'], full_name: user.data['full_name'], company_id: dim_company.id, 
-              start_date: user.data['start_date'], leave_date: user.data['leave_date'], role: user.data['role'], email: user.data['email'], employee_type: user.data['employee_type'], 
+              start_date: user.data['start_date'], leave_date: user.data['leave_date'], birth_date: user.data['birth_date'], role: user.data['role'], email: user.data['email'], employee_type: user.data['employee_type'], 
               contract: user.data['contract'], contract_hours: user.data['contract_hours'], salary: user.data['salary'], address: user.data['address'],
               zipcode: user.data['zipcode'], city: user.data['city'], country: user.data['country']})
           else
             if dim_user.company_id != dim_company.id
               dim_user = Dwh::DimUser.create({ account_id: dim_account.id, original_id: user.data['original_id'], full_name: user.data['full_name'], company_id: dim_company.id, 
-                start_date: user.data['start_date'], leave_date: user.data['leave_date'], role: user.data['role'], email: user.data['email'], employee_type: user.data['employee_type'], 
+                start_date: user.data['start_date'], leave_date: user.data['leave_date'], birth_date: user.data['birth_date'], role: user.data['role'], email: user.data['email'], employee_type: user.data['employee_type'], 
                 contract: user.data['contract'], contract_hours: user.data['contract_hours'], salary: user.data['salary'], address: user.data['address'],
                 zipcode: user.data['zipcode'], city: user.data['city'], country: user.data['country']})
             else
               dim_user.update({ account_id: dim_account.id, original_id: user.data['original_id'], full_name: user.data['full_name'], company_id: dim_company.id, 
-                start_date: user.data['start_date'], leave_date: user.data['leave_date'], role: user.data['role'], email: user.data['email'], employee_type: user.data['employee_type'], 
+                start_date: user.data['start_date'], leave_date: user.data['leave_date'], birth_date: user.data['birth_date'], role: user.data['role'], email: user.data['email'], employee_type: user.data['employee_type'], 
                 contract: user.data['contract'], contract_hours: user.data['contract_hours'], salary: user.data['salary'], address: user.data['address'],
                 zipcode: user.data['zipcode'], city: user.data['city'], country: user.data['country']})
             end

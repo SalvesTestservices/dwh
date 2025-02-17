@@ -7,17 +7,15 @@ class UserMailer < ApplicationMailer
     )
   end
 
-  def weekly_notifications(receiver_email, account, upcoming_data)
-    @account = account
-    @birthdays = upcoming_data[:birthdays]
-    @jubilees = upcoming_data[:jubilees]
-    @passport_expirations = upcoming_data[:passport_expirations]
+  def weekly_notifications(receiver_email, account_id, upcoming_data)
+    @account = Account.find(account_id)
+    @upcoming_data = upcoming_data
     @week_start = Date.current + 7.days
-    @week_end = @week_start + 6.days
+    @week_end = @week_start + 7.days
 
     mail(
       to: receiver_email,
-      subject: "#{account.name} - Weekly Notifications (#{@week_start.strftime('%d-%m')} - #{@week_end.strftime('%d-%m')})"
+      subject: "#{@account.name} - Weekoverzicht #{l(@week_start, format: :long)}"
     )
   end
 end 

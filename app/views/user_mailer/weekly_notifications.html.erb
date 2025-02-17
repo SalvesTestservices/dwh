@@ -1,0 +1,46 @@
+<h1 style="margin-top: 0; font-size: 24px; color: #111827;">
+  Weekoverzicht <%= @account.name %>
+</h1>
+
+<p style="color: #4b5563; margin-bottom: 24px;">
+  Hier is een overzicht van de aankomende gebeurtenissen voor de week van
+  <strong><%= l @week_start, format: :long %></strong> tot
+  <strong><%= l @week_end, format: :long %></strong>.
+</p>
+
+<% if @birthdays.any? %>
+  <div class="section">
+    <h2 class="section-title">🎂 Verjaardagen</h2>
+    <ul class="event-list">
+      <% @birthdays.each do |birthday| %>
+        <li class="event-item">
+          <span class="event-date"><%= l birthday.date, format: :long %></span><br>
+          <%= birthday.person.full_name %> wordt <%= birthday.age %> jaar
+        </li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<% if @jubilees.any? %>
+  <div class="section">
+    <h2 class="section-title">🎉 Jubilea</h2>
+    <ul class="event-list">
+      <% @jubilees.each do |jubilee| %>
+        <li class="event-item">
+          <span class="event-date"><%= l jubilee.date, format: :long %></span><br>
+          <%= jubilee.person.full_name %> - <%= jubilee.years %> jaar in dienst
+        </li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<% if @birthdays.empty? && @jubilees.empty? %>
+  <div style="text-align: center; padding: 30px 0; color: #6b7280;">
+    <p>Er zijn geen speciale gebeurtenissen deze week.</p>
+  </div>
+<% end %>
+
+<div style="text-align: center; margin-top: 30px;">
+  <%= link_to "Bekijk alle gebeurtenissen", events_url, class: "button" %> 

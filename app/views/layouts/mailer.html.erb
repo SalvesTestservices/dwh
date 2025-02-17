@@ -3,11 +3,91 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <style>
-      /* Email styles need to be inline */
+      /* Email styles need to be inline for better client compatibility */
+      .email-wrapper {
+        background-color: #f3f4f6;
+        padding: 20px;
+        font-family: system-ui, -apple-system, sans-serif;
+      }
+      .email-container {
+        background-color: white;
+        max-width: 600px;
+        margin: 0 auto;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+      .email-header {
+        background-color: #1a56db;
+        padding: 20px;
+        border-radius: 8px 8px 0 0;
+      }
+      .email-header img {
+        max-height: 50px;
+      }
+      .email-body {
+        padding: 30px 20px;
+        color: #1f2937;
+      }
+      .email-footer {
+        background-color: #f9fafb;
+        padding: 20px;
+        text-align: center;
+        font-size: 14px;
+        color: #6b7280;
+        border-radius: 0 0 8px 8px;
+      }
+      .section {
+        margin-bottom: 30px;
+      }
+      .section-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #111827;
+        margin-bottom: 15px;
+        padding-bottom: 8px;
+        border-bottom: 2px solid #e5e7eb;
+      }
+      .event-list {
+        list-style: none;
+        padding: 0;
+      }
+      .event-item {
+        padding: 12px;
+        margin-bottom: 8px;
+        background-color: #f9fafb;
+        border-radius: 6px;
+      }
+      .event-date {
+        color: #1a56db;
+        font-weight: 600;
+      }
+      .button {
+        display: inline-block;
+        padding: 12px 24px;
+        background-color: #1a56db;
+        color: white;
+        text-decoration: none;
+        border-radius: 6px;
+        font-weight: 500;
+      }
     </style>
   </head>
 
   <body>
-    <%= yield %>
+    <div class="email-wrapper">
+      <div class="email-container">
+        <div class="email-header">
+          <%= image_tag 'logo.png', alt: 'Cerios Logo' %>
+        </div>
+
+        <div class="email-body">
+          <%= yield %>
+        </div>
+
+        <div class="email-footer">
+          <p>© <%= Time.current.year %> Cerios. All rights reserved.</p>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
