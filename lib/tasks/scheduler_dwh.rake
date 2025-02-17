@@ -26,6 +26,10 @@ namespace :dwh do
     end
   end
 
+  task send_notifications: :environment do
+    NotificationSender.new.send_notifications
+  end
+
   task remove_unemployed_users: :environment do
     account_users = User.where(role: "employee")
     unless account_users.blank?

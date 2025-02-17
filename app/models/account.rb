@@ -4,7 +4,7 @@ class Account
   attr_accessor :id, :name, :is_holding, :original_id
 
   ACCOUNTS = [
-    { id: 1, name: 'QDat Holding', original_id: 4, is_holding: false },
+    { id: 1, name: 'QDat', original_id: 4, is_holding: false },
     { id: 2, name: 'Salves', original_id: 2, is_holding: false },
     { id: 3, name: 'Test Crew IT', original_id: 6, is_holding: false },
     { id: 4, name: 'Valori', original_id: 8, is_holding: false },
