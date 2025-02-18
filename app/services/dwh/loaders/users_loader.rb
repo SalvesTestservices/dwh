@@ -10,7 +10,7 @@ class Dwh::Loaders::UsersLoader
         dim_company = Dwh::DimCompany.find_by(account_id: dim_account.id, original_id: user.data['company_id'])
         unless dim_company.blank?
           # Find the user. If not found, create it, otherwise update it
-          # If an existing user now has a different company, create a new user
+          # If an existing user now has a different company, create a new user (slowly changing dimension) and make sure the old user has a leave date
           dim_user = Dwh::DimUser.find_by(account_id: dim_account.id, original_id: user.data['original_id'], company_id: dim_company.id)
           if dim_user.blank?
             dim_user = Dwh::DimUser.create({ account_id: dim_account.id, original_id: user.data['original_id'], full_name: user.data['full_name'], company_id: dim_company.id, 
@@ -19,6 +19,12 @@ class Dwh::Loaders::UsersLoader
               zipcode: user.data['zipcode'], city: user.data['city'], country: user.data['country']})
           else
             if dim_user.company_id != dim_company.id
+              # Make sure the old user has a leave date
+              if dim_user.leave_date.blank?
+                leave_date = user.data['leave_date'].blank? ? Date.current.strftime("%d%m%Y").to_i : user.data['leave_date']
+                dim_user.update(leave_date: leave_date)
+              end
+
               dim_user = Dwh::DimUser.create({ account_id: dim_account.id, original_id: user.data['original_id'], full_name: user.data['full_name'], company_id: dim_company.id, 
                 start_date: user.data['start_date'], leave_date: user.data['leave_date'], birth_date: user.data['birth_date'], role: user.data['role'], email: user.data['email'], employee_type: user.data['employee_type'], 
                 contract: user.data['contract'], contract_hours: user.data['contract_hours'], salary: user.data['salary'], address: user.data['address'],

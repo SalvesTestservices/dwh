@@ -57,7 +57,7 @@ class Dwh::Tasks::EtlSynergyUsersTask < Dwh::Tasks::BaseSynergyTask
               unless dim_company.blank?
                 contract = get_contract(api_url, api_key, administration,user["ID"])
                 contract_hours = (user["FTE"].to_f * 40).round(1)
-                start_date, end_date = get_employment_dates(api_url, api_key, administration, user["ID"])
+                start_date, leave_date = get_employment_dates(api_url, api_key, administration, user["ID"])
                 birth_date = user["BirthDate"].blank? ? nil : user["BirthDate"].to_date.strftime("%d%m%Y").to_i
 
                 # Get salary
@@ -92,7 +92,7 @@ class Dwh::Tasks::EtlSynergyUsersTask < Dwh::Tasks::BaseSynergyTask
                 users_hash[:full_name]      = user["FullName"]
                 users_hash[:company_id]     = dim_company.original_id
                 users_hash[:start_date]     = start_date
-                users_hash[:leave_date]     = end_date
+                users_hash[:leave_date]     = leave_date
                 users_hash[:birth_date]     = birth_date
                 users_hash[:role]           = role
                 users_hash[:email]          = user["EmailWork"]
@@ -128,7 +128,7 @@ class Dwh::Tasks::EtlSynergyUsersTask < Dwh::Tasks::BaseSynergyTask
 
   private def get_employment_dates(api_url, api_key, administration, user_id)
     start_date = nil
-    end_date = nil
+    leave_date = nil
 
     # First get a verification code
     query = "SELECT absences.ID AS ID, absences.HID AS HID, absences.EmpID as EmployeeID, absences.FreeTextField_01 AS Type, absences.FreeTextField_15 AS TypeDesc, absences.startdate AS StartDate, absences.enddate AS EndDate, absences.Description AS Description FROM absences WHERE absences.Type=11001 AND absences.EmpID=#{user_id} ORDER BY Absences.EmpID, absences.FreeTextField_15,absences.startdate,absences.HID"    
@@ -145,14 +145,14 @@ class Dwh::Tasks::EtlSynergyUsersTask < Dwh::Tasks::BaseSynergyTask
 
         # Get the StartDate of the first result and the EndDate of the last result
         start_date = sorted_results.first["StartDate"]
-        end_date = sorted_results.last["EndDate"]
+        leave_date = sorted_results.last["EndDate"]
 
         # Convert the dates to the correct format
         start_date = start_date.blank? ? nil : start_date.to_date.strftime("%d%m%Y").to_i
-        end_date = end_date.blank? ? nil : end_date.to_date.strftime("%d%m%Y").to_i
+        leave_date = leave_date.blank? ? nil : leave_date.to_date.strftime("%d%m%Y").to_i
       end
     end
 
-    return start_date, end_date
+    return start_date, leave_date
   end
 end
