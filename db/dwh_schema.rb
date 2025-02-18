@@ -220,7 +220,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_17_084739) do
     t.boolean "migrated", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.date "birth_date"
+    t.integer "birth_date"
     t.index ["account_id", "original_id", "company_id"], name: "index_dim_users_on_account_id_and_original_id_and_company_id", unique: true
     t.index ["account_id"], name: "index_dim_users_on_account_id"
     t.index ["birth_date"], name: "index_dim_users_on_birth_date"

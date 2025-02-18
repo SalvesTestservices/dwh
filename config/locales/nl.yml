@@ -104,3 +104,9 @@ nl:
 
     month_names: [~, januari, februari, maart, april, mei, juni, juli, augustus, september, oktober, november, december]
     abbr_month_names: [~, jan, feb, mar, apr, mei, jun, jul, aug, sep, okt, nov, dec]
+
+  time:
+    formats:
+      default: "%a %d %b %Y %H:%M:%S %Z"
+      short: "%d %b %H:%M"
+      long: "%-d %B %Y %H:%M"

@@ -15,7 +15,7 @@ class UserMailer < ApplicationMailer
 
     mail(
       to: receiver_email,
-      subject: "#{@account.name} - Weekoverzicht #{l(@week_start, format: :long)}"
+      subject: "Verjaardagen en jubilea voor de week van #{l(@week_start, format: :long)}"
     )
   end
 end 

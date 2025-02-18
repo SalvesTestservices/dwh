@@ -20,19 +20,17 @@ class NotificationSender
 
     # Process each account
     @accounts.each do |account|
-      puts "ACCOUNT: #{account.name}"
       # Skip if the account is not in the notification receivers list
       next unless notification_receivers[account.name]
-puts "JA"
+
       # Collect the upcoming data for the account
       upcoming_data = {
-        birthdays: collect_birthdays(account)
-        #jubilees: collect_jubilees(account)
+        birthdays: collect_birthdays(account),
+        jubilees: collect_jubilees(account)
       }
-puts "JA2 #{upcoming_data}"
+
       # Send the notifications to the receivers
       notification_receivers[account.name].each do |receiver_email|
-        puts "JA3 #{receiver_email}"
         UserMailer.weekly_notifications(
           receiver_email,
           account.id,
@@ -43,53 +41,53 @@ puts "JA2 #{upcoming_data}"
   end
 
   private def collect_birthdays(account)
-    dates = (@start_date ... @end_date).map { |d| d.strftime('%m%d') }
-    dates << '0229' if dates.include?('0228')
-    
-    Dwh::DimUser
-      .where(account_id: account.id)
-      .where.not(birth_date: nil)
-      .where("to_char(birth_date, 'MMDD') in (?)", dates)
-      .order(Arel.sql("to_char(birth_date, 'MMDD')"))
-      .map { |dim_user| "#{dim_user.birth_date.strftime('%d-%m')}: #{dim_user.full_name}" }
-  end
+    birthdays = []
 
-  private def collect_jubilees(account)
-    dates = (@start_date ... @end_date).map { |d| d.strftime('%m%d') }
-    dates << '0229' if dates.include?('0228')
+    dates = (@start_date ... @end_date).map { |d| d.strftime('%d%m').sub(/^0/, '') }
+    dates << '2902' if dates.include?('2802')
 
-    jubilee_dates = [
-      { years: 25, weeks: 5 },
-      { years: 20, weeks: 5 },
-      { years: 15, weeks: 5 },
-      { years: 10, weeks: 5 },
-      { years: 5, weeks: 5 }
-    ]
+    dim_users = Dwh::DimUser.where(account_id: account.id).where.not(birth_date: nil).order(:birth_date)
+    unless dim_users.blank?
+      dim_users.each do |dim_user|
+        day = dim_user.birth_date.to_s.length == 7 ? dim_user.birth_date.to_s[0..0] : dim_user.birth_date.to_s[0..1]
+        month = dim_user.birth_date.to_s.length == 7 ? dim_user.birth_date.to_s[1..2] : dim_user.birth_date.to_s[2..3]
+        formatted_birth_date = "#{day}#{month}"
 
-    # Use LPAD to ensure proper formatting of month and day
-    users = Dwh::DimUser
-      .where(account_id: account.id)
-      .where.not(start_date: nil)
-      .where(
-        "LPAD(CAST(date_part('month', start_date) AS text), 2, '0') || " \
-        "LPAD(CAST(date_part('day', start_date) AS text), 2, '0') IN (?)",
-        dates
-      )
-      .order(Arel.sql("date_part('month', start_date), date_part('day', start_date)"))
-
-    jubilee_users = []
-
-    users.each do |user|
-      next unless user.start_date.present?
-
-      jubilee_dates.each do |jubilee|
-        anniversary_date = jubilee[:years].years.ago.to_date + jubilee[:weeks].weeks
-        if user.start_date.to_date == anniversary_date
-          jubilee_users << "#{user.start_date.strftime('%d-%m')}: #{user.full_name} (#{jubilee[:years]} jaar)"
+        if dates.include?(formatted_birth_date.to_s)
+          birthdays << "#{day}-#{month}: #{dim_user.full_name}"
         end
       end
     end
 
-    jubilee_users
+    birthdays
+  end
+
+  private def collect_jubilees(account)
+    jubilees = []
+
+    dates = (@start_date ... @end_date).map { |d| d.strftime('%d%m').sub(/^0/, '') }
+    dates << '2902' if dates.include?('2802')
+
+    dim_users = Dwh::DimUser.where(account_id: account.id).where.not(start_date: nil).order(:start_date)
+    unless dim_users.blank?
+      dim_users.each do |dim_user|
+        day = dim_user.start_date.to_s.length == 7 ? dim_user.start_date.to_s[0..0] : dim_user.start_date.to_s[0..1]
+        month = dim_user.start_date.to_s.length == 7 ? dim_user.start_date.to_s[1..2] : dim_user.start_date.to_s[2..3]
+        year = dim_user.start_date.to_s.length == 7 ? dim_user.start_date.to_s[3..6] : dim_user.start_date.to_s[4..7]
+        formatted_start_date = "#{day}#{month}"
+
+        if dates.include?(formatted_start_date)
+          # Calculate years of service
+          years_of_service = Date.current.year - year.to_i
+
+          # Check if it's a milestone anniversary (5, 10, 15, 20, or 25 years)
+          if [5, 10, 15, 20, 25].include?(years_of_service)
+            jubilees << "#{day}-#{month}: #{dim_user.full_name} (#{years_of_service} jaar)"
+          end
+        end
+      end
+    end
+
+    jubilees
   end
 end
