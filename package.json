@@ -1,6 +1,6 @@
 {
   "dependencies": {
     "sortablejs": "^1.15.6",
-    "tom-select": "^2.4.1"
+    "tom-select": "^2.4.3"
   }
 }
