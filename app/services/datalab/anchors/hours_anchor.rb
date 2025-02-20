@@ -36,42 +36,12 @@ module Datalab
               calculation_type: 'calculation',
               description: 'Het jaar waar de uren toe behoren',
               calculation: ->(record) { Calculators::HourCalculator.calculate_year(record) }
-            },
-            hours_gvp: {
-              name: 'GVP uren',
-              calculation_type: 'calculation',
-              description: 'Het aantal uren geboorteverlof partner',
-              calculation: ->(record) { Calculators::HourCalculator.calculate_hours_gvp(record) }
-            },
-            hours_agvp: {
-              name: 'AGVP uren',
-              calculation_type: 'calculation',
-              description: 'Het aantal uren aanvullend geboorteverlof partner',
-              calculation: ->(record) { Calculators::HourCalculator.calculate_hours_agvp(record) }
-            },
-            hours_ovb: {
-              name: 'OVB uren',
-              calculation_type: 'calculation',
-              description: 'Het aantal uren ouderschapsverlof betaald',
-              calculation: ->(record) { Calculators::HourCalculator.calculate_hours_ovb(record) }
-            },
-            hours_ovo: {
-              name: 'OVO uren',
-              calculation_type: 'calculation',
-              description: 'Het aantal uren ouderschapsverlof onbetaald',
-              calculation: ->(record) { Calculators::HourCalculator.calculate_hours_ovo(record) }
-            },
-            hours_apv: {
-              name: 'APV uren',
-              calculation_type: 'calculation',
-              description: 'Het aantal uren adoptieverlof/pleegzorgverlof',
-              calculation: ->(record) { Calculators::HourCalculator.calculate_hours_apv(record) }
             }
           }
         end
 
         def fetch_data(limit, column_ids)
-          Dwh::FactActivity.joins('LEFT JOIN dim_dates ON dim_dates.id = fact_activities.activity_date').order('dim_dates.year, dim_dates.month').limit(limit)
+          Dwh::FactActivity.joins('LEFT JOIN dim_dates ON dim_dates.id = fact_activities.activity_date').order('dim_dates.year DESC, dim_dates.month DESC').limit(limit)
         end
 
         def filterable_attributes

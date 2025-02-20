@@ -84,7 +84,6 @@ module Datalab
     end
 
     def generate
-      dump "FILTER PARAMS: #{filter_params}"
       records, data = ReportGenerator.new(@report, filter_params, 25).generate
       
       @report_data = data.merge(
@@ -118,7 +117,7 @@ module Datalab
     end
 
     private def report_params
-      params.require(:datalab_report).permit(:name, :description, :anchor_type, :is_public, :report_type)
+      params.require(:datalab_report).permit(:name, :description, :anchor_type, :is_public)
     end
 
     private def set_report

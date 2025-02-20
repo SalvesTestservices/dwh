@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_20_110722) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_14_123456) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -60,9 +60,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_20_110722) do
     t.boolean "is_public", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "report_type", default: "rows"
     t.index ["anchor_type"], name: "index_datalab_reports_on_anchor_type"
-    t.index ["report_type"], name: "index_datalab_reports_on_report_type"
     t.index ["user_id", "name"], name: "index_datalab_reports_on_user_id_and_name"
     t.index ["user_id"], name: "index_datalab_reports_on_user_id"
   end
