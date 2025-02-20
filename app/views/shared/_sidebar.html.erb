@@ -20,6 +20,13 @@
           <% end %>
         <% end %>
 
+        <% if can?(:read, :data_reports) %>
+          <%= link_to data_reports_path, class: "#{request.path.include?("data_reports") ? 'bg-gray-100' : 'bg-white'} flex items-center px-3 py-3 text-base font-medium text-gray-700 rounded-md hover:bg-gray-200 hover:text-gray-900" do %>
+            <%= render(View::IconComponent.new(icon_type: "table", size: "small", color: "gray")) %>
+            <span class="ml-3"><%= I18n.t(".data_reports.titles.index") %></span>
+          <% end %>
+        <% end %>
+
         <% if can?(:read, :data_pipelines) %>
           <%= link_to dwh_dp_pipelines_path, class: "#{request.path.include?("dp_") ? 'bg-gray-100' : 'bg-white'} flex items-center px-3 py-3 text-base font-medium text-gray-700 rounded-md hover:bg-gray-200 hover:text-gray-900" do %>
             <%= render(View::IconComponent.new(icon_type: "pipeline", size: "small", color: "gray")) %>

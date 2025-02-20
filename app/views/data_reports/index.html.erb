@@ -1,0 +1,31 @@
+<%= render "shared/page_header", 
+  breadcrumbs: @breadcrumbs, 
+  title: I18n.t('.data_reports.titles.index'), 
+  icon: ["table", "medium", "gray"],
+  buttons: nil
+%>
+
+<main>
+  <div class="mx-auto max-w-8xl py-6 mt-10">
+
+    <ul role="list" class="divide-y divide-gray-300 bg-white py-2 shadow-sm ring-1 ring-gray-900/5 sm:mx-0 sm:rounded-lg px-1 my-3 border border-gray-100">
+      <li class="flex items-center justify-between gap-x-6 px-5 py-5">
+        <div class="min-w-0 flex flex-col">
+          <div class="flex items-start gap-x-3">
+            <p class="text-base font-semibold leading-6 text-gray-900"><%= I18n.t(".data_reports.reports.parental_leave") %></p>
+          </div>
+          <div class="flex flex-row justify-start mt-2 text-sm text-gray-500">
+            Overzicht met de maand uurtotalen per medewerker voor de diverse verloven.
+          </div>
+        </div>
+        
+        <div class="flex flex-none items-center gap-x-1">
+          <% if can?(:read, :data_reports) %>
+            <%= render(View::ButtonComponent.new(title: I18n.t(".general.details"), url: parental_leave_data_reports_path, button_type: "link", size: "small")) %>
+          <% end %>
+        </div>
+      </li>
+    </ul>
+
+  </div>
+</main>

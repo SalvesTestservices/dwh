@@ -15,6 +15,13 @@ Rails.application.routes.draw do
     get :quarter_targets, on: :collection
   end
 
+  # Data reports
+  resources :data_reports, only: [:index] do
+    collection do
+      get :parental_leave
+    end
+  end
+
   # Data overviews
   get :bonus_overview, to: "data_overviews#bonus_overview"
   get :holiday_overview, to: "data_overviews#holiday_overview"
