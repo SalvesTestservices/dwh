@@ -31,6 +31,12 @@
       </div>
 
       <div>
+        <%= form.label I18n.t('.datalab.report.attributes.report_type'), class: "block text-sm font-medium leading-6 text-gray-900 pb-2" %>
+        <%= form.collection_select :report_type, [["rows", I18n.t('.datalab.report.report_types.rows')], ["month_totals", I18n.t('.datalab.report.report_types.month_totals')]], :first, :last, { include_blank: "" }, 
+            class: "block w-full rounded-md border-0 py-1.5 text-gray-900 bg-gray-50 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6" %>
+      </div>
+
+      <div>
         <%= form.label I18n.t('.datalab.report.attributes.anchor_type'), class: "block text-sm font-medium leading-6 text-gray-900 pb-2" %>
         <%= form.select :anchor_type, available_anchors, { include_blank: "" }, 
             class: "block w-full rounded-md border-0 py-1.5 text-gray-900 bg-gray-50 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6" %>

@@ -30,6 +30,7 @@ nl:
         available_fields: Beschikbare velden
         report_columns:   Rapport kolommen
         anchor_type:      Data basis
+        report_type:      Rapport type
         is_public:        Gedeeld
         name:             Naam rapport
         description:      Beschrijving
@@ -37,6 +38,9 @@ nl:
         users:            Medewerkers
         projects:         Klanten & Projecten
         hours:            Uren
+      report_types:
+        rows:             Alle regels
+        month_totals:     Maand totalen
     project:
       calculation_types:
         hour_based:       Time & Material

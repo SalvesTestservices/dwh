@@ -15,6 +15,9 @@
             <h2 class="text-base font-semibold text-gray-900 mb-4"><%= I18n.t('.datalab.report.attributes.anchor_type') %></h2>
             <div class="text-sm text-gray-500 mb-6"><%= decorates.anchor_type %></div>
 
+            <h2 class="text-base font-semibold text-gray-900 mb-4"><%= I18n.t('.datalab.report.attributes.report_type') %></h2>
+            <div class="text-sm text-gray-500 mb-6"><%= decorates.report_type %></div>
+
             <h2 class="text-base font-semibold text-gray-900 mb-4"><%= I18n.t('.datalab.report.attributes.available_fields') %></h2>
             <div data-designer-target="availableAttributes" class="grid grid-cols-5 gap-2 min-h-[100px]">
               <% @available_attributes.each do |id, attribute| %>

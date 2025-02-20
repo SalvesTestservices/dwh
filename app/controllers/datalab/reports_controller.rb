@@ -117,7 +117,7 @@ module Datalab
     end
 
     private def report_params
-      params.require(:datalab_report).permit(:name, :description, :anchor_type, :is_public)
+      params.require(:datalab_report).permit(:name, :description, :anchor_type, :is_public, :report_type)
     end
 
     private def set_report

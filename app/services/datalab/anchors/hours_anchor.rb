@@ -18,8 +18,8 @@ module Datalab
               related_model: Dwh::DimCompany,
               display_attribute: :name
             },
-            full_name: {
-              name: 'Naam',
+            user_id: {
+              name: 'Naam medewerker',
               calculation_type: 'relation',
               description: 'Volledige naam van de medewerker',
               related_model: Dwh::DimUser,
@@ -27,13 +27,15 @@ module Datalab
             },
             month: {
               name: 'Maand',
-              calculation_type: 'translation',
-              description: 'De maand waar de uren toe behoren'
+              calculation_type: 'calculation',
+              description: 'De maand waar de uren toe behoren',
+              calculation: ->(record) { Calculators::HourCalculator.calculate_month(record) }
             },
             year: {
               name: 'Jaar',
-              calculation_type: 'direct',
-              description: 'Het jaar waar de uren toe behoren'
+              calculation_type: 'calculation',
+              description: 'Het jaar waar de uren toe behoren',
+              calculation: ->(record) { Calculators::HourCalculator.calculate_year(record) }
             },
             hours_gvp: {
               name: 'GVP uren',

@@ -9,6 +9,14 @@ class DatalabReportDecorator < BaseDecorator
     end
   end
 
+  def report_type(layout = "text")
+    if layout == "text"
+      I18n.t(".datalab.report.report_types.#{datalab_report.report_type}")
+    else
+      "<span class='#{set_color("blue")} #{set_label}'>#{I18n.t(".datalab.report.report_types.#{datalab_report.report_type}").downcase}</span>".html_safe
+    end
+  end
+
   def is_public
     if datalab_report.is_public
       "<span class='#{set_color("green")} #{set_label}'>#{I18n.t('.datalab.report.attributes.is_public')}</span>".html_safe
