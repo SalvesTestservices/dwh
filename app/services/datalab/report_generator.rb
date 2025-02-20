@@ -36,7 +36,15 @@ module Datalab
 
     def apply_filters(records)
       filters = @params[:filters]
-      return records if filters.blank?
+      if filters.blank?
+        if @report.report_type == 'month_totals'
+          current_year = Time.current.year.to_s
+          records = records.where("activity_date::text LIKE ?", "%#{current_year}")
+          return records
+        else
+          return records
+        end
+      end
 
       filters.to_unsafe_h.each do |field, values|
         next if values.blank?

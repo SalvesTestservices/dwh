@@ -84,6 +84,7 @@ module Datalab
     end
 
     def generate
+      dump "FILTER PARAMS: #{filter_params}"
       records, data = ReportGenerator.new(@report, filter_params, 25).generate
       
       @report_data = data.merge(

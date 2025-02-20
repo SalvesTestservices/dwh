@@ -71,7 +71,7 @@ module Datalab
         end
 
         def fetch_data(limit, column_ids)
-          Dwh::FactActivity.joins('LEFT JOIN dim_dates ON dim_dates.id = fact_activities.activity_date').limit(limit)
+          Dwh::FactActivity.joins('LEFT JOIN dim_dates ON dim_dates.id = fact_activities.activity_date').order('dim_dates.year, dim_dates.month').limit(limit)
         end
 
         def filterable_attributes
