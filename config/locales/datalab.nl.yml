@@ -35,7 +35,8 @@ nl:
         description:      Beschrijving
       anchor_types:
         users:            Medewerkers
-        projects:         Klanten & Projecten      
+        projects:         Klanten & Projecten
+        hours:            Uren
     project:
       calculation_types:
         hour_based:       Time & Material

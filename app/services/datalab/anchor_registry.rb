@@ -10,6 +10,10 @@ module Datalab
           users: {
             name: 'Medewerkers',
             service: Datalab::Anchors::UsersAnchor
+          },
+          hours: {
+            name: 'Uren',
+            service: Datalab::Anchors::HoursAnchor
           }
         }
       end
