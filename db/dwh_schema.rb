@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_17_084739) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_20_103627) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -383,6 +383,21 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_17_084739) do
     t.index ["refreshed"], name: "index_fact_activities_on_refreshed"
     t.index ["unbillable_id"], name: "index_fact_activities_on_unbillable_id"
     t.index ["user_id"], name: "index_fact_activities_on_user_id"
+  end
+
+  create_table "fact_balances", force: :cascade do |t|
+    t.integer "account_id"
+    t.integer "user_id"
+    t.integer "year"
+    t.decimal "previous_balance", precision: 10, scale: 2
+    t.decimal "start_rights", precision: 10, scale: 2
+    t.decimal "start_balance", precision: 10, scale: 2
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id", "user_id", "year"], name: "index_fact_balances_on_account_id_and_user_id_and_year", unique: true
+    t.index ["account_id"], name: "index_fact_balances_on_account_id"
+    t.index ["user_id"], name: "index_fact_balances_on_user_id"
+    t.index ["year"], name: "index_fact_balances_on_year"
   end
 
   create_table "fact_projectusers", force: :cascade do |t|

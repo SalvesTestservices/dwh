@@ -176,7 +176,8 @@ class Dwh::Tasks::BaseSynergyTask < Dwh::Tasks::BaseTask
       "ACADEMY_EIGEN_BNS", 
       "ACADEMY_EIGEN_NBNS", 
       "ACADEMY_WT", 
-      "ACADEMY_WT_LL"
+      "ACADEMY_WT_LL",
+      "DISCOVER"
     ]
   end
 end
