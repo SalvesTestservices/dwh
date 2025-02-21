@@ -1,0 +1,89 @@
+<%= render "shared/page_header", 
+  breadcrumbs: @breadcrumbs, 
+  title: I18n.t(".employee.titles.show"), 
+  icon: ["users", "medium", "gray"],
+  buttons: nil
+%>
+
+<main>
+  <div class="mx-auto max-w-8xl py-6 flex flex-col justify-center">
+
+    <div class="bg-white rounded-lg shadow-md p-6 max-w-3xl mx-auto">
+      <div class="flex items-start space-x-6">
+        <div class="flex-1 p-4">
+          <h2 class="text-2xl font-bold text-gray-900"><%= @dim_user.full_name %></h2>
+          <p class="text-lg text-gray-600 mb-2"><%= @dim_account.name %></p>
+          <p class="text-gray-500 mb-4"><%= @dim_company.name %></p>
+
+          <div class="grid grid-cols-2 gap-4 mt-6">
+            <div>
+              <h3 class="text-sm font-medium text-gray-500"><%= I18n.t(".employee.form.email") %></h3>
+              <div class="mt-2 space-y-2">
+                <p class="text-gray-900 flex items-center">
+                  <svg class="h-5 w-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                  </svg>
+                  <%= @dim_user.email %>
+                </p>
+              </div>
+            </div>
+            <div>
+              <h3 class="text-sm font-medium text-gray-500"><%= I18n.t(".employee.form.role") %></h3>
+              <div class="mt-2 space-y-2">
+                <p class="text-gray-900"><%= @dim_user.role %></p>
+              </div>
+            </div>
+            <div>
+              <h3 class="text-sm font-medium text-gray-500"><%= I18n.t(".employee.form.contract") %></h3>
+              <div class="mt-2 space-y-2">
+                <p class="text-gray-900"><%= @dim_user.contract %></p>
+              </div>
+            </div>
+            <div>
+              <h3 class="text-sm font-medium text-gray-500"><%= I18n.t(".employee.form.contract_hours") %></h3>
+              <div class="mt-2 space-y-2">
+                <p class="text-gray-900"><%= @dim_user.contract_hours %></p>
+              </div>
+            </div>
+            <div>
+              <h3 class="text-sm font-medium text-gray-500"><%= I18n.t(".employee.form.start_date") %></h3>
+              <div class="mt-2 space-y-2">
+                <p class="text-gray-900"><%= @start_date %></p>
+              </div>
+            </div>
+            <div>
+              <h3 class="text-sm font-medium text-gray-500"><%= I18n.t(".employee.form.leave_date") %></h3>
+              <div class="mt-2 space-y-2">
+                <p class="text-gray-900"><%= @leave_date %></p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="w-full flex flex-row justify-center my-10 space-x-4">
+      <%= link_to employee_path(view: "holiday") do %>
+        <div class="px-6 py-4 overflow-hidden rounded-lg <%= @view == "holiday" ? "bg-white" : "bg-gray-50" %> border border-gray-200 shadow-sm flex flex-row justify-center items-center">
+          <%= render(View::IconComponent.new(icon_type: "holiday", size: "medium", color: "gray")) %>
+          <div class="text-gray-800 text-2xl pl-3 text-center"><%= I18n.t(".data_overview.titles.holiday_overview").downcase %></div>
+        </div>
+      <% end %>
+
+      <%= link_to employee_path(view: "bonus") do %>
+        <div class="px-6 py-4 overflow-hidden rounded-lg <%= @view == "bonus" ? "bg-white" : "bg-gray-50" %> border border-gray-200 shadow-sm flex flex-row justify-center items-center">
+          <%= render(View::IconComponent.new(icon_type: "bonus", size: "medium", color: "gray")) %>
+          <div class="text-gray-800 text-2xl pl-3 text-center"><%= I18n.t(".data_overview.titles.bonus_overview").downcase %></div>
+        </div>
+      <% end %>
+    </div>
+
+    <% if @view == "bonus" %>
+      <%= render "data_overviews/bonus", dim_user: @dim_user %>
+    <% elsif @view == "holiday" %>
+      <%= render "data_overviews/holiday", dim_user: @dim_user %>
+    <% end %>
+
+  </div>
+</main>

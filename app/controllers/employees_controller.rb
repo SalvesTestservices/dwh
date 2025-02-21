@@ -41,7 +41,14 @@ class EmployeesController < ApplicationController
   end
 
   def show
-    @employee = Dwh::DimUser.find(params[:id])
+    @employee = User.find(params[:id])
+    @dim_user = Dwh::DimUser.find_by(email: @employee.email)
+    @dim_account = Dwh::DimAccount.find_by(id: @dim_user.account_id)
+    @dim_company = Dwh::DimCompany.find_by(id: @dim_user.company_id)
+    @start_date = Dwh::DimDate.find(@dim_user.start_date).original_date.strftime("%d-%m-%Y")
+    @leave_date = @dim_user.leave_date.blank? ? "-" : Dwh::DimDate.find(@dim_user.leave_date).original_date.strftime("%d-%m-%Y")
+
+    @view = params[:view].blank? ? "holiday" : params[:view]
 
     @breadcrumbs = []
     @breadcrumbs << [I18n.t(".employee.titles.index"), employees_path]

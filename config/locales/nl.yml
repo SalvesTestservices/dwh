@@ -34,6 +34,14 @@ nl:
   employee:
     titles:
       index:        Medewerkers
+      show:         Medewerker details
+    form:
+      email:        Email
+      start_date:   Datum in dienst
+      leave_date:   Datum uit dienst
+      role:         Rol
+      contract:     Contract type
+      contract_hours: Contract uren
   role:
     titles:
       index:        Rollen
