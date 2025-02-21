@@ -1,19 +1,52 @@
 <%= render "shared/page_header", 
   breadcrumbs: @breadcrumbs, 
-  title: I18n.t('.employee.titles.index'), 
+  title: "#{I18n.t(".employee.titles.index")} (#{@dim_users.count})", 
   icon: ["users", "medium", "gray"],
   buttons: nil
 %>
 
 <main>
-  <div class="mx-auto max-w-4xl flex flex-row justify-center mt-32">
-    <div class="grid grid-cols-2 gap-10 w-full">
+  <div class="mx-auto max-w-8xl py-6 flex flex-col justify-center">
 
-      <div class="grid grid-cols-2 gap-10 w-full">
-        <% @employees.each do |employee| %>
-          <%= render "employee", employee: employee %>
-        <% end %>
-      </div>
+    <div class="flex flex-row justify-center mt-5 mb-10 w-full">
+      <%= form_tag employees_path, method: :get, class: "w-1/2 relative" do %>
+        <div class="relative">
+          <!-- Search Icon -->
+          <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+            <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+            </svg>
+          </div>
+          
+          <%= text_field_tag :query, 
+              params[:query], 
+              class: "block w-full rounded-xl border-0 bg-white py-3 pl-10 pr-12 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6 search-input",
+              placeholder: I18n.t('.general.search'),
+              type: "text"
+          %>
+
+          <% if params[:query].present? %>
+            <!-- Clear Search Link -->
+            <%= link_to employees_path, 
+                class: "absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-gray-700",
+                title: "Clear search" do %>
+              <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
     </div>
-  </div>
+
+    <div class="grid grid-cols-4 gap-4 w-full">
+      <% if @dim_users.blank? %>
+        <%= render "shared/no_records" %>
+      <% else %>
+        <% @dim_users.each do |dim_user| %>
+          <%= render "employee", dim_user: dim_user, dim_accounts: @dim_accounts, dim_companies: @dim_companies %>
+        <% end %>
+      <% end %>
+    </div>
+
 </main>

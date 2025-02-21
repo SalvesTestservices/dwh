@@ -12,6 +12,8 @@ nl:
     month:          Maand
     year:           Jaar
     cancel:         Annuleren
+    search:         Zoeken
+    no_records:     Geen records gevonden
   user:
     titles:
       index:        Gebruikers

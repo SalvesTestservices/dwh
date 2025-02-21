@@ -1,3 +1,13 @@
-<div id="<%= dom_id(employee) %>" class="flex items-center justify-between p-3">
-  <%= employee.full_name %>
+<% dim_account = @dim_accounts.find { |dim_account| dim_account.id == dim_user.account_id } %>
+<% dim_company = @dim_companies.find { |dim_company| dim_company.id == dim_user.company_id } %>
+<% employee = User.find_by(email: dim_user.email) %>
+
+<div id="<%= dom_id(dim_user) %>" class="flex items-center space-x-3 rounded-lg border border-gray-300 bg-white px-6 py-5 shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400">
+  <%= link_to employee_path(employee), class: "w-full" do %>
+    <div class="min-w-0 flex flex-col justify-center items-center">
+      <p class="text-sm font-medium text-gray-900"><%= dim_user.full_name %></p>
+      <p class="truncate text-sm text-gray-500"><%= dim_account.name %></p>
+      <p class="truncate text-sm text-gray-500"><%= dim_company.blank? ? "-" : dim_company.name %></p>
+    </div>
+  <% end %>
 </div>

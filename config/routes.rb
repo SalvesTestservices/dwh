@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }
   
   resources :users
-  resources :employees, only: [:index]
+  resources :employees, only: [:index, :show]
   resources :roles, except: [:show]
   resources :site, only: [:index] do
     get :dwh_dashboard, on: :collection

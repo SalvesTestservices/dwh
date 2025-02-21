@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_20_103627) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_21_111129) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -544,5 +544,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_20_103627) do
     t.index ["transaction_type_type"], name: "index_lucanet_transactions_on_transaction_type_type"
     t.index ["uid"], name: "index_lucanet_transactions_on_uid", unique: true
     t.index ["year"], name: "index_lucanet_transactions_on_year"
+  end
+
+  create_table "pg_search_documents", force: :cascade do |t|
+    t.text "content"
+    t.string "searchable_type"
+    t.bigint "searchable_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["searchable_type", "searchable_id"], name: "index_pg_search_documents_on_searchable"
   end
 end
