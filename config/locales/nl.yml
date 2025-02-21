@@ -72,6 +72,7 @@ nl:
     titles:
       bonus_overview:     Bonus uren
       holiday_overview:   Verlof uren
+      children_leave_overview: Kinderen & verlof
   data_target:
     titles:
       index:        Data targets

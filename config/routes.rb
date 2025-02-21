@@ -26,7 +26,7 @@ Rails.application.routes.draw do
   # Data overviews
   get :bonus_overview, to: "data_overviews#bonus_overview"
   get :holiday_overview, to: "data_overviews#holiday_overview"
-
+  get :children_leave_overview, to: "data_overviews#children_leave_overview"
   # Datalab
   namespace :datalab do
     resources :reports do

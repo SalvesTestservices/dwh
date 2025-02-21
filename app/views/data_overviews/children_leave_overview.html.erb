@@ -1,0 +1,15 @@
+<%= render "shared/page_header", 
+  breadcrumbs: @breadcrumbs, 
+  title: I18n.t('.data_overview.titles.children_leave_overview'), 
+  icon: ["child", "medium", "gray"],
+  buttons: nil
+%>
+
+<main>
+  <div class="mx-auto max-w-8xl py-6 flex flex-col">
+
+    <%= render "data_overviews/children_leave", dim_user: nil %>
+
+  </div>
+</main>
+

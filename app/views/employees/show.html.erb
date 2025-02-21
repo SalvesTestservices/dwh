@@ -77,12 +77,22 @@
           <div class="text-gray-800 text-2xl pl-3 text-center"><%= I18n.t(".data_overview.titles.bonus_overview").downcase %></div>
         </div>
       <% end %>
+
+      <%= link_to employee_path(view: "children_leave") do %>
+        <div class="px-6 py-4 overflow-hidden rounded-lg <%= @view == "children_leave" ? "bg-white" : "bg-gray-50" %> border border-gray-200 shadow-sm flex flex-row justify-center items-center">
+          <%= render(View::IconComponent.new(icon_type: "child", size: "medium", color: "gray")) %>
+          <div class="text-gray-800 text-2xl pl-3 text-center"><%= I18n.t(".data_overview.titles.children_leave_overview").downcase %></div>
+        </div>
+      <% end %>
+
     </div>
 
     <% if @view == "bonus" %>
       <%= render "data_overviews/bonus", dim_user: @dim_user %>
     <% elsif @view == "holiday" %>
       <%= render "data_overviews/holiday", dim_user: @dim_user %>
+    <% elsif @view == "children_leave" %>
+      <%= render "data_overviews/children_leave", dim_user: @dim_user %>
     <% end %>
 
   </div>

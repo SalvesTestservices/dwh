@@ -94,6 +94,14 @@
           <span class="ml-3"><%= I18n.t(".data_overview.titles.holiday_overview") %></span>
         <% end %>
       <% end %>
+
+      <% if can?(:read, :employee_overviews) %>
+        <%= link_to children_leave_overview_path, class: "#{request.path.include?("children_leave") ? 'bg-gray-100' : 'bg-white'} flex items-center px-3 py-3 text-base font-medium text-gray-700 rounded-md hover:bg-gray-200 hover:text-gray-900" do %>
+          <%= render(View::IconComponent.new(icon_type: "child", size: "small", color: "gray")) %>
+          <span class="ml-3"><%= I18n.t(".data_overview.titles.children_leave_overview") %></span>
+        <% end %>
+      <% end %>
+
     </div>
     <div class="border-t border-gray-200 pt-5">
       <%= button_to destroy_user_session_path, 

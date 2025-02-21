@@ -12,4 +12,9 @@ class DataOverviewsController < ApplicationController
     @breadcrumbs = []
     @breadcrumbs << [I18n.t('.data_overview.titles.holiday_overview')]
   end
+
+  def children_leave_overview
+    @breadcrumbs = []
+    @breadcrumbs << [I18n.t('.data_overview.titles.children_leave_overview')]
+  end
 end
