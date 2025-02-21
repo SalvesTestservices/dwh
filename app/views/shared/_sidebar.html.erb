@@ -13,6 +13,13 @@
 
     <% if can?(:read, :datalab) %>
       <div class="border-b border-gray-200 pb-5">
+        <% if can?(:read, :employees) %>
+          <%= link_to employees_path, class: "#{request.path.include?("employees") ? 'bg-gray-100' : 'bg-white'} flex items-center px-3 py-3 text-base font-medium text-gray-700 rounded-md hover:bg-gray-200 hover:text-gray-900" do %>
+            <%= render(View::IconComponent.new(icon_type: "users", size: "small", color: "gray")) %>
+            <span class="ml-3"><%= I18n.t(".employee.titles.index") %></span>
+          <% end %>
+        <% end %>
+
         <% if can?(:read, :datalab) %>
           <%= link_to datalab_reports_path, class: "#{request.path.include?("datalab") ? 'bg-gray-100' : 'bg-white'} flex items-center px-3 py-3 text-base font-medium text-gray-700 rounded-md hover:bg-gray-200 hover:text-gray-900" do %>
             <%= render(View::IconComponent.new(icon_type: "datalab", size: "small", color: "gray")) %>

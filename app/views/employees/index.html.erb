@@ -1,0 +1,19 @@
+<%= render "shared/page_header", 
+  breadcrumbs: @breadcrumbs, 
+  title: I18n.t('.employee.titles.index'), 
+  icon: ["users", "medium", "gray"],
+  buttons: nil
+%>
+
+<main>
+  <div class="mx-auto max-w-4xl flex flex-row justify-center mt-32">
+    <div class="grid grid-cols-2 gap-10 w-full">
+
+      <div class="grid grid-cols-2 gap-10 w-full">
+        <% @employees.each do |employee| %>
+          <%= render "employee", employee: employee %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</main>

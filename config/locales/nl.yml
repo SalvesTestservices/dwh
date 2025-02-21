@@ -29,6 +29,9 @@ nl:
     contracts:
       fixed:        Vast contract
       temporary:    Tijdelijk contract
+  employee:
+    titles:
+      index:        Medewerkers
   role:
     titles:
       index:        Rollen
@@ -37,6 +40,7 @@ nl:
   permissions:
     resources:
       users:              Gebruikers
+      employees:          Medewerkers
       roles:              Rollen
       datalab:            Data lab
       data_pipelines:     Data pipelines

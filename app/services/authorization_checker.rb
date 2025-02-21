@@ -7,6 +7,7 @@ class AuthorizationChecker
     data_governance: [:read, :write, :delete],
     data_api: [:read, :write, :delete],
     users: [:read, :write, :delete],
+    employees: [:read],
     roles: [:read, :write, :delete],
     employee_overviews: [:read, :write, :delete],
   }.freeze
