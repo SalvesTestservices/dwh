@@ -63,28 +63,30 @@
       </div>
     </div>
 
-    <div class="w-full flex flex-row justify-center my-10 space-x-4">
-      <%= link_to employee_path(view: "holiday") do %>
-        <div class="px-6 py-4 overflow-hidden rounded-lg <%= @view == "holiday" ? "bg-white" : "bg-gray-50" %> border border-gray-200 shadow-sm flex flex-row justify-center items-center">
-          <%= render(View::IconComponent.new(icon_type: "holiday", size: "medium", color: "gray")) %>
-          <div class="text-gray-800 text-2xl pl-3 text-center"><%= I18n.t(".data_overview.titles.holiday_overview").downcase %></div>
-        </div>
-      <% end %>
-
-      <%= link_to employee_path(view: "bonus") do %>
-        <div class="px-6 py-4 overflow-hidden rounded-lg <%= @view == "bonus" ? "bg-white" : "bg-gray-50" %> border border-gray-200 shadow-sm flex flex-row justify-center items-center">
-          <%= render(View::IconComponent.new(icon_type: "bonus", size: "medium", color: "gray")) %>
-          <div class="text-gray-800 text-2xl pl-3 text-center"><%= I18n.t(".data_overview.titles.bonus_overview").downcase %></div>
-        </div>
-      <% end %>
-
-      <%= link_to employee_path(view: "children_leave") do %>
-        <div class="px-6 py-4 overflow-hidden rounded-lg <%= @view == "children_leave" ? "bg-white" : "bg-gray-50" %> border border-gray-200 shadow-sm flex flex-row justify-center items-center">
-          <%= render(View::IconComponent.new(icon_type: "child", size: "medium", color: "gray")) %>
-          <div class="text-gray-800 text-2xl pl-3 text-center"><%= I18n.t(".data_overview.titles.children_leave_overview").downcase %></div>
-        </div>
-      <% end %>
-
+    <div class="my-10">
+      <nav class="isolate flex divide-x divide-gray-200 rounded-lg shadow" aria-label="Tabs">
+        <%= link_to employee_path(view: "holiday"), class: "group relative min-w-0 flex-1 overflow-hidden rounded-l-lg bg-white px-4 py-4 focus:z-10" do %>
+          <div class="flex items-center justify-center">
+            <%= render(View::IconComponent.new(icon_type: "holiday", size: "medium", color: "gray")) %>
+            <span class="text-gray-900 ml-2"><%= I18n.t(".data_overview.titles.holiday_overview").downcase %></span>
+          </div>
+          <span aria-hidden="true" class="<%= @view == "holiday" ? "bg-indigo-500" : "bg-transparent" %> absolute inset-x-0 bottom-0 h-0.5"></span>
+        <% end %>
+        <%= link_to employee_path(view: "bonus"), class: "group relative min-w-0 flex-1 overflow-hidden rounded-l-lg bg-white px-4 py-4 focus:z-10" do %>
+          <div class="flex items-center justify-center">
+            <%= render(View::IconComponent.new(icon_type: "bonus", size: "medium", color: "gray")) %>
+            <span class="text-gray-900 ml-2"><%= I18n.t(".data_overview.titles.bonus_overview").downcase %></span>
+          </div>
+          <span aria-hidden="true" class="<%= @view == "bonus" ? "bg-indigo-500" : "bg-transparent" %> absolute inset-x-0 bottom-0 h-0.5"></span>
+        <% end %>
+        <%= link_to employee_path(view: "children_leave"), class: "group relative min-w-0 flex-1 overflow-hidden rounded-l-lg bg-white px-4 py-4 focus:z-10" do %>
+          <div class="flex items-center justify-center">
+            <%= render(View::IconComponent.new(icon_type: "child", size: "medium", color: "gray")) %>
+            <span class="text-gray-900 ml-2"><%= I18n.t(".data_overview.titles.children_leave_overview").downcase %></span>
+          </div>
+          <span aria-hidden="true" class="<%= @view == "children_leave" ? "bg-indigo-500" : "bg-transparent" %> absolute inset-x-0 bottom-0 h-0.5"></span>
+        <% end %>
+      </nav>
     </div>
 
     <% if @view == "bonus" %>
