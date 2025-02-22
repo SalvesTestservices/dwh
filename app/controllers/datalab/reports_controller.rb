@@ -2,7 +2,7 @@ module Datalab
   class ReportsController < ApplicationController
     include Pagy::Backend
     before_action :authenticate_user!
-    before_action :set_report, only: [:show, :update, :generate, :export, :destroy]
+    before_action :set_report, only: [:show, :edit, :update, :generate, :export, :destroy]
     before_action :set_anchor_service, only: [:show, :generate, :export]
     
     before_action -> { authorize!(:read, :datalab) }, only: [:index, :show, :generate, :export]
@@ -36,8 +36,8 @@ module Datalab
 
       respond_to do |format|
         if @report.save
-          format.html { redirect_to datalab_designer_path(@report), notice: 'Report created successfully.' }
-          format.turbo_stream { redirect_to datalab_designer_path(@report), notice: 'Report created successfully.' }
+          format.html { redirect_to datalab_designer_path(@report), notice: I18n.t('.datalab.report.messages.created') }
+          format.turbo_stream { redirect_to datalab_designer_path(@report), notice: I18n.t('.datalab.report.messages.created') }
         else
           @available_anchors = AnchorRegistry.available_anchors.map { |key, anchor| 
             [anchor[:name], key]
@@ -48,14 +48,26 @@ module Datalab
       end
     end
 
+    def edit
+      @available_anchors = AnchorRegistry.available_anchors.map { |key, anchor| 
+        [anchor[:name], key]
+      }
+
+    
+      @breadcrumbs = []
+      @breadcrumbs << [I18n.t('.datalab.report.titles.index'), datalab_reports_path]
+      @breadcrumbs << [@report.name, datalab_report_path(@report)]
+      @breadcrumbs << [I18n.t('.datalab.report.titles.edit')]
+    end
+
     def update
       if @report.update(report_params)
         respond_to do |format|
-          format.turbo_stream
-          format.html { redirect_to datalab_report_path(@report) }
+          format.html { redirect_to datalab_designer_path(@report), notice: I18n.t('.datalab.report.messages.updated') }
+          format.turbo_stream { redirect_to datalab_designer_path(@report), notice: I18n.t('.datalab.report.messages.updated') }
         end
       else
-        render :show, status: :unprocessable_entity
+        render :edit, status: :unprocessable_entity
       end
     end
 

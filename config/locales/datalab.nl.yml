@@ -3,6 +3,7 @@ nl:
     report:
       titles:
         index:            Data lab
+        open:             openen
         new:              Nieuw rapport
         edit:             Wijzigen rapport
         delete:           Verwijderen rapport

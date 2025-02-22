@@ -17,11 +17,7 @@
         
         <div class="flex flex-none items-center gap-x-1">
           <% if can?(:read, :datalab) %>
-            <%= render(View::ButtonComponent.new(title: I18n.t(".general.details"), url: datalab_report_path(report), button_type: "link", size: "small")) %>
-          <% end %>
-          
-          <% if can?(:write, :datalab) %>
-            <%= render(View::ButtonComponent.new(title: I18n.t(".general.edit").downcase, url: datalab_designer_path(report), button_type: "link", size: "small")) %>
+            <%= render(View::ButtonComponent.new(title: I18n.t(".datalab.report.titles.open"), url: datalab_report_path(report), button_type: "link", size: "small")) %>
           <% end %>
         </div>
       </li>

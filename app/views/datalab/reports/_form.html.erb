@@ -1,4 +1,6 @@
-<%= form_with(model: report, url: datalab_reports_path, local: true) do |form| %>
+<%= form_with(model: report, 
+    url: report.persisted? ? datalab_report_path(report) : datalab_reports_path,
+    local: true) do |form| %>
   <% if report.errors.any? %>
     <div class="rounded-md bg-red-50 p-4 mb-6">
       <div class="flex">
