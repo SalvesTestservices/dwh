@@ -1,0 +1,37 @@
+<div class="bg-white rounded-lg shadow-md p-6 max-w-3xl mx-auto">
+  <div class="flex items-start space-x-6">
+    <div class="flex-1 p-4">
+      <h2 class="text-2xl font-bold text-gray-900"><%= dim_user.full_name %></h2>
+      <p class="text-lg text-gray-600 mb-2"><%= dim_account.name %></p>
+      <p class="text-gray-500 mb-4"><%= dim_company.name %></p>
+
+      <div class="grid grid-cols-2 gap-4 mt-6">
+        <div>
+          <h3 class="text-sm font-medium text-gray-500"><%= I18n.t(".employee.form.start_date") %></h3>
+          <div class="mt-2 space-y-2">
+            <p class="text-gray-900"><%= start_date %></p>
+          </div>
+        </div>
+        <div>
+          <h3 class="text-sm font-medium text-gray-500"><%= I18n.t(".employee.form.role") %></h3>
+          <div class="mt-2 space-y-2">
+            <p class="text-gray-900"><%= dim_user.role %></p>
+          </div>
+        </div>
+        <div>
+          <h3 class="text-sm font-medium text-gray-500"><%= I18n.t(".employee.form.contract") %></h3>
+          <div class="mt-2 space-y-2">
+            <p class="text-gray-900"><%= dim_user.contract %></p>
+          </div>
+        </div>
+        <div>
+          <h3 class="text-sm font-medium text-gray-500"><%= I18n.t(".employee.form.contract_hours") %></h3>
+          <div class="mt-2 space-y-2">
+            <p class="text-gray-900"><%= dim_user.contract_hours %></p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
