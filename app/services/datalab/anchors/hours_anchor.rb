@@ -40,36 +40,62 @@ module Datalab
           }
         end
 
-        def fetch_data(limit, column_ids)
-          Dwh::FactActivity.joins('LEFT JOIN dim_dates ON dim_dates.id = fact_activities.activity_date').order('dim_dates.year DESC, dim_dates.month DESC').limit(limit)
+        def fetch_data(filters, page=1, items_per_page=20)
+          offset = (page - 1) * items_per_page
+          
+          query = base_query
+          query = apply_filters(query, filters)
+          query = apply_sorting(query)
+          
+          records = query.limit(items_per_page).offset(offset)
+          total_count = query.count
+
+          [records, total_count]
         end
 
         def filterable_attributes
           [:account_id, :company_id, :user_id, :month, :year]
         end
 
-        def apply_filter(records, field, value)
-          case field.to_sym
-          when :account_id
-            records.where(account_id: value)
-          when :company_id
-            records.where(company_id: value)
-          when :user_id
-            records.where(user_id: value)
-          when :month
-            records.where(month: value)
-          when :year
-            records.where(year: value)
-          else
-            records
-          end
+        private
+
+        def base_query
+          Dwh::FactActivity
+            .joins('LEFT JOIN dim_dates ON dim_dates.id = fact_activities.activity_date')
         end
 
-        def apply_sorting(records)
-          records.joins('LEFT JOIN dim_accounts ON dim_accounts.id = fact_activities.account_id')
-                .joins('LEFT JOIN dim_companies ON dim_companies.id = fact_activities.company_id')
-                .joins('LEFT JOIN dim_users ON dim_users.id = fact_activities.user_id')
-                .order('dim_accounts.name', 'dim_companies.name', 'dim_users.full_name')
+        def apply_filters(query, filters)
+          return query if filters.blank?
+
+          filters.to_unsafe_h.each do |field, values|
+            next if values.blank?
+            values = values.flatten.reject(&:blank?)
+            next if values.empty?
+            
+            query = case field.to_sym
+            when :account_id
+              query.where(account_id: values)
+            when :company_id
+              query.where(company_id: values)
+            when :user_id
+              query.where(user_id: values)
+            when :month
+              query.where(month: values)
+            when :year
+              query.where(year: values)
+            else
+              query
+            end
+          end
+
+          query
+        end
+
+        def apply_sorting(query)
+          query.joins('LEFT JOIN dim_accounts ON dim_accounts.id = fact_activities.account_id')
+               .joins('LEFT JOIN dim_companies ON dim_companies.id = fact_activities.company_id')
+               .joins('LEFT JOIN dim_users ON dim_users.id = fact_activities.user_id')
+               .order('dim_dates.year DESC, dim_dates.month DESC, dim_accounts.name, dim_companies.name, dim_users.full_name')
         end
       end
     end

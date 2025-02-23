@@ -1,0 +1,21 @@
+<%= turbo_stream.append "report_rows" do %>
+  <%= render "table_rows", report_data: @report_data %>
+<% end %>
+
+<% if @report_data[:current_page] * @report_data[:items_per_page] < @report_data[:total_count] %>
+  <%= turbo_stream.replace "next_page" do %>
+    <%= turbo_frame_tag "next_page",
+        src: datalab_report_path(@report, 
+                               page: @report_data[:current_page] + 1,
+                               filters: params[:filters],
+                               format: :turbo_stream),
+        data: { turbo_frame: "next_page" },
+        loading: :lazy do %>
+      <div class="flex justify-center my-4">
+        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+      </div>
+    <% end %>
+  <% end %>
+<% else %>
+  <%= turbo_stream.remove "next_page" %>
+<% end %> 

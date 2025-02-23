@@ -84,36 +84,61 @@ module Datalab
           }
         end
 
-        def fetch_data(limit, column_ids)
-          Dwh::DimUser
-            .joins('LEFT JOIN dim_dates ON dim_dates.id = dim_users.leave_date')
-            .where('leave_date IS NULL OR dim_dates.original_date > ?', Date.current)
-            .limit(limit)
+        def fetch_data(filters, page=1, items_per_page=20)
+          offset = (page - 1) * items_per_page
+          
+          query = base_query
+          query = apply_filters(query, filters)
+          query = apply_sorting(query)
+          
+          records = query.limit(items_per_page).offset(offset)
+          total_count = query.count
+
+          [records, total_count]
         end
 
         def filterable_attributes
           [:account_id, :company_id, :contract, :role]
         end
 
-        def apply_filter(records, field, value)
-          case field.to_sym
-          when :account_id
-            records.where(account_id: value)
-          when :company_id
-            records.where(company_id: value)
-          when :contract
-            records.where(contract: value)
-          when :role
-            records.where(role: value)
-          else
-            records
-          end
+        private
+
+        def base_query
+          Dwh::DimUser
+            .joins('LEFT JOIN dim_dates ON dim_dates.id = dim_users.leave_date')
+            .where('leave_date IS NULL OR dim_dates.original_date > ?', Date.current)
+            .order('dim_accounts.name', 'dim_companies.name', 'dim_users.full_name')
         end
 
-        def apply_sorting(records)
-          records.joins('LEFT JOIN dim_accounts ON dim_accounts.id = dim_users.account_id')
-                .joins('LEFT JOIN dim_companies ON dim_companies.id = dim_users.company_id')
-                .order('dim_accounts.name', 'dim_companies.name', 'dim_users.full_name')
+        def apply_filters(query, filters)
+          return query if filters.blank?
+
+          filters.to_unsafe_h.each do |field, values|
+            next if values.blank?
+            values = values.flatten.reject(&:blank?)
+            next if values.empty?
+            
+            query = case field.to_sym
+            when :account_id
+              query.where(account_id: values)
+            when :company_id
+              query.where(company_id: values)
+            when :contract
+              query.where(contract: values)
+            when :role
+              query.where(role: values)
+            else
+              query
+            end
+          end
+
+          query
+        end
+
+        def apply_sorting(query)
+          query.joins('LEFT JOIN dim_accounts ON dim_accounts.id = dim_users.account_id')
+               .joins('LEFT JOIN dim_companies ON dim_companies.id = dim_users.company_id')
+               .order('dim_accounts.name', 'dim_companies.name', 'dim_users.full_name')
         end
       end
     end

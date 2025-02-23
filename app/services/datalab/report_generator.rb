@@ -2,28 +2,31 @@ module Datalab
   class ReportGenerator
     include Pagy::Backend
 
-    def initialize(report, params = {}, limit)
+    def initialize(report, params = {})
       @report = report
-      @params = params
-      @limit = limit
+      @params = params.with_indifferent_access
+      @page = (@params[:page] || 1).to_i
+      @items_per_page = (@params[:items_per_page] || 20).to_i
       @anchor_service = AnchorRegistry.get_anchor(@report.anchor_type)[:service]
     end
 
     def generate
-      records = fetch_records
-      records = apply_filters(records)
-      records = apply_sorting(records)
+      records, total_count = @anchor_service.fetch_data(
+        @params[:filters],
+        @page,
+        @items_per_page
+      )
       
-      # Return the records for pagination in the controller
       [records, {
         columns: generate_columns,
-        rows: generate_rows(records)
+        rows: generate_rows(records),
+        total_count: total_count,
+        current_page: @page,
+        items_per_page: @items_per_page
       }]
     end
 
-    private
-
-    def cache_key
+    private def cache_key
       parts = [
         'datalab_report',
         @report.id,
@@ -34,41 +37,14 @@ module Datalab
       parts.join('/')
     end
 
-    def apply_filters(records)
-      filters = @params[:filters]
-      if filters.blank?
-        return records
-      end
-
-      filters.to_unsafe_h.each do |field, values|
-        next if values.blank?
-        
-        # Handle array of arrays from params (e.g., [["5"], ["2"]])
-        values = values.flatten.reject(&:blank?)
-        next if values.empty?
-        
-        records = @anchor_service.apply_filter(records, field, values)
-      end
-
-      records
-    end
-
-    def apply_sorting(records)
-      @anchor_service.apply_sorting(records)
-    end
-
-    def fetch_records
-      @anchor_service.fetch_data(@limit, @report.column_config['columns'].map { |c| c['id'] })
-    end
-
-    def generate_report_data(records)
+    private def generate_report_data(records)
       {
         columns: generate_columns,
         rows: generate_rows(records)
       }
     end
 
-    def generate_columns
+    private def generate_columns
       @report.column_config['columns'].map do |column|
         attribute = @anchor_service.available_attributes[column['id'].to_sym]
         {
@@ -79,7 +55,7 @@ module Datalab
       end
     end
 
-    def generate_rows(records)
+    private def generate_rows(records)
       records.map do |record|
         row = { id: record.id }
         @report.column_config['columns'].each do |column|

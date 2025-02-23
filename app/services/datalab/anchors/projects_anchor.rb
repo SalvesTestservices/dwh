@@ -18,79 +18,84 @@ module Datalab
               related_model: Dwh::DimCompany,
               display_attribute: :name
             },
-            customer_id: {
-              name: 'Klant',
-              calculation_type: 'relation',
-              description: 'De klant waar het project toe behoort',
-              related_model: Dwh::DimCustomer,
-              display_attribute: :name
-            },
             name: {
-              name: 'Project naam',
+              name: 'Project',
               calculation_type: 'direct',
-              description: 'De naam van het project'
+              description: 'Naam van het project'
             },
-            calculation_type: {
-              name: 'Type project',
-              calculation_type: 'translation',
-              description: 'Het type/afrekenmethode van het project',
-              method: :calculation_type,
-              translation_scope: 'datalab.project.calculation_types'
+            project_number: {
+              name: 'Project nummer',
+              calculation_type: 'direct',
+              description: 'Nummer van het project'
+            },
+            status: {
+              name: 'Status',
+              calculation_type: 'direct',
+              description: 'Status van het project'
             },
             start_date: {
-              name: 'Startdatum',
-              calculation_type: 'calculation',
-              description: 'De startdatum van het project',
-              calculation: ->(record) { Calculators::ProjectCalculator.calculate_start_date(record) }
+              name: 'Start datum',
+              calculation_type: 'direct',
+              description: 'Start datum van het project'
             },
             end_date: {
-              name: 'Einddatum',
-              calculation_type: 'calculation',
-              description: 'De einddatum van het project',
-              calculation: ->(record) { Calculators::ProjectCalculator.calculate_end_date(record) }
-            },
-            expected_end_date: {
-              name: 'Verwachte einddatum',
-              calculation_type: 'calculation',
-              description: 'De verwachte einddatum van het project',
-              calculation: ->(record) { Calculators::ProjectCalculator.calculate_expected_end_date(record) }
-            },
-            nr_active_projectusers: {
-              name: 'Actieve inzetten',
-              calculation_type: 'calculation',
-              description: 'Het aantal medewerkers dat actief is ingezet in het project',
-              calculation: ->(record) { Calculators::ProjectCalculator.calculate_nr_active_projectusers(record) }
+              name: 'Eind datum',
+              calculation_type: 'direct',
+              description: 'Eind datum van het project'
             }
           }
         end
 
-        def fetch_data(limit, column_ids)
-          Dwh::DimProject.joins('LEFT JOIN dim_dates ON dim_dates.id = dim_projects.start_date').limit(limit)
+        def fetch_data(filters, page=1, items_per_page=20)
+          offset = (page - 1) * items_per_page
+          
+          query = base_query
+          query = apply_filters(query, filters)
+          query = apply_sorting(query)
+          
+          records = query.limit(items_per_page).offset(offset)
+          total_count = query.count
+
+          [records, total_count]
         end
 
         def filterable_attributes
-          [:account_id, :company_id, :customer_id, :calculation_type]
+          [:account_id, :company_id, :status]
         end
 
-        def apply_filter(records, field, value)
-          case field.to_sym
-          when :account_id
-            records.where(account_id: value)
-          when :company_id
-            records.where(company_id: value)
-          when :customer_id
-            records.where(customer_id: value)
-          when :calculation_type
-            records.where(calculation_type: value)
-          else
-            records
+        private
+
+        def base_query
+          Dwh::DimProject.all
+        end
+
+        def apply_filters(query, filters)
+          return query if filters.blank?
+
+          filters.to_unsafe_h.each do |field, values|
+            next if values.blank?
+            values = values.flatten.reject(&:blank?)
+            next if values.empty?
+            
+            query = case field.to_sym
+            when :account_id
+              query.where(account_id: values)
+            when :company_id
+              query.where(company_id: values)
+            when :status
+              query.where(status: values)
+            else
+              query
+            end
           end
+
+          query
         end
 
-        def apply_sorting(records)
-          records.joins('LEFT JOIN dim_accounts ON dim_accounts.id = dim_projects.account_id')
-                .joins('LEFT JOIN dim_companies ON dim_companies.id = dim_projects.company_id')
-                .order('dim_accounts.name', 'dim_companies.name', 'dim_projects.name')
+        def apply_sorting(query)
+          query.joins('LEFT JOIN dim_accounts ON dim_accounts.id = dim_projects.account_id')
+               .joins('LEFT JOIN dim_companies ON dim_companies.id = dim_projects.company_id')
+               .order('dim_accounts.name', 'dim_companies.name', 'dim_projects.name')
         end
       end
     end

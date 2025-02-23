@@ -72,36 +72,20 @@ module Datalab
     end
 
     def show
-      @records, data = ReportGenerator.new(@report, filter_params, nil).generate
-
-      @pagy, paginated_records = pagy(@records, 
-        items: 50, 
-        limit: 50,
-        overflow: :last_page,
-        page: params[:page] || 1
-      )
-      
-      @report_data = data.merge(
-        rows: data[:rows].select { |row| paginated_records.pluck(:id).include?(row[:id]) }
-      )
-
-      @breadcrumbs = []
-      @breadcrumbs << [I18n.t('.datalab.report.titles.index'), datalab_reports_path]  
-      @breadcrumbs << [@report.name]
-      
-      respond_to do |format|
-        format.html
-        format.turbo_stream if params[:page]
-      end
-    end
-
-    def generate
-      records, data = ReportGenerator.new(@report, filter_params, 25).generate
-      
-      @report_data = data.merge(
-        rows: data[:rows].select { |row| records.pluck(:id).include?(row[:id]) }
+      @report = DatalabReport.find(params[:id])
+      @report_generator = Datalab::ReportGenerator.new(
+        @report,
+        {
+          filters: params[:filters],
+          sort_by: params[:sort_by] || default_sort_field,
+          sort_direction: params[:sort_direction] || 'asc',
+          items_per_page: 50,
+          page: params[:page] || 1
+        }
       )
 
+      @records, @report_data = @report_generator.generate
+      
       @breadcrumbs = []
       @breadcrumbs << [I18n.t('.datalab.report.titles.index'), datalab_reports_path]  
       @breadcrumbs << [@report.name]
@@ -112,13 +96,43 @@ module Datalab
       end
     end
 
+    def generate
+      report_params = {
+        filters: params[:filters],
+        sort_by: params[:sort_by] || default_sort_field,
+        sort_direction: params[:sort_direction] || 'asc',
+        items_per_page: 25,
+        page: params[:page]
+      }
+      
+      records, data = ReportGenerator.new(
+        @report, 
+        report_params
+      ).generate
+      
+      @report_data = data
+
+      @breadcrumbs = []
+      @breadcrumbs << [I18n.t('.datalab.report.titles.index'), datalab_reports_path]  
+      @breadcrumbs << [@report.name]
+
+      respond_to do |format|
+        format.html
+      end
+    end
+
     def export
-      records, data = ReportGenerator.new(@report, filter_params, nil).generate
+      @report = DatalabReport.find(params[:id])
+      
+      records, data = ReportGenerator.new(
+        @report, 
+        filter_params.merge(items_per_page: nil) # No pagination for exports
+      ).generate
 
       respond_to do |format|       
-        format.xlsx do
-          @report_data = data
-          response.headers['Content-Disposition'] = "attachment; filename=\"#{@report.name.parameterize}-#{Date.current.strftime('%d%m%Y')}.xlsx\""
+        format.csv do
+          send_data generate_csv(records),
+            filename: "#{@report.name.parameterize}-#{Date.today}.csv"
         end
       end
     end
@@ -141,18 +155,19 @@ module Datalab
       @anchor_service = anchor[:service]
     end
 
+    private def default_sort_field
+      anchor_service = Datalab::AnchorRegistry.get_anchor(@report.anchor_type)[:service]
+      anchor_service.sortable_attributes.first&.to_s || 'id'
+    end
+
     private def filter_params
       {
         filters: params[:filters],
         sort_by: params[:sort_by] || default_sort_field,
         sort_direction: params[:sort_direction] || 'asc',
-        page: params[:page]
+        items_per_page: params[:items_per_page] || 50,
+        page: params[:page] || 1
       }
-    end
-
-    private def default_sort_field
-      anchor_service = Datalab::AnchorRegistry.get_anchor(@report.anchor_type)[:service]
-      anchor_service.sortable_attributes.first&.to_s || 'id'
     end
   end
 end
