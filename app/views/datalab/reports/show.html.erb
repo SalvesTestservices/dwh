@@ -9,23 +9,21 @@
   <div class="mx-auto max-w-8xl py-6 mt-2 flex flex-col">
     <%= form_with(url: datalab_report_path(@report), method: :get, data: { controller: 'report', turbo_frame: 'report_data' }) do |form| %>
       <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-lg p-4 mb-4 border border-gray-100">
-        <div class="flex flex-row gap-4">
+        <div class="flex flex-row justify-center gap-4">
           <% @anchor_service.filterable_attributes.each do |attr| %>
             <div class="px-2">
               <%= form.label "filters[#{attr}]", @anchor_service.available_attributes[attr][:name], class: "block text-sm font-bold underline underline-offset-2 text-gray-700" %>
               <div class="mt-1">
-                <%= form.select "filters[#{attr}][]",
+                <%= form.select "filters[#{attr}]",
                     options_for_select(
                       filter_options_for_attribute(attr),
-                      params.dig(:filters, attr)
+                      params.dig(:filters, attr)&.first
                     ),
-                    {},
+                    { include_blank: "- #{@anchor_service.available_attributes[attr][:name]} -" },
                     {
-                      multiple: true,
-                      class: select_width_for_attribute(attr) + " h-44 border border-gray-300 text-sm bg-gray-50",
+                      class: select_width_for_attribute(attr) + " rounded-md bg-gray-50 py-1.5 pl-3 pr-8 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6",
                       data: {
-                        controller: "tom-select",
-                        tom_select_placeholder_value: "Select #{@anchor_service.available_attributes[attr][:name]}"
+                        controller: "tom-select"
                       }
                     }
                 %>

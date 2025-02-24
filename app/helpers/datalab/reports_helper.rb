@@ -49,7 +49,7 @@ module Datalab
     def select_width_for_attribute(attr)
       case attr
       when :account_id
-        'w-32'
+        'w-44'
       when :company_id
         'w-64'
       when :role
