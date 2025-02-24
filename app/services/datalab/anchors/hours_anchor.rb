@@ -36,6 +36,12 @@ module Datalab
               calculation_type: 'calculation',
               description: 'Het jaar waar de uren toe behoren',
               calculation: ->(record) { Calculators::HourCalculator.calculate_year(record) }
+            },
+            hours_parental_leave: {
+              name: 'Uren ouderschapsverlof',
+              calculation_type: 'calculation',
+              description: 'Het aantal uren ouderschapsverlof',
+              calculation: ->(record) { Calculators::HourCalculator.calculate_hours_parental_leave(record) }
             }
           }
         end
