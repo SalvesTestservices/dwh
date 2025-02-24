@@ -96,7 +96,9 @@ module Datalab
         sort_by: params[:sort_by] || default_sort_field,
         sort_direction: params[:sort_direction] || 'asc',
         items_per_page: 25,
-        page: params[:page]
+        page: params[:page],
+        group_by_user_id: true,
+        group_by_month: true
       }
       
       records, data = ReportGenerator.new(

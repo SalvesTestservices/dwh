@@ -21,26 +21,13 @@ module Datalab
       [records, data]
     end
 
-    private
-
-    def generator_class
+    private def generator_class
       case @report.report_type
       when 'group'
         ReportGenerators::GroupGenerator
-      else # default to detail for backward compatibility
+      else
         ReportGenerators::DetailGenerator
       end
-    end
-
-    private def cache_key
-      parts = [
-        'datalab_report',
-        @report.id,
-        @report.updated_at.to_i,
-        Digest::MD5.hexdigest(@params.to_json)
-      ]
-      
-      parts.join('/')
     end
 
     private def generate_report_data(records)

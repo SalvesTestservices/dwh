@@ -7,16 +7,16 @@ module Datalab
           nil,
           nil
         )
-        
-        grouped_data = group_records(records)
-        rows = generate_group_rows(grouped_data)
-        
+        dump "RECORDS: #{records.count}"
+        grouped_records = group_records(records, @params)
+        #rows = generate_group_rows(grouped_data)
+        #dump "ROWS: #{rows.inspect}"
         [records, {
           columns: generate_group_columns,
-          rows: rows,
-          total_count: rows.size,
+          rows: grouped_records,
+          total_count: grouped_records.size,
           current_page: 1,
-          items_per_page: rows.size
+          items_per_page: grouped_records.size
         }]
       end
 
@@ -43,28 +43,61 @@ module Datalab
         month_names[month_number] || ''
       end
 
-      def group_records(records)
+      def group_records(records, params)
+        grouped_records = []
+
         case @report.anchor_type.to_sym
         when :hours
-          # First, group records by user_id and month
-          records.group_by do |record|
-            dim_user = Dwh::DimUser.find_by(id: record.user_id)
-            dim_account = Dwh::DimAccount.find_by(id: record.account_id)
-            dim_company = Dwh::DimCompany.find_by(id: record.company_id)
-            date_str = record.activity_date.to_s
-            month = date_str[2..3].to_i  # Extract month from ddmmyyyy
-            year = date_str[4..7].to_i   # Extract year from ddmmyyyy
-            
-            # Create a unique key for each user-month combination
-            {
-              user_id: record.user_id,
-              full_name: dim_user&.full_name,
-              label: dim_account&.name,
-              unit: dim_company&.name,
-              month: month,
-              year: year
-            }
+          user_ids = []
+          months = []
+
+          records.each do |record|
+            user_ids << record.user_id
+            months << record.activity_date.to_s.length == 7 ? record.activity_date.to_s[1..2] : record.activity_date.to_s[2..3]
           end
+
+          user_ids = user_ids.uniq
+          months = months.uniq
+
+          dump "USER IDS: #{user_ids.inspect}"
+          dump "MONTHS: #{months.inspect}"
+
+          user_ids.each do |user_id|
+            months.each do |month|
+              grouped_record = {}
+              total_hours = 0.0
+              matching_records = records.select do |record|
+                record.user_id == user_id && 
+                (record.activity_date.to_s.length == 7 ? 
+                  record.activity_date.to_s[1..2] : 
+                  record.activity_date.to_s[2..3]) == month
+              end
+              
+              matching_records.each do |record|
+                dim_account = Dwh::DimAccount.find_by(id: record.account_id)
+                dim_company = Dwh::DimCompany.find_by(id: record.company_id)
+                dim_user = Dwh::DimUser.find_by(id: record.user_id)
+                year = record.activity_date.to_s.length == 7 ? record.activity_date.to_s[4..7] : record.activity_date.to_s[5..8]
+                dump "USER #{dim_user.full_name} - #{dim_user.id}"
+                dump "GROUPED_RECORD: #{grouped_record.inspect}"
+
+                grouped_record[:user_id] ||= record.user_id
+                grouped_record[:full_name] ||= dim_user&.full_name
+                grouped_record[:label] ||= dim_account&.name
+                grouped_record[:unit] ||= dim_company&.name
+                grouped_record[:year] ||= year
+                grouped_record[:month] ||= record.activity_date.to_s.length == 7 ? record.activity_date.to_s[1..2] : record.activity_date.to_s[2..3]
+
+                total_hours += record.hours.to_f
+              end
+
+              grouped_record[:total_hours] ||= total_hours
+              grouped_records << grouped_record
+            end
+          end
+
+          dump "GROUPED RECORDS: #{grouped_records.inspect}"
+
         when :projects
           records.group_by { |record| [record.customer_id, record.dim_customer&.name] }
         when :users
@@ -82,6 +115,7 @@ module Datalab
             end.flatten
           end
         end
+        grouped_records
       end
 
       def generate_group_rows(grouped_data)
