@@ -35,13 +35,15 @@ nl:
         is_public:        Gedeeld
         name:             Naam rapport
         description:      Beschrijving
+        report_type:      Rapport type
+      report_types:
+        detail:           Detail (alle rijen)
+        group:            Groep (rijen per groep)
+        matrix:           Matrix (rijen per groep en maand kolommen)
       anchor_types:
         users:            Medewerkers
         projects:         Klanten & Projecten
         hours:            Uren
-      report_types:
-        rows:             Alle regels
-        month_totals:     Maand totalen
     project:
       calculation_types:
         hour_based:       Time & Material

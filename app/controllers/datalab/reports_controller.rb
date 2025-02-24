@@ -19,10 +19,7 @@ module Datalab
 
     def new
       @report = DatalabReport.new
-      @available_anchors = AnchorRegistry.available_anchors.map { |key, anchor| 
-        [anchor[:name], key]
-      }
-
+      get_form_data
     
       @breadcrumbs = []
       @breadcrumbs << [I18n.t('.datalab.report.titles.index'), datalab_reports_path]  
@@ -39,9 +36,8 @@ module Datalab
           format.html { redirect_to datalab_designer_path(@report), notice: I18n.t('.datalab.report.messages.created') }
           format.turbo_stream { redirect_to datalab_designer_path(@report), notice: I18n.t('.datalab.report.messages.created') }
         else
-          @available_anchors = AnchorRegistry.available_anchors.map { |key, anchor| 
-            [anchor[:name], key]
-          }
+          get_form_data
+
           format.html { render :new, status: :unprocessable_entity }
           format.turbo_stream { render :new, status: :unprocessable_entity }
         end
@@ -49,11 +45,8 @@ module Datalab
     end
 
     def edit
-      @available_anchors = AnchorRegistry.available_anchors.map { |key, anchor| 
-        [anchor[:name], key]
-      }
+      get_form_data
 
-    
       @breadcrumbs = []
       @breadcrumbs << [I18n.t('.datalab.report.titles.index'), datalab_reports_path]
       @breadcrumbs << [@report.name, datalab_report_path(@report)]
@@ -67,6 +60,7 @@ module Datalab
           format.turbo_stream { redirect_to datalab_designer_path(@report), notice: I18n.t('.datalab.report.messages.updated') }
         end
       else
+        get_form_data
         render :edit, status: :unprocessable_entity
       end
     end
@@ -143,7 +137,19 @@ module Datalab
     end
 
     private def report_params
-      params.require(:datalab_report).permit(:name, :description, :anchor_type, :is_public)
+      params.require(:datalab_report).permit(:name, :description, :anchor_type, :is_public, :report_type)
+    end
+
+    private def get_form_data
+      @available_anchors = AnchorRegistry.available_anchors.map { |key, anchor| 
+        [anchor[:name], key]
+      }
+
+      @available_report_types = [
+        [I18n.t("datalab.report.report_types.detail"), "detail"],
+        [I18n.t("datalab.report.report_types.group"), "group"],
+        [I18n.t("datalab.report.report_types.matrix"), "matrix"]
+      ]
     end
 
     private def set_report
