@@ -72,18 +72,18 @@ module Datalab
         def apply_filters(query, filters)
           return query if filters.blank?
 
-          filters.to_unsafe_h.each do |field, values|
-            next if values.blank?
-            values = values.flatten.reject(&:blank?)
-            next if values.empty?
+          filters.to_unsafe_h.each do |field, value|
+            next if value.blank?
+            value = value.reject(&:blank?) if value.is_a?(Array)
+            next if value.blank?
             
             query = case field.to_sym
             when :account_id
-              query.where(account_id: values)
+              query.where(account_id: value)
             when :company_id
-              query.where(company_id: values)
+              query.where(company_id: value)
             when :status
-              query.where(status: values)
+              query.where(status: value)
             else
               query
             end
