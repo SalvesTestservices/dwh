@@ -1,27 +1,48 @@
-<%= form_with(url: datalab_report_path(@report), method: :get, data: { controller: 'report', turbo_frame: 'report_data' }) do |form| %>
-  <div class="bg-gray-50 shadow-sm ring-1 ring-gray-900/5 sm:rounded-lg p-4 mb-4 border border-gray-100">
-    <div class="flex flex-row gap-4 justify-start">
+<%= form_with(url: datalab_report_path(report), method: :get, data: { controller: 'report', turbo_frame: 'report_data' }) do |form| %>
+  <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-lg p-4 mb-4 border border-gray-100">
+    <div class="flex flex-row justify-center gap-4">
       <% anchor_service.filterable_attributes.each do |attr| %>
-        <div class="px-4">
-          <%= form.label "filters[#{attr}]", @anchor_service.available_attributes[attr][:name], 
-              class: "block text-sm font-bold underline underline-offset-2 text-gray-700" %>
+        <div class="px-2">
+          <%= form.label "filters[#{attr}]", anchor_service.available_attributes[attr][:name], class: "block text-sm font-bold underline underline-offset-2 text-gray-700" %>
           <div class="mt-1">
-            <div class="max-h-40 overflow-y-auto no-scrollbar">
-              <% filter_options_for_attribute(attr).each do |label, value| %>
-                <div class="flex items-center p-1">
-                  <%= form.check_box "filters[#{attr}][]", 
-                      { multiple: true, 
-                        class: "h-4 w-4 rounded border-gray-300 text-gray-600 focus:ring-gray-600",
-                        checked: params.dig(:filters, attr)&.include?(value.to_s),
-                        data: { action: "change->report#submit" }
-                      }, value, nil %>
-                  <%= form.label "filters[#{attr}][]", label, class: "ml-2 text-sm text-gray-600" %>
-                </div>
-              <% end %>
-            </div>
+            <%= form.select "filters[#{attr}]",
+                options_for_select(
+                  filter_options_for_attribute(attr),
+                  params.dig(:filters, attr)&.first
+                ),
+                { include_blank: "- #{anchor_service.available_attributes[attr][:name]} -" },
+                {
+                  class: select_width_for_attribute(attr) + " rounded-md bg-gray-50 py-1.5 pl-3 pr-8 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6",
+                  data: {
+                    controller: "tom-select"
+                  }
+                }
+            %>
           </div>
         </div>
       <% end %>
     </div>
+  </div>
+
+  <div class="flex flex-row justify-center space-x-2 w-full my-8">
+    <%= form.button type: :submit, class: "flex flex-row items-center px-4 py-2 text-sm text-gray-700 bg-gray-100 hover:bg-gray-50 mr-1 border border-gray-300 shadow-sm font-medium rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500" do %>
+      <%= render(View::IconComponent.new(icon_type: "filter", size: "small", color: "gray")) %>
+      <span class="ml-2"><%= I18n.t('.datalab.report.titles.filter') %></span>
+    <% end %>
+    
+    <%= link_to datalab_report_path(report), class: "flex flex-row items-center px-4 py-2 text-sm text-gray-700 bg-gray-100 hover:bg-gray-50 mr-1 border border-gray-300 shadow-sm font-medium rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500" do %>
+      <%= render(View::IconComponent.new(icon_type: "filter-x", size: "small", color: "gray")) %>
+      <span class="ml-2"><%= I18n.t('.datalab.report.titles.reset_filters') %></span>
+    <% end %>
+
+    <% if can?(:read, :datalab) %>
+      <%= form.button formaction: export_datalab_report_path(report, format: :xlsx),
+                    formmethod: "get",
+                    data: { turbo: false },
+                    class: "flex flex-row items-center px-4 py-2 text-sm text-gray-700 bg-gray-100 hover:bg-gray-50 mr-1 border border-gray-300 shadow-sm font-medium rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500" do %>
+        <%= render(View::IconComponent.new(icon_type: "download", size: "small", color: "gray")) %>
+        <span class="ml-2"><%= I18n.t('.datalab.report.titles.download') %></span>
+      <% end %>
+    <% end %>
   </div>
 <% end %>

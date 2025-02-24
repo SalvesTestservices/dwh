@@ -16,7 +16,12 @@ module Datalab
     end
 
     def update
-      @datalab_report.update!(column_config: params.require(:column_config))
+      column_config = params.require(:column_config).permit!.to_h
+      
+      # Merge existing columns with new group settings
+      updated_config = @datalab_report.column_config.deep_merge(column_config)
+      
+      @datalab_report.update!(column_config: updated_config)
       head :ok
     end
 

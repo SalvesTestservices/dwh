@@ -36,6 +36,8 @@ nl:
         name:             Naam rapport
         description:      Beschrijving
         report_type:      Rapport type
+        report_settings: "Rapport instellingen"
+        group_by:         "Groeperen op"
       report_types:
         detail:           Detail (alle rijen)
         group:            Groep (rijen per groep)

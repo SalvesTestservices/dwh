@@ -45,7 +45,7 @@
           <%= render(View::IconComponent.new(icon_type: icon[0], size: icon[1], color: icon[2])) %>
         <% end %>
         <%= I18n.t('.datalab.report.titles.show') %>:
-        <%= render 'datalab/reports/editable_name', report: report %>
+        <%= report.name %>
       </h2>
 
       <% decorate report do |decorates| %>

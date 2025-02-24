@@ -85,13 +85,17 @@ module Datalab
         end
 
         def fetch_data(filters, page=1, items_per_page=20)
-          offset = (page - 1) * items_per_page
-          
           query = base_query
           query = apply_filters(query, filters)
           query = apply_sorting(query)
           
-          records = query.limit(items_per_page).offset(offset)
+          if page && items_per_page
+            offset = (page - 1) * items_per_page
+            records = query.limit(items_per_page).offset(offset)
+          else
+            records = query
+          end
+          
           total_count = query.count
 
           [records, total_count]

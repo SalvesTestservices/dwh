@@ -47,13 +47,17 @@ module Datalab
         end
 
         def fetch_data(filters, page=1, items_per_page=20)
-          offset = (page - 1) * items_per_page
-          
           query = base_query
           query = apply_filters(query, filters)
           query = apply_sorting(query)
           
-          records = query.limit(items_per_page).offset(offset)
+          if page && items_per_page
+            offset = (page - 1) * items_per_page
+            records = query.limit(items_per_page).offset(offset)
+          else
+            records = query
+          end
+          
           total_count = query.count
 
           [records, total_count]
@@ -95,7 +99,7 @@ module Datalab
         def apply_sorting(query)
           query.joins('LEFT JOIN dim_accounts ON dim_accounts.id = dim_projects.account_id')
                .joins('LEFT JOIN dim_companies ON dim_companies.id = dim_projects.company_id')
-               .order('dim_accounts.name', 'dim_companies.name', 'dim_projects.name')
+               .order('dim_accounts.name, dim_companies.name, dim_projects.name')
         end
       end
     end
