@@ -73,7 +73,7 @@ class Dwh::Tasks::EtlSynergyProjectsTask < Dwh::Tasks::BaseSynergyTask
               project_hash[:start_date]         = start_date
               project_hash[:end_date]           = end_date
               project_hash[:expected_end_date]  = expected_end_date
-              project_hash[:broker_id]          = nil
+              project_hash[:broker_id]          = set_broker(project["ProjectNumber"].strip)
               project_hash[:customer_id]        = dim_customer_id
               project_hash[:updated_at]         = project["ModifiedDate"].to_date.strftime("%d%m%Y").to_i
 
@@ -96,23 +96,57 @@ class Dwh::Tasks::EtlSynergyProjectsTask < Dwh::Tasks::BaseSynergyTask
     end
   end
 
-  private def get_broker_id(project)
-    broker_id = nil
+  private def set_broker(project_number)
+    broker = nil
 
-    unless project.blank? or project.broker_name.blank?
-      broker_id = create_or_find_broker(project.broker_name)
+    unless project_number.blank?
+      broker = create_or_find_broker(project_number)
     end
 
-    broker_id
+    broker
   end
 
-  private def create_or_find_broker(name)
-    normalized_name = normalize_broker_name(name)
-    broker = Dw::DimBroker.all.find { |b| normalize_broker_name(b.name) == normalized_name }
-    if broker.blank?
-      broker = Dw::DimBroker.create(name: name)  # Preserves original spacing and capitals
+  private def create_or_find_broker(project_number)
+    broker_id = nil
+    # Get globe keys
+    api_url, api_key, administration = get_api_keys("globe")
+
+    # First get a verification code
+    query = "SELECT * FROM frhkrg (NOLOCK) WHERE ProjectNr = '#{project_number}'"    
+    body = send_custom_query(api_url, api_key, administration, "", query)
+
+    # When there are no errors, then the verification code can be used to get the data
+    if body["Errors"].blank?
+      body = send_custom_query(api_url, api_key, administration, "#{body["VerificationCode"]}", query)
+
+      # Iterate over the results and get the sales price of the valid item
+      if body["Errors"].blank?
+        broker_data = body["Results"].first
+        unless broker_data.blank?
+          broker_name = broker_data["inv_debtor_name"]
+          unless broker_name.blank? or broker_name == ""
+            broker_email = broker_data["inv_contactemail"]
+
+            # First match on email
+            broker = Dw::DimBroker.find_by(email: broker_email)
+            if broker.blank?
+              # Match on normalized name
+              normalized_name = normalize_broker_name(broker_name)
+              broker = Dw::DimBroker.find_by(name: normalized_name)
+              if broker.blank?
+                # Create new broker
+                broker = Dw::DimBroker.create(name: normalized_name, email: broker_email)
+              else
+                # Update email if it exists
+                broker.update(email: broker_email) unless broker_email.blank? or broker_email == broker.email
+              end
+            end
+            broker_id = broker.blank? ? nil : broker.id
+          end
+        end
+      end
     end
-    broker.id
+    broker_id
   end
 
   private def normalize_broker_name(name)
@@ -121,6 +155,7 @@ class Dwh::Tasks::EtlSynergyProjectsTask < Dwh::Tasks::BaseSynergyTask
       .gsub(/\s*nederland\s*$/i, '')       # Remove Nederland at the end (case insensitive)
       .gsub(/\s+/, '')                     # Remove ALL spaces
       .downcase                            # Convert to lowercase
+      .capitalize                          # Capitalize the first letter of each word
       .strip
   end
 end
