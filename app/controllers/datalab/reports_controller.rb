@@ -79,7 +79,7 @@ module Datalab
       )
 
       @records, @report_data = @report_generator.generate
-      
+
       @breadcrumbs = []
       @breadcrumbs << [I18n.t('.datalab.report.titles.index'), datalab_reports_path]  
       @breadcrumbs << [@report.name]
@@ -101,12 +101,10 @@ module Datalab
         group_by_month: true
       }
       
-      records, data = ReportGenerator.new(
+      @records, @report_data = ReportGenerator.new(
         @report, 
         report_params
       ).generate
-      
-      @report_data = data
 
       @breadcrumbs = []
       @breadcrumbs << [I18n.t('.datalab.report.titles.index'), datalab_reports_path]  

@@ -60,6 +60,10 @@ module Datalab
         'w-64'
       when :calculation_type
         'w-40'
+      when :month
+        'w-32'
+      when :year
+        'w-32'
       else
         'w-52'
       end

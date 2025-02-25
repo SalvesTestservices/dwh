@@ -34,6 +34,24 @@ module Datalab
           }
         end
       end
+
+      def extract_month(original_date)
+        original_date_str = original_date.to_s
+        if original_date_str.length == 7
+          original_date_str[1..2]  # For 7-digit format
+        else
+          original_date_str[2..3]  # For 8-digit format (DDMMYYYY)
+        end
+      end
+
+      def extract_year(original_date)
+        original_date_str = original_date.to_s
+        if original_date_str.length == 7
+          original_date_str[4..7]  # For 7-digit format
+        else
+          original_date_str[5..8]  # For 8-digit format (DDMMYYYY)
+        end
+      end
     end
   end
 end 

@@ -1,13 +1,9 @@
 <% report_data[:rows].each do |row| %>
   <tr class="whitespace-nowrap hover:bg-gray-50">
     <% report_data[:columns].each do |column| %>
-      <td class="p-1 text-left text-xs text-gray-900 border border-gray-400 bg-white max-w-64 overflow-hidden text-ellipsis
-                <%= column[:id] == 'uren_ouderschapsverlof' ? 'font-semibold' : '' %>">
-        <% if column[:id].end_with?('_hours', '_projects', 'uren_ouderschapsverlof') %>
-          <%= number_with_precision(row[column[:id]], precision: 1, delimiter: '.', separator: ',') %>
-        <% else %>
-          <%= row[column[:id]] %>
-        <% end %>
+        <% align = column[:id] == 'hours_ovb' ? 'text-right' : 'text-left' %>
+      <td class="p-1 text-xs text-gray-900 border border-gray-400 bg-white max-w-64 overflow-hidden text-ellipsis <%= align %>">
+        <%= row[column[:id]] %>
       </td>
     <% end %>
   </tr>
@@ -16,10 +12,11 @@
 <% if report_data[:rows].any? %>
   <tr class="whitespace-nowrap bg-gray-100 font-semibold">
     <% report_data[:columns].each_with_index do |column, index| %>
-      <td class="p-1 text-left text-xs text-gray-900 border border-gray-400">
-        <% if column[:id] == 'uren_ouderschapsverlof' %>
+      <% align = column[:id] == 'hours_ovb' ? 'text-right' : 'text-left' %>
+      <td class="p-1 text-xs text-gray-900 border border-gray-400 <%= align %>">
+        <% if column[:id] == 'hours_ovb' %>
           <% total = report_data[:rows].sum { |row| row[column[:id]].to_f } %>
-          <%= number_with_precision(total, precision: 1, delimiter: '.', separator: ',') %>
+          <%= total.round(1) %>
         <% elsif index == 0 %>
           Totaal
         <% end %>
