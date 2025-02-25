@@ -11,19 +11,6 @@ module Datalab
         @anchor_service = AnchorRegistry.get_anchor(@report.anchor_type)[:service]
       end
 
-      protected
-
-      def cache_key
-        parts = [
-          'datalab_report',
-          @report.id,
-          @report.updated_at.to_i,
-          Digest::MD5.hexdigest(@params.to_json)
-        ]
-        
-        parts.join('/')
-      end
-
       def generate_columns
         @report.column_config['columns'].map do |column|
           attribute = @anchor_service.available_attributes[column['id'].to_sym]

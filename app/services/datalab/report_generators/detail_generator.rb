@@ -17,9 +17,7 @@ module Datalab
         }]
       end
 
-      private
-
-      def generate_detail_rows(records)
+      private def generate_detail_rows(records)
         records.map do |record|
           row = {}
           @report.column_config['columns'].each do |column|
