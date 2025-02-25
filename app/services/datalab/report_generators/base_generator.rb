@@ -34,9 +34,9 @@ module Datalab
       def extract_year(original_date)
         original_date_str = original_date.to_s
         if original_date_str.length == 7
-          original_date_str[4..7]  # For 7-digit format
+          original_date_str[3..6]  # For 7-digit format
         else
-          original_date_str[5..8]  # For 8-digit format (DDMMYYYY)
+          original_date_str[4..7]  # For 8-digit format (DDMMYYYY)
         end
       end
     end
