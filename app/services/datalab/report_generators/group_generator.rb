@@ -124,26 +124,6 @@ module Datalab
       def include_company_grouping?
         @report.column_config.dig('group_by', 'company').present?
       end
-
-      def extract_month(original_date)
-        date_str = original_date.to_s
-        month = if date_str.length == 7
-          date_str[1..2]  # For 7-digit format
-        else
-          date_str[2..3]  # For 8-digit format (DDMMYYYY)
-        end
-        month.rjust(2, '0')  # Ensure two digits with leading zero if needed
-      end
-
-      def extract_year(original_date)
-        date_str = original_date.to_s
-        year = if date_str.length == 7
-          date_str[3..6]  # For 7-digit format
-        else
-          date_str[4..7]  # For 8-digit format (DDMMYYYY)
-        end
-        year.length == 3 ? "2#{year}" : year  # Ensure full year format
-      end
     end
   end
 end 
